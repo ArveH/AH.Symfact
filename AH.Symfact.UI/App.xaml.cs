@@ -9,7 +9,7 @@ using Windows.ApplicationModel;
 
 namespace AH.Symfact.UI;
 
-public partial class App : Application
+public partial class App
 {
     private Window? _window;
 
@@ -23,7 +23,7 @@ public partial class App : Application
 
     public IServiceProvider Services { get; }
 
-    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         _window = Services.GetService<MainWindow>();
         _window?.Activate();
@@ -49,6 +49,7 @@ public partial class App : Application
 
         // ViewModels
         services.AddTransient<MainViewModel>();
+        services.AddTransient<MenuViewModel>();
 
         return services.BuildServiceProvider();
     }

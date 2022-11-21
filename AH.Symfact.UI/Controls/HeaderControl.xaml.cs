@@ -1,10 +1,9 @@
-namespace AH.Symfact.UI.Controls
+namespace AH.Symfact.UI.Controls;
+
+public sealed partial class HeaderControl
 {
-    public sealed partial class HeaderControl
+    public HeaderControl()
     {
-        public HeaderControl()
-        {
-            this.InitializeComponent();
-        }
+        this.InitializeComponent();
     }
 }

@@ -21,6 +21,13 @@
         </Grid.RowDefinitions>
 
         <controls:HeaderControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+        <controls:MenuControl Grid.Row="1" Grid.Column="0" Width="140" HorizontalAlignment="Left"/>
+        <controls:ConnectControl Grid.Row="1" Grid.Column="1" 
+                              HorizontalAlignment="Stretch"
+                              Visibility="{x:Bind ViewModel.IsConnectPage, Mode=OneWay}"/>
+        <controls:CreateTablesControl Grid.Row="1" Grid.Column="1" 
+                                 HorizontalAlignment="Stretch"
+                                 Visibility="{x:Bind ViewModel.IsCreateTablesPage, Mode=OneWay}"/>
 
     </Grid>
 </Window>
