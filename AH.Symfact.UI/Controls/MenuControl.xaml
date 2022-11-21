@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel Margin="10 10 10 0"
+    <StackPanel Margin="10 10 10 10"
                 BorderBrush="Gray"
                 BorderThickness="1">
         <TextBlock Text="Menu" 

@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml;
 using Serilog;
 using System;
 using Windows.ApplicationModel;
+using AH.Symfact.UI.Database;
 
 namespace AH.Symfact.UI;
 
@@ -44,12 +45,16 @@ public partial class App
             .CreateLogger();
 
         // Services
+        services.AddSingleton(config);
+        services.AddSingleton(new DbConnectionString(config, Log.Logger));
         services.AddSingleton(Log.Logger);
         services.AddTransient<MainWindow>();
 
         // ViewModels
         services.AddTransient<MainViewModel>();
         services.AddTransient<MenuViewModel>();
+        services.AddTransient<ConnectViewModel>();
+        services.AddTransient<CreateTablesViewModel>();
 
         return services.BuildServiceProvider();
     }

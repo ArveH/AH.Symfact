@@ -6,10 +6,46 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
-        <TextBlock Text="Connect" 
-                   FontSize="20" FontWeight="Bold"
-                   Margin="0 5" 
-                   HorizontalTextAlignment="Center"></TextBlock>
+    <Grid Margin="0 10 10 10"
+          HorizontalAlignment="Stretch"
+          BorderBrush="Gray"
+          BorderThickness="1">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="ConnectionString:" 
+                   Grid.Row="0" Grid.Column="0"
+                   Margin="20 20 0 20"
+                   VerticalAlignment="Center"/>
+        <TextBox PlaceholderText="Enter SQL Server connection string here" 
+                 Grid.Row="0" Grid.Column="1"
+                 TextAlignment="Left"
+                 HorizontalAlignment="Stretch"
+                 Margin="2 20 20 2"
+                 Text="{x:Bind ViewModel.ConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Text="Status:" 
+                   Grid.Row="1" Grid.Column="0"
+                   Margin="20 2 0 2"
+                   VerticalAlignment="Center"/>
+        <TextBox PlaceholderText="Enter SQL Server connection string here" 
+                 Grid.Row="1" Grid.Column="1"
+                 TextAlignment="Left"
+                 Margin="2 2 20 2"
+                 Text="{x:Bind ViewModel.ConnectionStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Button Grid.Row="4" Grid.Column="0"
+                Margin="20 40"
+                Command="{x:Bind ViewModel.ConnectCommand, Mode=OneWay}"
+                Content="Try Connection"/>
     </Grid>
 </UserControl>

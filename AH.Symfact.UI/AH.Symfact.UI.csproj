@@ -13,13 +13,6 @@
     <Nullable>Enable</Nullable>
     <UserSecretsId>f40ef935-6add-41f0-8535-68a7f5f6f954</UserSecretsId>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Controls\ConnectControl.xaml" />
-    <None Remove="Controls\CreateTablesControl.xaml" />
-    <None Remove="Controls\HeaderControl.xaml" />
-    <None Remove="Controls\MenuControl.xaml" />
-    <None Remove="Resources\Brushes.xaml" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -80,6 +73,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Extensions\" />
     <Folder Include="ViewModels\Messages\" />
   </ItemGroup>
 

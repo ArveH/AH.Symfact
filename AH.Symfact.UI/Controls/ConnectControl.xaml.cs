@@ -1,11 +1,18 @@
-using Microsoft.UI.Xaml.Controls;
+using AH.Symfact.UI.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace AH.Symfact.UI.Controls;
 
-public sealed partial class ConnectControl : UserControl
+public sealed partial class ConnectControl
 {
+    public ConnectViewModel ViewModel { get; }
+
     public ConnectControl()
     {
-        this.InitializeComponent();
+        ViewModel = App.Current.Services.GetService<ConnectViewModel>()
+                    ?? throw new ApplicationException(
+                        "Can't get ViewModel for ConnectControl");
+        InitializeComponent();
     }
 }
