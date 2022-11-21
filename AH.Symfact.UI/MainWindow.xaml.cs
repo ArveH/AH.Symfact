@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AH.Symfact.UI;
 
-public sealed partial class MainWindow : Window
+public sealed partial class MainWindow
 {
     private readonly ILogger _logger;
 
@@ -15,6 +15,7 @@ public sealed partial class MainWindow : Window
     {
         _logger = logger.ForContext<MainWindow>();
         InitializeComponent();
+        Title = "Symfact Database Utilities";
         ViewModel = viewModel;
         Root.Loaded += Root_Loaded;
     }

@@ -13,6 +13,10 @@
     <Nullable>Enable</Nullable>
     <UserSecretsId>f40ef935-6add-41f0-8535-68a7f5f6f954</UserSecretsId>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Controls\HeaderControl.xaml" />
+    <None Remove="Resources\Brushes.xaml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -53,13 +57,18 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controls\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="AppSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Controls\HeaderControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Brushes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <!-- 
