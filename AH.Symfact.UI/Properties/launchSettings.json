@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AH.Symfact.UI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "AH.Symfact.UI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
