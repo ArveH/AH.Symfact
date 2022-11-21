@@ -24,9 +24,9 @@
         <controls:ConnectControl Grid.Row="1" Grid.Column="1" 
                               HorizontalAlignment="Stretch"
                               Visibility="{x:Bind ViewModel.IsConnectPage, Mode=OneWay}"/>
-        <controls:CreateTablesControl Grid.Row="1" Grid.Column="1" 
+        <controls:TablesControl Grid.Row="1" Grid.Column="1" 
                                  HorizontalAlignment="Stretch"
-                                 Visibility="{x:Bind ViewModel.IsCreateTablesPage, Mode=OneWay}"/>
+                                 Visibility="{x:Bind ViewModel.IsTablesPage, Mode=OneWay}"/>
 
     </Grid>
 </Window>

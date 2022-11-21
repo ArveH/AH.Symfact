@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace AH.Symfact.UI.ViewModels;
 
-public partial class CreateTablesViewModel : ObservableRecipient
+public partial class TablesViewModel : ObservableRecipient
 {
     private readonly ILogger _logger;
 
-    public CreateTablesViewModel(ILogger logger)
+    public TablesViewModel(ILogger logger)
     {
         _logger = logger.ForContext<MenuControl>();
     }

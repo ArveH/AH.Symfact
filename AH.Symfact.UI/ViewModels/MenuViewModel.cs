@@ -24,9 +24,9 @@ public partial class MenuViewModel : ObservableRecipient
     }
 
     [RelayCommand]
-    private void LoadCreateTablesDetails()
+    private void LoadTablesDetails()
     {
-        _logger.Information("Loading Create Tables page details");
-        WeakReferenceMessenger.Default.Send(new PageChangedMessage(PageName.CreateTables));
+        _logger.Information("Loading Tables page details");
+        WeakReferenceMessenger.Default.Send(new PageChangedMessage(PageName.Tables));
     }
 }

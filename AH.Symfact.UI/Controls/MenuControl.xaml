@@ -17,9 +17,9 @@
                 HorizontalAlignment="Left"
                 Margin="5" 
                 Command="{x:Bind ViewModel.LoadConnectDetailsCommand}"/>
-        <Button Content="Create Tables" 
+        <Button Content="Tables" 
                 HorizontalAlignment="Left"
                 Margin="5" 
-                Command="{x:Bind ViewModel.LoadCreateTablesDetailsCommand}"/>
+                Command="{x:Bind ViewModel.LoadTablesDetailsCommand}"/>
     </StackPanel>
 </UserControl>

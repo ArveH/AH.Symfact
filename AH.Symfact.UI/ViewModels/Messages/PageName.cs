@@ -3,5 +3,5 @@
 public enum PageName
 {
     Connect = 1,
-    CreateTables = 2,
+    Tables = 2,
 }

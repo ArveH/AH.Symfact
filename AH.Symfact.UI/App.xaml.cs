@@ -54,7 +54,7 @@ public partial class App
         services.AddTransient<MainViewModel>();
         services.AddTransient<MenuViewModel>();
         services.AddTransient<ConnectViewModel>();
-        services.AddTransient<CreateTablesViewModel>();
+        services.AddTransient<TablesViewModel>();
 
         return services.BuildServiceProvider();
     }
