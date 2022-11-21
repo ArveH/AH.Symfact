@@ -18,7 +18,7 @@ public class DbCommands : IDbCommands
         _logger = logger.ForContext<DbCommands>();
     }
 
-    public async Task<IEnumerable<string>> GetAllTablesAsync()
+    public async Task<List<string>> GetAllTablesAsync()
     {
         await using var dbConn = _dbConnFactory.CreateConnection();
         await dbConn.ConnectAsync();
@@ -34,8 +34,20 @@ public class DbCommands : IDbCommands
         return tables;
     }
 
-    public Task DeleteAllTablesAsync()
+    public async Task DeleteTablesAsync(IEnumerable<string> tableNames)
     {
-        throw new System.NotImplementedException();
+        foreach (var tableName in tableNames)
+        {
+            await DeleteTableAsync(tableName);
+        }
+    }
+
+    private async Task DeleteTableAsync(string tableName)
+    {
+        await using var dbConn = _dbConnFactory.CreateConnection();
+        await dbConn.ConnectAsync();
+        var sqlTxt = $"drop table {tableName}";
+        await using var cmd = new SqlCommand(sqlTxt, dbConn.Conn);
+        await cmd.ExecuteNonQueryAsync();
     }
 }

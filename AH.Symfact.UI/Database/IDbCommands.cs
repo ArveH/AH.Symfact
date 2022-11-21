@@ -5,6 +5,6 @@ namespace AH.Symfact.UI.Database;
 
 public interface IDbCommands
 {
-    Task<IEnumerable<string>> GetAllTablesAsync();
-    Task DeleteAllTablesAsync();
+    Task<List<string>> GetAllTablesAsync();
+    Task DeleteTablesAsync(IEnumerable<string> tableNames);
 }
