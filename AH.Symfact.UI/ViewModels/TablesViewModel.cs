@@ -1,14 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using AH.Symfact.UI.Controls;
+﻿using AH.Symfact.UI.Controls;
+using AH.Symfact.UI.Database;
+using AH.Symfact.UI.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Controls;
 using Serilog;
+using System;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using AH.Symfact.UI.Database;
-using Microsoft.UI.Xaml.Controls;
 
 namespace AH.Symfact.UI.ViewModels;
 
@@ -37,38 +37,47 @@ public partial class TablesViewModel : ObservableRecipient
 
     private async Task DeleteAllTablesAsync()
     {
-        _logger.Information("Deleting all tables...");
-        DeleteAllStatus = "Deleting all tables...";
-
-        var tables = await _dbCommands.GetAllTablesAsync();
-        if (tables.Count < 1)
+        try
         {
-            _logger.Information("No tables deleted");
-            DeleteAllStatus = "No tables deleted";
-            return;
+            _logger.Information("Deleting all tables...");
+            DeleteAllStatus = "Deleting all tables...";
+
+            var tables = await _dbCommands.GetAllTablesAsync();
+            if (tables.Count < 1)
+            {
+                _logger.Information("No tables deleted");
+                DeleteAllStatus = "No tables deleted";
+                return;
+            }
+
+            var sb = new StringBuilder();
+            sb.Append($"Do you want to delete the following {tables.Count} tables?");
+            tables.ForEach(t => sb.AppendLine("\t" + t));
+            var deleteTablesDialog = new ContentDialog
+            {
+                Title = "Delete Tables",
+                Content = sb.ToString(),
+                PrimaryButtonText = "Delete",
+                CloseButtonText = "Cancel"
+            };
+            deleteTablesDialog.XamlRoot = App.MainRoot?.XamlRoot;
+            var result = await deleteTablesDialog.ShowAsync();
+            if (result != ContentDialogResult.Primary)
+            {
+                _logger.Information("No tables deleted");
+                DeleteAllStatus = "No tables deleted";
+                return;
+            }
+            await _dbCommands.DeleteTablesAsync(tables);
+
+            _logger.Information("{TableCount} tables deleted", tables.Count);
+            DeleteAllStatus = $"{tables.Count} tables deleted";
         }
-
-        var sb = new StringBuilder();
-        sb.Append($"Do you want to delete the following {tables.Count} tables?");
-        tables.ForEach(t => sb.AppendLine("\t" + t));
-        var deleteTablesDialog = new ContentDialog
+        catch (Exception ex)
         {
-            Title = "Delete Tables",
-            Content = sb.ToString(),
-            PrimaryButtonText = "Delete",
-            CloseButtonText = "Cancel"
-        };
-        var result = await deleteTablesDialog.ShowAsync();
-        if (result != ContentDialogResult.Primary)
-        {
-            _logger.Information("No tables deleted");
-            DeleteAllStatus = "No tables deleted";
-            return;
+            _logger.Error(ex, "Error when deleting tables");
+            DeleteAllStatus = ex.FlattenMessages();
         }
-        await _dbCommands.DeleteTablesAsync(tables);
-
-        _logger.Information("{TableCount} tables deleted", tables.Count);
-        DeleteAllStatus = $"{tables.Count} tables deleted";
     }
 
     private async Task CreateAllTablesAsync()
