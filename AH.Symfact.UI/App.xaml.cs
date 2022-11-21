@@ -1,26 +1,14 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using AH.Symfact.UI.Config;
+using AH.Symfact.UI.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
+using Serilog;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using AH.Symfact.UI.ViewModels;
 
 namespace AH.Symfact.UI;
 
@@ -47,8 +35,19 @@ public partial class App : Application
     private static IServiceProvider ConfigureServices()
     {
         ServiceCollection services = new();
+        IConfiguration config = ConfigurationHelper.GetConfiguration(
+            "f40ef935-6add-41f0-8535-68a7f5f6f954",
+            Package.Current.InstalledLocation.Path);
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(config)
+            .Enrich.WithMachineName()
+            .Enrich.WithProcessId()
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .CreateLogger();
 
         // Services
+        services.AddSingleton(Log.Logger);
         services.AddTransient<MainWindow>();
 
         // ViewModels

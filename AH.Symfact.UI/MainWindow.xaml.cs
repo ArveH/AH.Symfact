@@ -1,28 +1,19 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using AH.Symfact.UI.ViewModels;
+using Microsoft.UI.Xaml;
+using Serilog;
+using System.Threading.Tasks;
 
 namespace AH.Symfact.UI;
 
 public sealed partial class MainWindow : Window
 {
+    private readonly ILogger _logger;
+
     public MainWindow(
-        MainViewModel viewModel)
+        MainViewModel viewModel,
+        ILogger logger)
     {
+        _logger = logger.ForContext<MainWindow>();
         InitializeComponent();
         ViewModel = viewModel;
         Root.Loaded += Root_Loaded;
@@ -32,6 +23,7 @@ public sealed partial class MainWindow : Window
 
     private async void Root_Loaded(object sender, RoutedEventArgs e)
     {
+        _logger.Information("Started Symfact.UI");
         await Task.CompletedTask;
     }
 
