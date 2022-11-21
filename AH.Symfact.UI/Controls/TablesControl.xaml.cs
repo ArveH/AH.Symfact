@@ -1,6 +1,5 @@
 using AH.Symfact.UI.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
 using System;
 
 namespace AH.Symfact.UI.Controls;

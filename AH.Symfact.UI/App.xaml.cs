@@ -47,6 +47,7 @@ public partial class App
         // Services
         services.AddSingleton(config);
         services.AddSingleton(new DbConnectionString(config, Log.Logger));
+        services.AddSingleton<IDbConnFactory, DbConnFactory>();
         services.AddSingleton(Log.Logger);
         services.AddTransient<MainWindow>();
 

@@ -13,16 +13,16 @@ namespace AH.Symfact.UI.ViewModels;
 
 public partial class ConnectViewModel : ObservableObject
 {
-    private readonly DbConnectionString _dbConnectionString;
+    private readonly IDbConnFactory _dbConnFactory;
     private readonly ILogger _logger;
 
     public ConnectViewModel(
-        DbConnectionString dbConnectionString,
+        IDbConnFactory dbConnFactory,
         ILogger logger)
     {
-        _dbConnectionString = dbConnectionString;
+        _dbConnFactory = dbConnFactory;
         _logger = logger.ForContext<MenuControl>();
-        _connectionString = _dbConnectionString.ConnectionString ?? "";
+        _connectionString = _dbConnFactory.DbConnectionString.ConnectionString ?? "";
         ConnectCommand = new AsyncRelayCommand(ConnectAsync);
     }
 
@@ -31,7 +31,7 @@ public partial class ConnectViewModel : ObservableObject
 
     partial void OnConnectionStringChanging(string value)
     {
-        _dbConnectionString.ConnectionString = value;
+        _dbConnFactory.DbConnectionString.ConnectionString = value;
     }
 
     [ObservableProperty]
@@ -54,7 +54,7 @@ public partial class ConnectViewModel : ObservableObject
         ConnectionStatus = "Connecting...";
         try
         {
-            await using IDbConn dbConn = new DbConn(_dbConnectionString, _logger);
+            await using var dbConn = _dbConnFactory.CreateConnection();
 
             if (await dbConn.ConnectAsync())
             {
