@@ -7,6 +7,7 @@ using AH.Symfact.UI.ViewModels.Messages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.UI.Xaml.Controls;
 using Serilog;
 using System;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Linq;
 using Windows.Storage.Pickers;
-using Microsoft.Web.WebView2.Core.Raw;
+using ABI.Windows.ApplicationModel.Appointments;
 using WinRT.Interop;
 
 namespace AH.Symfact.UI.ViewModels;
@@ -126,26 +127,27 @@ public partial class TablesViewModel : ObservableRecipient
 
     private async Task CreateAllTablesAsync()
     {
-        var entityName = "Contract";
-        WeakReferenceMessenger.Default.Send(new XmlFileLoadedMessage(new XmlFileInfo
-        {
-            ContractElementName = entityName,
-            ContractCount = 0
-        }));
-        await ExecuteScriptAsync("CreateContractTable.sql", s => CreateTablesStatus = s);
+        await CreateTableAsync("Contract",
+            cnt => WeakReferenceMessenger.Default.Send(new ContractLoadedMessage(cnt)));
+        await CreateTableAsync("Party",
+            cnt => WeakReferenceMessenger.Default.Send(new PartyLoadedMessage(cnt)));
+        await CreateTableAsync("OrganisationalPerson",
+            cnt => WeakReferenceMessenger.Default.Send(new OrgPersonLoadedMessage(cnt)));
+    }
+
+    private async Task CreateTableAsync(string entityName, Func<int, ValueChangedMessage<int>> func)
+    {
+        await ExecuteScriptAsync(entityName + ".sql", s => CreateTablesStatus = s);
         var contractData = ReadFromXml(entityName);
         try
         {
+            func(0);
             _logger.Information("Inserting into {TableName}...", entityName);
             CreateTablesStatus = $"Inserting into {entityName}...";
             var cnt = await _dbCommands.InsertRowsAsync(entityName, contractData);
             _logger.Information("{RowCount} rows inserted into {TableName}", cnt, entityName);
             CreateTablesStatus = $"{cnt} rows inserted into {entityName}";
-            WeakReferenceMessenger.Default.Send(new XmlFileLoadedMessage(new XmlFileInfo
-            {
-                ContractElementName = entityName,
-                ContractCount = cnt
-            }));
+            func(cnt);
         }
         catch (Exception ex)
         {
