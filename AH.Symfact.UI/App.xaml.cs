@@ -7,6 +7,7 @@ using Serilog;
 using System;
 using Windows.ApplicationModel;
 using AH.Symfact.UI.Database;
+using AH.Symfact.UI.Services;
 
 namespace AH.Symfact.UI;
 
@@ -46,17 +47,20 @@ public partial class App
 
         // Services
         services.AddSingleton(config);
+        services.AddSingleton(Log.Logger);
+        services.AddTransient<MainWindow>();
         services.AddSingleton(new DbConnectionString(config, Log.Logger));
         services.AddSingleton<IDbConnFactory, DbConnFactory>();
         services.AddSingleton<IDbCommands, DbCommands>();
-        services.AddSingleton(Log.Logger);
-        services.AddTransient<MainWindow>();
-
+        services.AddSingleton<ITaminoFileReader, TaminoFileReader>();
+        services.AddSingleton<IXElementHelper, XElementHelper>();
+        
         // ViewModels
         services.AddTransient<MainViewModel>();
         services.AddTransient<MenuViewModel>();
         services.AddTransient<ConnectViewModel>();
         services.AddTransient<TablesViewModel>();
+        services.AddTransient<XmlFileDetailsViewModel>();
 
         return services.BuildServiceProvider();
     }

@@ -56,6 +56,9 @@
     <None Update="AppSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Controls\XmlFileDetailsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Controls\TablesControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

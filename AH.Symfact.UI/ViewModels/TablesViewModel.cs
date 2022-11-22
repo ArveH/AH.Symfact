@@ -1,6 +1,7 @@
 ﻿using AH.Symfact.UI.Controls;
 using AH.Symfact.UI.Database;
 using AH.Symfact.UI.Extensions;
+using AH.Symfact.UI.Services;
 using AH.Symfact.UI.ViewModels.Messages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -8,10 +9,14 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Serilog;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Xml.Linq;
 using Windows.Storage.Pickers;
+using AH.Symfact.UI.Models;
 using WinRT.Interop;
 
 namespace AH.Symfact.UI.ViewModels;
@@ -19,13 +24,16 @@ namespace AH.Symfact.UI.ViewModels;
 public partial class TablesViewModel : ObservableRecipient
 {
     private readonly IDbCommands _dbCommands;
+    private readonly ITaminoFileReader _fileReader;
     private readonly ILogger _logger;
 
     public TablesViewModel(
         IDbCommands dbCommands,
+        ITaminoFileReader fileReader,
         ILogger logger)
     {
         _dbCommands = dbCommands;
+        _fileReader = fileReader;
         _logger = logger.ForContext<MenuControl>();
         DeleteAllTablesCommand = new AsyncRelayCommand(DeleteAllTablesAsync);
         SelectDataFolderCommand = new AsyncRelayCommand(SelectDataFolderAsync);
@@ -113,9 +121,31 @@ public partial class TablesViewModel : ObservableRecipient
 
     private async Task CreateAllTablesAsync()
     {
-        _logger.Information("Creating all tables...");
-        CreateAllStatus = "Creating all tables...";
+        var filePath = Path.Combine(DataPath, "Contract.xml");
+        _logger.Information("Starting to load from file '{FilePath}'...",
+            filePath);
+        CreateAllStatus = $"Starting to load from file '{filePath}'...";
+        try
+        {
+            var xElem = XElement.Load(filePath);
+            var elemName = _fileReader.GetName(xElem);
+            if (elemName == null) return;
 
+            var xmlData = _fileReader.SplitRequests(xElem);
+            WeakReferenceMessenger.Default.Send(new XmlFileLoadedMessage(new XmlFileInfo
+            {
+                ElementName = elemName,
+                ElementCount = xmlData.Count
+            }));
+            _logger.Information("Found {RowCount} rows for '{ElementName}'",
+                xmlData.Count, elemName);
+            CreateAllStatus = $"Found {xmlData.Count} rows for '{elemName}'";
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Can't read XML file");
+            CreateAllStatus = "Can't read XML file";
+        }
 
         await Task.CompletedTask;
     }
