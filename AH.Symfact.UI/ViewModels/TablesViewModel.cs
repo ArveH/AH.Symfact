@@ -1,14 +1,18 @@
 ﻿using AH.Symfact.UI.Controls;
 using AH.Symfact.UI.Database;
 using AH.Symfact.UI.Extensions;
+using AH.Symfact.UI.ViewModels.Messages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Serilog;
 using System;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.Storage.Pickers;
+using WinRT.Interop;
 
 namespace AH.Symfact.UI.ViewModels;
 
@@ -24,15 +28,19 @@ public partial class TablesViewModel : ObservableRecipient
         _dbCommands = dbCommands;
         _logger = logger.ForContext<MenuControl>();
         DeleteAllTablesCommand = new AsyncRelayCommand(DeleteAllTablesAsync);
+        SelectDataFolderCommand = new AsyncRelayCommand(SelectDataFolderAsync);
         CreateAllTablesCommand = new AsyncRelayCommand(CreateAllTablesAsync);
     }
 
     [ObservableProperty]
     private string _deleteAllStatus = "Ready...";
     [ObservableProperty]
+    private string _dataPath = @"D:\Temp\Symfact\DataSet";
+    [ObservableProperty]
     private string _createAllStatus = "Ready...";
 
     public ICommand DeleteAllTablesCommand { get; }
+    public ICommand SelectDataFolderCommand { get; }
     public ICommand CreateAllTablesCommand { get; }
 
     private async Task DeleteAllTablesAsync()
@@ -77,6 +85,28 @@ public partial class TablesViewModel : ObservableRecipient
         {
             _logger.Error(ex, "Error when deleting tables");
             DeleteAllStatus = ex.FlattenMessages();
+        }
+    }
+
+    private async Task SelectDataFolderAsync()
+    {
+        try
+        {
+            var hWnd = WeakReferenceMessenger.Default.Send<WindowHandleSetMessage>();
+            var folderPicker = new FolderPicker();
+            InitializeWithWindow.Initialize(folderPicker, hWnd);
+            folderPicker.ViewMode = PickerViewMode.List;
+            folderPicker.SuggestedStartLocation = PickerLocationId.ComputerFolder;
+            folderPicker.CommitButtonText = "Select";
+            var folder = await folderPicker.PickSingleFolderAsync();
+            if (!string.IsNullOrWhiteSpace(folder?.Path))
+            {
+                DataPath = folder.Path;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Failed to select data folder");
         }
     }
 

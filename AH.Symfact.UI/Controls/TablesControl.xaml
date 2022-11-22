@@ -23,6 +23,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!--Delete tables -->
         <Button Grid.Row="0" Grid.Column="0"
                 Margin="20 20 0 5"
                 Command="{x:Bind ViewModel.DeleteAllTablesCommand, Mode=OneWay}"
@@ -32,12 +33,22 @@
                    Margin="20 20 0 5"
                    VerticalAlignment="Center"/>
 
+        <!--Create tables -->
         <Button Grid.Row="1" Grid.Column="0"
+                Margin="20 30 0 5"
+                Command="{x:Bind ViewModel.SelectDataFolderCommand, Mode=OneWay}"
+                Content="Choose folder"/>
+        <TextBlock Text="{x:Bind ViewModel.DataPath, Mode=OneWay}" 
+                   Grid.Row="1" Grid.Column="1"
+                   Margin="20 30 0 5"
+                   VerticalAlignment="Center"/>
+
+        <Button Grid.Row="2" Grid.Column="0"
                 Margin="20 5 0 5"
                 Command="{x:Bind ViewModel.CreateAllTablesCommand, Mode=OneWay}"
                 Content="Create all tables"/>
         <TextBlock Text="{x:Bind ViewModel.DeleteAllStatus, Mode=OneWay}" 
-                   Grid.Row="1" Grid.Column="1"
+                   Grid.Row="2" Grid.Column="1"
                    Margin="20 5 0 5"
                    VerticalAlignment="Center"/>
     </Grid>
