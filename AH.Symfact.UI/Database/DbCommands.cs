@@ -2,6 +2,8 @@
 using Serilog;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.SqlServer.Management.Common;
+using Microsoft.SqlServer.Management.Smo;
 
 namespace AH.Symfact.UI.Database;
 
@@ -40,6 +42,14 @@ public class DbCommands : IDbCommands
         {
             await DeleteTableAsync(tableName);
         }
+    }
+
+    public async Task ExecuteScriptAsync(string script)
+    {
+        await using var dbConn = _dbConnFactory.CreateConnection();
+        await dbConn.ConnectAsync();
+        var server = new Server(new ServerConnection(dbConn.Conn));
+        var _ = server.ConnectionContext.ExecuteNonQuery(script);
     }
 
     private async Task DeleteTableAsync(string tableName)

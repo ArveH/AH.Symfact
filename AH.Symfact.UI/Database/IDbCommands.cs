@@ -7,4 +7,5 @@ public interface IDbCommands
 {
     Task<List<string>> GetAllTablesAsync();
     Task DeleteTablesAsync(IEnumerable<string> tableNames);
+    Task ExecuteScriptAsync(string script);
 }

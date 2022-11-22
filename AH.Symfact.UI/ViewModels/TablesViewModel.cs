@@ -11,6 +11,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -121,7 +122,27 @@ public partial class TablesViewModel : ObservableRecipient
 
     private async Task CreateAllTablesAsync()
     {
-        var filePath = Path.Combine(DataPath, "Contract.xml");
+        var entityName = "Contract";
+        var contractData = ReadFromXml(entityName);
+        try
+        {
+            _logger.Information("Creating table '{TableName}'...",
+                entityName);
+            CreateAllStatus = $"Creating table '{entityName}'...";
+            var filePath = Path.Combine("Scripts", "CreateContractTable.sql");
+            var cmds = await File.ReadAllTextAsync(filePath);
+            await _dbCommands.ExecuteScriptAsync(cmds);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Can't create table {TableName}", entityName);
+            CreateAllStatus = $"Can't create table '{entityName}'...";
+        }
+    }
+
+    private IEnumerable<TableRow>? ReadFromXml(string entityName)
+    {
+        var filePath = Path.Combine(DataPath, $"{entityName}.xml");
         _logger.Information("Starting to load from file '{FilePath}'...",
             filePath);
         CreateAllStatus = $"Starting to load from file '{filePath}'...";
@@ -129,7 +150,12 @@ public partial class TablesViewModel : ObservableRecipient
         {
             var xElem = XElement.Load(filePath);
             var elemName = _fileReader.GetName(xElem);
-            if (elemName == null) return;
+            if (elemName == null)
+            {
+                _logger.Error("Can't find element name for {EntityName}", entityName);
+                CreateAllStatus = $"Can't find element name for {entityName}";
+                return null;
+            }
 
             var xmlData = _fileReader.SplitRequests(xElem);
             WeakReferenceMessenger.Default.Send(new XmlFileLoadedMessage(new XmlFileInfo
@@ -140,13 +166,13 @@ public partial class TablesViewModel : ObservableRecipient
             _logger.Information("Found {RowCount} rows for '{ElementName}'",
                 xmlData.Count, elemName);
             CreateAllStatus = $"Found {xmlData.Count} rows for '{elemName}'";
+            return xmlData;
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Can't read XML file");
-            CreateAllStatus = "Can't read XML file";
+            _logger.Error(ex, "Can't read XML file for {EntityName}");
+            CreateAllStatus = $"Can't read XML file for {entityName}";
+            return null;
         }
-
-        await Task.CompletedTask;
     }
 }
