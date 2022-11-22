@@ -1,6 +1,7 @@
 ﻿using AH.Symfact.UI.Controls;
 using AH.Symfact.UI.Database;
 using AH.Symfact.UI.Extensions;
+using AH.Symfact.UI.Models;
 using AH.Symfact.UI.Services;
 using AH.Symfact.UI.ViewModels.Messages;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -11,13 +12,11 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Linq;
 using Windows.Storage.Pickers;
-using AH.Symfact.UI.Models;
 using WinRT.Interop;
 
 namespace AH.Symfact.UI.ViewModels;
@@ -129,7 +128,8 @@ public partial class TablesViewModel : ObservableRecipient
             _logger.Information("Creating table '{TableName}'...",
                 entityName);
             CreateAllStatus = $"Creating table '{entityName}'...";
-            var filePath = Path.Combine("Scripts", "CreateContractTable.sql");
+            var folder = WeakReferenceMessenger.Default.Send<ExeFolderMessage>();
+            var filePath = Path.Combine(folder, "Database", "Scripts", "CreateContractTable.sql");
             var cmds = await File.ReadAllTextAsync(filePath);
             await _dbCommands.ExecuteScriptAsync(cmds);
         }
@@ -170,7 +170,7 @@ public partial class TablesViewModel : ObservableRecipient
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Can't read XML file for {EntityName}");
+            _logger.Error(ex, "Can't read XML file for {EntityName}", entityName);
             CreateAllStatus = $"Can't read XML file for {entityName}";
             return null;
         }

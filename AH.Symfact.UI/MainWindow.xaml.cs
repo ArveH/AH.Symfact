@@ -20,6 +20,7 @@ public sealed partial class MainWindow
         Title = "Symfact Database Utilities";
         ViewModel = viewModel;
         Root.Loaded += Root_Loaded;
+        ViewModel.ExeFolder = Windows.ApplicationModel.Package.Current.InstalledPath;
 
         SetWindowHandle();
     }
