@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Linq;
 using Windows.Storage.Pickers;
+using Microsoft.Web.WebView2.Core.Raw;
 using WinRT.Interop;
 
 namespace AH.Symfact.UI.ViewModels;
@@ -126,8 +127,31 @@ public partial class TablesViewModel : ObservableRecipient
     private async Task CreateAllTablesAsync()
     {
         var entityName = "Contract";
-        var contractData = ReadFromXml(entityName);
+        WeakReferenceMessenger.Default.Send(new XmlFileLoadedMessage(new XmlFileInfo
+        {
+            ContractElementName = entityName,
+            ContractCount = 0
+        }));
         await ExecuteScriptAsync("CreateContractTable.sql", s => CreateTablesStatus = s);
+        var contractData = ReadFromXml(entityName);
+        try
+        {
+            _logger.Information("Inserting into {TableName}...", entityName);
+            CreateTablesStatus = $"Inserting into {entityName}...";
+            var cnt = await _dbCommands.InsertRowsAsync(entityName, contractData);
+            _logger.Information("{RowCount} rows inserted into {TableName}", cnt, entityName);
+            CreateTablesStatus = $"{cnt} rows inserted into {entityName}";
+            WeakReferenceMessenger.Default.Send(new XmlFileLoadedMessage(new XmlFileInfo
+            {
+                ContractElementName = entityName,
+                ContractCount = cnt
+            }));
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Insert into {TableName} failed", entityName);
+            CreateTablesStatus = $"Insert into {entityName} failed. " + ex.FlattenMessages();
+        }
     }
 
     private async Task ExecuteScriptAsync(
@@ -170,11 +194,6 @@ public partial class TablesViewModel : ObservableRecipient
             }
 
             var xmlData = _fileReader.SplitRequests(xElem);
-            WeakReferenceMessenger.Default.Send(new XmlFileLoadedMessage(new XmlFileInfo
-            {
-                ContractElementName = elemName,
-                ContractCount = xmlData.Count
-            }));
             _logger.Information("Found {RowCount} rows for '{ElementName}'",
                 xmlData.Count, elemName);
             CreateTablesStatus = $"Found {xmlData.Count} rows for '{elemName}'";

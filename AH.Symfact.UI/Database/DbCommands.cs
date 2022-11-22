@@ -1,23 +1,21 @@
-﻿using Microsoft.Data.SqlClient;
-using Serilog;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using AH.Symfact.UI.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.SqlServer.Management.Common;
 using Microsoft.SqlServer.Management.Smo;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace AH.Symfact.UI.Database;
 
 public class DbCommands : IDbCommands
 {
     private readonly IDbConnFactory _dbConnFactory;
-    private readonly ILogger _logger;
 
     public DbCommands(
-        IDbConnFactory dbConnFactory,
-        ILogger logger)
+        IDbConnFactory dbConnFactory)
     {
         _dbConnFactory = dbConnFactory;
-        _logger = logger.ForContext<DbCommands>();
     }
 
     public async Task<List<string>> GetAllTablesAsync()
@@ -42,6 +40,26 @@ public class DbCommands : IDbCommands
         {
             await DeleteTableAsync(tableName);
         }
+    }
+
+    public async Task<int> InsertRowsAsync(string tableName, IEnumerable<TableRow>? input)
+    {
+        if (input == null) return 0;
+
+        var sqlTxt = $"insert into {tableName} (Data) values(@Xml)";
+        await using var dbConn = _dbConnFactory.CreateConnection();
+        await dbConn.ConnectAsync();
+        await using var cmd = new SqlCommand(sqlTxt, dbConn.Conn);
+        cmd.Parameters.AddWithValue("@Xml", SqlDbType.Xml);
+        var cnt = 0;
+        foreach (var row in input)
+        {
+            cmd.Parameters[0].Value = row.Data;
+            await cmd.ExecuteNonQueryAsync();
+            cnt++;
+        }
+
+        return cnt;
     }
 
     public async Task ExecuteScriptAsync(string script)
