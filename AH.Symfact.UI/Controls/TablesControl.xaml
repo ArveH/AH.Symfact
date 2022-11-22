@@ -47,7 +47,7 @@
                 Margin="20 5 0 5"
                 Command="{x:Bind ViewModel.CreateAllTablesCommand, Mode=OneWay}"
                 Content="Create all tables"/>
-        <TextBlock Text="{x:Bind ViewModel.DeleteAllStatus, Mode=OneWay}" 
+        <TextBlock Text="{x:Bind ViewModel.CreateAllStatus, Mode=OneWay}" 
                    Grid.Row="2" Grid.Column="1"
                    Margin="20 5 0 5"
                    VerticalAlignment="Center"/>
