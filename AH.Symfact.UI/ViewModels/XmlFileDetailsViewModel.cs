@@ -8,7 +8,7 @@ namespace AH.Symfact.UI.ViewModels;
 public partial class XmlFileDetailsViewModel : ObservableRecipient
 {
     [ObservableProperty]
-    private XmlFileInfo? _xmlFileInfo;
+    private XmlFileInfo? _xmlFileInfo = new();
 
     public XmlFileDetailsViewModel()
     {

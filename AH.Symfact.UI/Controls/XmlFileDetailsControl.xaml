@@ -7,11 +7,15 @@
     mc:Ignorable="d">
 
     <Grid Margin="0 10 10 0"
-          HorizontalAlignment="Stretch"
+          HorizontalAlignment="Left"
           BorderBrush="Gray"
           BorderThickness="1">
 
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
@@ -21,13 +25,14 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!--Contract-->
         <TextBlock Grid.Row="0" Grid.Column="0"
                    Text="Name:" 
                    Margin="20 5 0 0"
                    VerticalAlignment="Center"/>
         <TextBlock Grid.Row="0" Grid.Column="1"
-                   Text="{x:Bind ViewModel.XmlFileInfo.ElementName, Mode=OneWay, FallbackValue='&lt;Not Set&gt;'}"
-                   Margin="2 5 0 0"
+                   Text="{x:Bind ViewModel.XmlFileInfo.ContractElementName, Mode=OneWay, FallbackValue='&lt;Not Set&gt;'}"
+                   Margin="2 5 20 0"
                    VerticalAlignment="Center"/>
 
         <TextBlock Grid.Row="1" Grid.Column="0"
@@ -35,8 +40,47 @@
                    Margin="20 5 0 5"
                    VerticalAlignment="Center"/>
         <TextBlock Grid.Row="1" Grid.Column="1"
-                   Text="{x:Bind ViewModel.XmlFileInfo.ElementCount, Mode=OneWay, FallbackValue='&lt;Not Set&gt;'}"
+                   Text="{x:Bind ViewModel.XmlFileInfo.ContractCount, Mode=OneWay, FallbackValue='&lt;Not Set&gt;'}"
                    Margin="2 5 0 5"
                    VerticalAlignment="Center"/>
+
+        <!--Party-->
+        <TextBlock Grid.Row="0" Grid.Column="2"
+                   Text="Name:" 
+                   Margin="20 5 0 0"
+                   VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="0" Grid.Column="3"
+                   Text="{x:Bind ViewModel.XmlFileInfo.PartyElementName, Mode=OneWay, FallbackValue='&lt;Not Set&gt;'}"
+                   Margin="2 5 20 0"
+                   VerticalAlignment="Center"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="2"
+                   Text="count:" 
+                   Margin="20 5 0 5"
+                   VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="1" Grid.Column="3"
+                   Text="{x:Bind ViewModel.XmlFileInfo.PartyCount, Mode=OneWay, FallbackValue='&lt;Not Set&gt;'}"
+                   Margin="2 5 0 5"
+                   VerticalAlignment="Center"/>
+
+        <!--OrganisationalPerson-->
+        <TextBlock Grid.Row="0" Grid.Column="4"
+                   Text="Name:" 
+                   Margin="20 5 0 0"
+                   VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="0" Grid.Column="5"
+                   Text="{x:Bind ViewModel.XmlFileInfo.OrgPersonElementName, Mode=OneWay, FallbackValue='&lt;Not Set&gt;'}"
+                   Margin="2 5 20 0"
+                   VerticalAlignment="Center"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="4"
+                   Text="count:" 
+                   Margin="20 5 0 5"
+                   VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="1" Grid.Column="5"
+                   Text="{x:Bind ViewModel.XmlFileInfo.OrgPersonCount, Mode=OneWay, FallbackValue='&lt;Not Set&gt;'}"
+                   Margin="2 5 0 5"
+                   VerticalAlignment="Center"/>
+
     </Grid>
 </UserControl>

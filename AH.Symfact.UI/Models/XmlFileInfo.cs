@@ -2,6 +2,10 @@
 
 public class XmlFileInfo
 {
-    public string? ElementName { get; set; }
-    public int ElementCount { get; set; }
+    public string? ContractElementName { get; set; } = "Contract";
+    public int ContractCount { get; set; }
+    public string? PartyElementName { get; set; } = "Party";
+    public int PartyCount { get; set; }
+    public string? OrgPersonElementName { get; set; } = "OrganisationalPerson";
+    public int OrgPersonCount { get; set; }
 }

@@ -134,8 +134,8 @@ public partial class TablesViewModel : ObservableRecipient
             var xmlData = _fileReader.SplitRequests(xElem);
             WeakReferenceMessenger.Default.Send(new XmlFileLoadedMessage(new XmlFileInfo
             {
-                ElementName = elemName,
-                ElementCount = xmlData.Count
+                ContractElementName = elemName,
+                ContractCount = xmlData.Count
             }));
             _logger.Information("Found {RowCount} rows for '{ElementName}'",
                 xmlData.Count, elemName);
