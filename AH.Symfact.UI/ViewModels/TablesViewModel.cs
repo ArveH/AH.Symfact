@@ -12,7 +12,6 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Linq;
@@ -35,65 +34,70 @@ public partial class TablesViewModel : ObservableRecipient
         _dbCommands = dbCommands;
         _fileReader = fileReader;
         _logger = logger.ForContext<MenuControl>();
-        DeleteAllTablesCommand = new AsyncRelayCommand(DeleteAllTablesAsync);
+        CreateSchemasCommand = new AsyncRelayCommand(CreateSchemasAsync);
         SelectDataFolderCommand = new AsyncRelayCommand(SelectDataFolderAsync);
-        CreateAllTablesCommand = new AsyncRelayCommand(CreateAllTablesAsync);
+        CreateTablesCommand = new AsyncRelayCommand(CreateAllTablesAsync);
     }
 
     [ObservableProperty]
-    private string _deleteAllStatus = "Ready...";
+    private string _createSchemasStatus = "Ready...";
     [ObservableProperty]
     private string _dataPath = @"D:\Temp\Symfact\DataSet";
     [ObservableProperty]
-    private string _createAllStatus = "Ready...";
+    private string _createTablesStatus = "Ready...";
 
-    public ICommand DeleteAllTablesCommand { get; }
+    public ICommand CreateSchemasCommand { get; }
     public ICommand SelectDataFolderCommand { get; }
-    public ICommand CreateAllTablesCommand { get; }
+    public ICommand CreateTablesCommand { get; }
 
-    private async Task DeleteAllTablesAsync()
+    private async Task CreateSchemasAsync()
+    {
+        var createSchemas = new ContentDialog
+        {
+            Title = "Create Schema Collections",
+            Content = "This will delete all existing Schema collections and ALL TABLES!",
+            PrimaryButtonText = "Continue",
+            CloseButtonText = "Cancel"
+        };
+        var xamlRoot = WeakReferenceMessenger.Default.Send<XamlRootMessage>();
+        createSchemas.XamlRoot = xamlRoot;
+        var result = await createSchemas.ShowAsync();
+        if (result != ContentDialogResult.Primary)
+        {
+            _logger.Debug("Create schemas cancelled");
+            return;
+        }
+
+        await DeleteTablesAsync();
+
+        await ExecuteScriptAsync("SchemaContractXCol.sql", s => CreateSchemasStatus = s);
+        await ExecuteScriptAsync("SchemaContractXOrg.sql", s => CreateSchemasStatus = s);
+    }
+
+    private async Task DeleteTablesAsync()
     {
         try
         {
             _logger.Information("Deleting all tables...");
-            DeleteAllStatus = "Deleting all tables...";
+            CreateSchemasStatus = "Deleting all tables...";
 
             var tables = await _dbCommands.GetAllTablesAsync();
             if (tables.Count < 1)
             {
                 _logger.Information("No tables deleted");
-                DeleteAllStatus = "No tables deleted";
+                CreateSchemasStatus = "No tables deleted";
                 return;
             }
 
-            var sb = new StringBuilder();
-            sb.Append($"Do you want to delete the following {tables.Count} tables?");
-            tables.ForEach(t => sb.AppendLine("\t" + t));
-            var deleteTablesDialog = new ContentDialog
-            {
-                Title = "Delete Tables",
-                Content = sb.ToString(),
-                PrimaryButtonText = "Delete",
-                CloseButtonText = "Cancel"
-            };
-            var xamlRoot = WeakReferenceMessenger.Default.Send<XamlRootMessage>();
-            deleteTablesDialog.XamlRoot = xamlRoot;
-            var result = await deleteTablesDialog.ShowAsync();
-            if (result != ContentDialogResult.Primary)
-            {
-                _logger.Information("No tables deleted");
-                DeleteAllStatus = "No tables deleted";
-                return;
-            }
             await _dbCommands.DeleteTablesAsync(tables);
 
             _logger.Information("{TableCount} tables deleted", tables.Count);
-            DeleteAllStatus = $"{tables.Count} tables deleted";
+            CreateSchemasStatus = $"{tables.Count} tables deleted";
         }
         catch (Exception ex)
         {
             _logger.Error(ex, "Error when deleting tables");
-            DeleteAllStatus = ex.FlattenMessages();
+            CreateSchemasStatus = ex.FlattenMessages();
         }
     }
 
@@ -123,20 +127,28 @@ public partial class TablesViewModel : ObservableRecipient
     {
         var entityName = "Contract";
         var contractData = ReadFromXml(entityName);
+        await ExecuteScriptAsync("CreateContractTable.sql", s => CreateTablesStatus = s);
+    }
+
+    private async Task ExecuteScriptAsync(
+        string fileName, Action<string> writeLog)
+    {
         try
         {
-            _logger.Information("Creating table '{TableName}'...",
-                entityName);
-            CreateAllStatus = $"Creating table '{entityName}'...";
+            _logger.Information("Running script '{FileName}'...", fileName);
+            writeLog($"Running script '{fileName}'...");
             var folder = WeakReferenceMessenger.Default.Send<ExeFolderMessage>();
-            var filePath = Path.Combine(folder, "Database", "Scripts", "CreateContractTable.sql");
-            var cmds = await File.ReadAllTextAsync(filePath);
-            await _dbCommands.ExecuteScriptAsync(cmds);
+            var filePath = Path.Combine(folder, "Database", "Scripts", fileName);
+            var scriptTxt = await File.ReadAllTextAsync(filePath);
+            await _dbCommands.ExecuteScriptAsync(
+                scriptTxt.Replace("<<<PATH>>>", DataPath));
+            _logger.Information("Script '{FileName}' finished", fileName);
+            writeLog($"Script '{fileName}' finished");
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Can't create table {TableName}", entityName);
-            CreateAllStatus = $"Can't create table '{entityName}'...";
+            _logger.Error(ex, "Failed running script '{FileName}'", fileName);
+            writeLog($"FAILED running script '{fileName}'! " + ex.FlattenMessages());
         }
     }
 
@@ -145,7 +157,7 @@ public partial class TablesViewModel : ObservableRecipient
         var filePath = Path.Combine(DataPath, $"{entityName}.xml");
         _logger.Information("Starting to load from file '{FilePath}'...",
             filePath);
-        CreateAllStatus = $"Starting to load from file '{filePath}'...";
+        CreateTablesStatus = $"Starting to load from file '{filePath}'...";
         try
         {
             var xElem = XElement.Load(filePath);
@@ -153,7 +165,7 @@ public partial class TablesViewModel : ObservableRecipient
             if (elemName == null)
             {
                 _logger.Error("Can't find element name for {EntityName}", entityName);
-                CreateAllStatus = $"Can't find element name for {entityName}";
+                CreateTablesStatus = $"Can't find element name for {entityName}";
                 return null;
             }
 
@@ -165,13 +177,13 @@ public partial class TablesViewModel : ObservableRecipient
             }));
             _logger.Information("Found {RowCount} rows for '{ElementName}'",
                 xmlData.Count, elemName);
-            CreateAllStatus = $"Found {xmlData.Count} rows for '{elemName}'";
+            CreateTablesStatus = $"Found {xmlData.Count} rows for '{elemName}'";
             return xmlData;
         }
         catch (Exception ex)
         {
             _logger.Error(ex, "Can't read XML file for {EntityName}", entityName);
-            CreateAllStatus = $"Can't read XML file for {entityName}";
+            CreateTablesStatus = $"Can't read XML file for {entityName}";
             return null;
         }
     }

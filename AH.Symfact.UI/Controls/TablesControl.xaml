@@ -28,9 +28,9 @@
         <!--Delete tables -->
         <Button Grid.Row="0" Grid.Column="0"
                 Margin="20 20 0 5"
-                Command="{x:Bind ViewModel.DeleteAllTablesCommand, Mode=OneWay}"
-                Content="Delete all tables"/>
-        <TextBlock Text="{x:Bind ViewModel.DeleteAllStatus, Mode=OneWay}" 
+                Command="{x:Bind ViewModel.CreateSchemasCommand, Mode=OneWay}"
+                Content="Create Schema Collections"/>
+        <TextBlock Text="{x:Bind ViewModel.CreateSchemasStatus, Mode=OneWay}" 
                    Grid.Row="0" Grid.Column="1"
                    Margin="20 20 0 5"
                    VerticalAlignment="Center"/>
@@ -47,9 +47,9 @@
 
         <Button Grid.Row="2" Grid.Column="0"
                 Margin="20 5 0 5"
-                Command="{x:Bind ViewModel.CreateAllTablesCommand, Mode=OneWay}"
+                Command="{x:Bind ViewModel.CreateTablesCommand, Mode=OneWay}"
                 Content="Create all tables"/>
-        <TextBlock Text="{x:Bind ViewModel.CreateAllStatus, Mode=OneWay}" 
+        <TextBlock Text="{x:Bind ViewModel.CreateTablesStatus, Mode=OneWay}" 
                    Grid.Row="2" Grid.Column="1"
                    Margin="20 5 0 5"
                    VerticalAlignment="Center"/>
