@@ -127,12 +127,26 @@ public partial class TablesViewModel : ObservableRecipient
 
     private async Task CreateAllTablesAsync()
     {
-        await CreateTableAsync("Contract",
-            cnt => WeakReferenceMessenger.Default.Send(new ContractLoadedMessage(cnt)));
-        await CreateTableAsync("Party",
-            cnt => WeakReferenceMessenger.Default.Send(new PartyLoadedMessage(cnt)));
-        await CreateTableAsync("OrganisationalPerson",
-            cnt => WeakReferenceMessenger.Default.Send(new OrgPersonLoadedMessage(cnt)));
+        var tasks = new List<Task>
+        {
+            CreateTableAsync("Contract",
+                cnt => WeakReferenceMessenger.Default.Send(new ContractLoadedMessage(cnt))),
+            CreateTableAsync("Party",
+                cnt => WeakReferenceMessenger.Default.Send(new PartyLoadedMessage(cnt))),
+            CreateTableAsync("OrganisationalPerson",
+                cnt => WeakReferenceMessenger.Default.Send(new OrgPersonLoadedMessage(cnt)))
+        };
+        try
+        {
+            await Task.WhenAll(tasks);
+        }
+        catch (AggregateException ex)
+        {
+            for (var i = 0; i < ex.InnerExceptions.Count; i++)
+            {
+                _logger.Error(ex, ex.Message);
+            }
+        }
     }
 
     private async Task CreateTableAsync(string entityName, Func<int, ValueChangedMessage<int>> func)
