@@ -92,7 +92,7 @@ public partial class TablesViewModel : ObservableRecipient
     {
         try
         {
-            var hWnd = WeakReferenceMessenger.Default.Send<WindowHandleSetMessage>();
+            var hWnd = WeakReferenceMessenger.Default.Send<WindowHandleMessage>();
             var folderPicker = new FolderPicker();
             InitializeWithWindow.Initialize(folderPicker, hWnd);
             folderPicker.ViewMode = PickerViewMode.List;

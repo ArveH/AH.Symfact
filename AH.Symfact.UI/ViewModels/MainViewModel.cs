@@ -36,7 +36,7 @@ public partial class MainViewModel : ObservableRecipient
             }
         });
 
-        WeakReferenceMessenger.Default.Register<MainViewModel, WindowHandleSetMessage>(this, (r, m) =>
+        WeakReferenceMessenger.Default.Register<MainViewModel, WindowHandleMessage>(this, (r, m) =>
         {
             m.Reply(r.HWnd);
         });

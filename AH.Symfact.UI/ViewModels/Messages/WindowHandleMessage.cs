@@ -3,7 +3,7 @@ using System;
 
 namespace AH.Symfact.UI.ViewModels.Messages;
 
-public class WindowHandleSetMessage : RequestMessage<IntPtr>
+public class WindowHandleMessage : RequestMessage<IntPtr>
 {
 
 }
