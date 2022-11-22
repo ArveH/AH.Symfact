@@ -2,6 +2,7 @@
 using AH.Symfact.UI.ViewModels.Messages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Xaml;
 using Serilog;
 
 namespace AH.Symfact.UI.ViewModels;
@@ -10,6 +11,8 @@ public partial class MainViewModel : ObservableRecipient
 {
     [ObservableProperty]
     private IntPtr _hWnd;
+    [ObservableProperty]
+    private XamlRoot? _xamlRoot;
 
     [ObservableProperty]
     private bool _isConnectPage = true;
@@ -39,6 +42,11 @@ public partial class MainViewModel : ObservableRecipient
         WeakReferenceMessenger.Default.Register<MainViewModel, WindowHandleMessage>(this, (r, m) =>
         {
             m.Reply(r.HWnd);
+        });
+
+        WeakReferenceMessenger.Default.Register<MainViewModel, XamlRootMessage>(this, (r, m) =>
+        {
+            m.Reply(r.XamlRoot);
         });
     }
 }

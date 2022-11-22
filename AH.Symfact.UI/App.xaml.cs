@@ -21,7 +21,6 @@ public partial class App
     }
 
     public new static App Current => (App)Application.Current;
-    public static FrameworkElement? MainRoot { get; private set; }
 
     public IServiceProvider Services { get; }
 
@@ -29,7 +28,6 @@ public partial class App
     {
         _window = Services.GetService<MainWindow>();
         _window?.Activate();
-        MainRoot = _window?.Content as FrameworkElement;
     }
 
     private static IServiceProvider ConfigureServices()

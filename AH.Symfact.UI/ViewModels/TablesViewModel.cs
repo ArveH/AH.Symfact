@@ -68,7 +68,8 @@ public partial class TablesViewModel : ObservableRecipient
                 PrimaryButtonText = "Delete",
                 CloseButtonText = "Cancel"
             };
-            deleteTablesDialog.XamlRoot = App.MainRoot?.XamlRoot;
+            var xamlRoot = WeakReferenceMessenger.Default.Send<XamlRootMessage>();
+            deleteTablesDialog.XamlRoot = xamlRoot;
             var result = await deleteTablesDialog.ShowAsync();
             if (result != ContentDialogResult.Primary)
             {

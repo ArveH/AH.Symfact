@@ -21,6 +21,41 @@ public sealed partial class MainWindow
         ViewModel = viewModel;
         Root.Loaded += Root_Loaded;
 
+        SetWindowHandle();
+    }
+
+    public MainViewModel ViewModel { get; }
+
+    private async void Root_Loaded(object sender, RoutedEventArgs e)
+    {
+        _logger.Information("Started Symfact.UI");
+        SetMainXamlRootHandle();
+        await Task.CompletedTask;
+    }
+
+    private void MainWindow_Closed(object sender, WindowEventArgs args)
+    {
+        Log.CloseAndFlush();
+    }
+
+    private void SetMainXamlRootHandle()
+    {
+        try
+        {
+            ViewModel.XamlRoot = Content.XamlRoot;
+            if (ViewModel.XamlRoot == null)
+            {
+                _logger.Error("Can't get XamlRoot");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Can't set XamlRoot");
+        }
+    }
+
+    private void SetWindowHandle()
+    {
         try
         {
             var hWnd = WindowNative.GetWindowHandle(this);
@@ -30,25 +65,12 @@ public sealed partial class MainWindow
             }
             else
             {
-                Console.WriteLine("Can't get WindowHandle");
+                _logger.Error("Can't get WindowHandle");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Can't set WindowHandle: " + ex);
+            _logger.Error(ex, "Can't set WindowHandle");
         }
-    }
-
-    public MainViewModel ViewModel { get; }
-
-    private async void Root_Loaded(object sender, RoutedEventArgs e)
-    {
-        _logger.Information("Started Symfact.UI");
-        await Task.CompletedTask;
-    }
-
-    private void MainWindow_Closed(object sender, WindowEventArgs args)
-    {
-        Log.CloseAndFlush();
     }
 }
