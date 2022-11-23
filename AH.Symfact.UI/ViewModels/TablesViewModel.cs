@@ -60,7 +60,7 @@ public partial class TablesViewModel : ObservableRecipient
         var createSchemas = new ContentDialog
         {
             Title = "Create Schema Collections",
-            Content = "This will delete all existing Schema collections and ALL TABLES!",
+            Content = "This will delete all existing Schema collections and ALL TABLES AND FUNCTIONS!",
             PrimaryButtonText = "Continue",
             CloseButtonText = "Cancel"
         };
@@ -74,6 +74,7 @@ public partial class TablesViewModel : ObservableRecipient
         }
 
         await DeleteTablesAsync();
+        await DeleteFunctionsAsync();
 
         await ExecuteScriptAsync("SchemaContractXCol.sql", s => CreateSchemasStatus = s);
         await ExecuteScriptAsync("SchemaContractXOrg.sql", s => CreateSchemasStatus = s);
@@ -96,12 +97,39 @@ public partial class TablesViewModel : ObservableRecipient
 
             await _dbCommands.DeleteTablesAsync(tables);
 
-            _logger.Information("{TableCount} tables deleted", tables.Count);
+            _logger.Information("{Count} tables deleted", tables.Count);
             CreateSchemasStatus = $"{tables.Count} tables deleted";
         }
         catch (Exception ex)
         {
             _logger.Error(ex, "Error when deleting tables");
+            CreateSchemasStatus = ex.FlattenMessages();
+        }
+    }
+
+    private async Task DeleteFunctionsAsync()
+    {
+        try
+        {
+            _logger.Information("Deleting all functions...");
+            CreateSchemasStatus = "Deleting all functions...";
+
+            var functions = await _dbCommands.GetAllFunctionsAsync();
+            if (functions.Count < 1)
+            {
+                _logger.Information("No functions deleted");
+                CreateSchemasStatus = "No functions deleted";
+                return;
+            }
+
+            await _dbCommands.DeleteFunctionsAsync(functions);
+
+            _logger.Information("{Count} functions deleted", functions.Count);
+            CreateSchemasStatus = $"{functions.Count} functions deleted";
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Error when deleting functions");
             CreateSchemasStatus = ex.FlattenMessages();
         }
     }

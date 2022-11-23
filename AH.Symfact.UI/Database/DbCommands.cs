@@ -18,20 +18,14 @@ public class DbCommands : IDbCommands
         _dbConnFactory = dbConnFactory;
     }
 
-    public async Task<List<string>> GetAllTablesAsync()
+    public Task<List<string>> GetAllTablesAsync()
     {
-        await using var dbConn = _dbConnFactory.CreateConnection();
-        await dbConn.ConnectAsync();
-        var sqlTxt = "select name from sys.objects where type = 'U' order by name";
-        await using var cmd = new SqlCommand(sqlTxt, dbConn.Conn);
-        await using var reader = await cmd.ExecuteReaderAsync();
-        var tables = new List<string>();
-        while (await reader.ReadAsync())
-        {
-            tables.Add(reader.GetString(0));
-        }
-        await reader.CloseAsync();
-        return tables;
+        return GetAllObjectsAsync("U");
+    }
+
+    public Task<List<string>> GetAllFunctionsAsync()
+    {
+        return GetAllObjectsAsync("FN");
     }
 
     public async Task DeleteTablesAsync(IEnumerable<string> tableNames)
@@ -39,6 +33,14 @@ public class DbCommands : IDbCommands
         foreach (var tableName in tableNames)
         {
             await DeleteTableAsync(tableName);
+        }
+    }
+
+    public async Task DeleteFunctionsAsync(IEnumerable<string> names)
+    {
+        foreach (var name in names)
+        {
+            await DeleteFunctionAsync(name);
         }
     }
 
@@ -70,12 +72,37 @@ public class DbCommands : IDbCommands
         var _ = server.ConnectionContext.ExecuteNonQuery(script);
     }
 
-    private async Task DeleteTableAsync(string tableName)
+    private  async Task<List<string>> GetAllObjectsAsync(string type)
     {
         await using var dbConn = _dbConnFactory.CreateConnection();
         await dbConn.ConnectAsync();
-        var sqlTxt = $"drop table {tableName}";
+        var sqlTxt = $"select name from sys.objects where type = '{type}' order by name";
         await using var cmd = new SqlCommand(sqlTxt, dbConn.Conn);
+        await using var reader = await cmd.ExecuteReaderAsync();
+        var tables = new List<string>();
+        while (await reader.ReadAsync())
+        {
+            tables.Add(reader.GetString(0));
+        }
+        await reader.CloseAsync();
+        return tables;
+    }
+
+    private async Task ExecuteNonQuery(string sql)
+    {
+        await using var dbConn = _dbConnFactory.CreateConnection();
+        await dbConn.ConnectAsync();
+        await using var cmd = new SqlCommand(sql, dbConn.Conn);
         await cmd.ExecuteNonQueryAsync();
+    }
+
+    private Task DeleteTableAsync(string name)
+    {
+        return ExecuteNonQuery($"drop table {name}");
+    }
+
+    private Task DeleteFunctionAsync(string name)
+    {
+        return ExecuteNonQuery($"drop function {name}");
     }
 }
