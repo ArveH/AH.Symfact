@@ -60,6 +60,7 @@ public partial class App
         services.AddTransient<MenuViewModel>();
         services.AddTransient<ConnectViewModel>();
         services.AddTransient<TablesViewModel>();
+        services.AddTransient<CreateTablesViewModel>();
         services.AddTransient<XmlFileDetailsViewModel>();
 
         return services.BuildServiceProvider();

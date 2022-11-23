@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Linq;
 using Windows.Storage.Pickers;
-using ABI.Windows.ApplicationModel.Appointments;
 using WinRT.Interop;
 
 namespace AH.Symfact.UI.ViewModels;

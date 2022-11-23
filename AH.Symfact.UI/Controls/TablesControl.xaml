@@ -55,7 +55,7 @@
                    VerticalAlignment="Center"/>
 
         <!--File info-->
-        <StackPanel  Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+        <StackPanel  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
                      Margin="20 30 20 0"
                      Orientation="Vertical">
             <TextBlock Text="Xml files info"
@@ -63,6 +63,14 @@
                        FontSize="20"/>
             <controls:XmlFileDetailsControl/>
         </StackPanel>
+
+        <!--File info-->
+        <StackPanel  Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                     Margin="20 30 20 0"
+                     Orientation="Vertical">
+            <controls:CreateTablesControl/>
+        </StackPanel>
+
     </Grid>
 
 </UserControl>
