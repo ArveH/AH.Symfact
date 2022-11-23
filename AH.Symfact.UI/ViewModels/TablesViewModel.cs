@@ -34,7 +34,7 @@ public partial class TablesViewModel : ObservableRecipient
     {
         _dbCommands = dbCommands;
         _fileReader = fileReader;
-        _logger = logger.ForContext<MenuControl>();
+        _logger = logger.ForContext<TablesViewModel>();
         CreateSchemasCommand = new AsyncRelayCommand(CreateSchemasAsync);
         SelectDataFolderCommand = new AsyncRelayCommand(SelectDataFolderAsync);
         CreateTablesCommand = new AsyncRelayCommand(CreateAllTablesAsync);

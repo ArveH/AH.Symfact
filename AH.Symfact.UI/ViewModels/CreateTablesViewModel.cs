@@ -1,20 +1,19 @@
-﻿using System;
+﻿using AH.Symfact.UI.Database;
+using AH.Symfact.UI.Extensions;
+using AH.Symfact.UI.Models;
+using AH.Symfact.UI.Services;
+using AH.Symfact.UI.ViewModels.Messages;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using Serilog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using AH.Symfact.UI.Controls;
-using AH.Symfact.UI.Database;
-using AH.Symfact.UI.Services;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Serilog;
 using System.Windows.Input;
 using System.Xml.Linq;
-using AH.Symfact.UI.Extensions;
-using AH.Symfact.UI.Models;
-using AH.Symfact.UI.ViewModels.Messages;
-using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace AH.Symfact.UI.ViewModels;
 
@@ -31,11 +30,11 @@ public partial class CreateTablesViewModel : ObservableRecipient
     {
         _dbCommands = dbCommands;
         _fileReader = fileReader;
-        _logger = logger.ForContext<MenuControl>();
+        _logger = logger.ForContext<CreateTablesViewModel>();
         NoColumnsCommand = new AsyncRelayCommand(CreateWithNoColumns);
         ComputedColumnsCommand = new AsyncRelayCommand(CreateWithComputedColumns);
         ExtractedColumnsCommand = new AsyncRelayCommand(CreateWithExtractedColumns);
-        WeakReferenceMessenger.Default.Register<ContractChangedMessage>(this, (r, msg) =>
+        WeakReferenceMessenger.Default.Register<ContractChangedMessage>(this, (_, msg) =>
         {
             switch (msg.Value.Action)
             {
@@ -82,7 +81,7 @@ public partial class CreateTablesViewModel : ObservableRecipient
 
     private Task CreateWithExtractedColumns()
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     private async Task CreateTableAsync(string entityName, Func<int, ValueChangedMessage<int>> func)

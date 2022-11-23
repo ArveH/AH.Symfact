@@ -1,5 +1,4 @@
-﻿using AH.Symfact.UI.Controls;
-using AH.Symfact.UI.Database;
+﻿using AH.Symfact.UI.Database;
 using AH.Symfact.UI.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -21,7 +20,7 @@ public partial class ConnectViewModel : ObservableObject
         ILogger logger)
     {
         _dbConnFactory = dbConnFactory;
-        _logger = logger.ForContext<MenuControl>();
+        _logger = logger.ForContext<ConnectViewModel>();
         _connectionString = _dbConnFactory.DbConnectionString.ConnectionString ?? "";
         ConnectCommand = new AsyncRelayCommand(ConnectAsync);
     }
