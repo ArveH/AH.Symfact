@@ -38,6 +38,10 @@ public partial class TablesViewModel : ObservableRecipient
         CreateSchemasCommand = new AsyncRelayCommand(CreateSchemasAsync);
         SelectDataFolderCommand = new AsyncRelayCommand(SelectDataFolderAsync);
         CreateTablesCommand = new AsyncRelayCommand(CreateAllTablesAsync);
+        WeakReferenceMessenger.Default.Register<TablesViewModel, DataFolderChangedMessage>(this, (r, m) =>
+        {
+            m.Reply(r.DataPath);
+        });
     }
 
     [ObservableProperty]
