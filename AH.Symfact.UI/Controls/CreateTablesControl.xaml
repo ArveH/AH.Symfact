@@ -1,6 +1,3 @@
-<!-- Copyright (c) Microsoft Corporation. All rights reserved. -->
-<!-- Licensed under the MIT License. See LICENSE in the project root for license information. -->
-
 <UserControl
     x:Class="AH.Symfact.UI.Controls.CreateTablesControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -35,9 +32,9 @@
             <!-- Create with no columns apart from Id -->
             <Button Grid.Row="0" Grid.Column="0"
                 Margin="20 20 0 5"
-                Command="{x:Bind ViewModel.NoColumnsCommand, Mode=OneWay}"
-                Content="Create with no columns"/>
-            <TextBlock Text="{x:Bind ViewModel.NoColumnsStatus, Mode=OneWay}" 
+                Command="{x:Bind ViewModel.SourceTableCommand, Mode=OneWay}"
+                Content="Create source table"/>
+            <TextBlock Text="{x:Bind ViewModel.SourceTableStatus, Mode=OneWay}" 
                    Grid.Row="0" Grid.Column="1"
                    Margin="20 20 0 5"
                    VerticalAlignment="Center"/>
@@ -56,7 +53,7 @@
             <Button Grid.Row="2" Grid.Column="0"
                 Margin="20 5 0 5"
                 Command="{x:Bind ViewModel.ExtractedColumnsCommand, Mode=OneWay}"
-                Content="Create with computed columns"/>
+                Content="Create with extracted columns"/>
             <TextBlock Text="{x:Bind ViewModel.ExtractedColumnsStatus, Mode=OneWay}" 
                    Grid.Row="2" Grid.Column="1"
                    Margin="20 5 0 5"

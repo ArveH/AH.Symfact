@@ -3,8 +3,7 @@
 public enum TableAction
 {
     NoAction = 0,
+    Information,
     LoadedXml,
-    NoColumns,
-    ComputedColumns,
-    ExtractedColumns
+    LoadedTable
 }
