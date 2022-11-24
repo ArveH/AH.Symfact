@@ -1,5 +1,4 @@
-﻿using AH.Symfact.UI.Controls;
-using AH.Symfact.UI.Database;
+﻿using AH.Symfact.UI.Database;
 using AH.Symfact.UI.Extensions;
 using AH.Symfact.UI.Models;
 using AH.Symfact.UI.Services;
@@ -23,15 +22,18 @@ namespace AH.Symfact.UI.ViewModels;
 
 public partial class TablesViewModel : ObservableRecipient
 {
+    private readonly ISchemaService _schemaService;
     private readonly IDbCommands _dbCommands;
     private readonly ITaminoFileReader _fileReader;
     private readonly ILogger _logger;
 
     public TablesViewModel(
+        ISchemaService schemaService,
         IDbCommands dbCommands,
         ITaminoFileReader fileReader,
         ILogger logger)
     {
+        _schemaService = schemaService;
         _dbCommands = dbCommands;
         _fileReader = fileReader;
         _logger = logger.ForContext<TablesViewModel>();
@@ -75,9 +77,12 @@ public partial class TablesViewModel : ObservableRecipient
 
         await DeleteTablesAsync();
         await DeleteFunctionsAsync();
+        await DeleteSchemaCollectionsAsync();
 
-        await ExecuteScriptAsync("SchemaContractXCol.sql", s => CreateSchemasStatus = s);
-        await ExecuteScriptAsync("SchemaContractXOrg.sql", s => CreateSchemasStatus = s);
+        await CreateSchemaCollectionAsync(
+            SymfactConstants.ContractXCol, SymfactConstants.ContractXColFiles);
+        await CreateSchemaCollectionAsync(
+            SymfactConstants.ContractXOrg, SymfactConstants.ContractXOrgFiles);
     }
 
     private async Task DeleteTablesAsync()
@@ -132,6 +137,76 @@ public partial class TablesViewModel : ObservableRecipient
             _logger.Error(ex, "Error when deleting functions");
             CreateSchemasStatus = ex.FlattenMessages();
         }
+    }
+
+    private async Task DeleteSchemaCollectionsAsync()
+    {
+        try
+        {
+            _logger.Information("Deleting all schema collections...");
+            CreateSchemasStatus = "Deleting all schema collections...";
+
+            var collections = await _dbCommands.GetAllSchemaCollectionsAsync();
+            if (collections.Count < 1)
+            {
+                _logger.Information("No schema collections deleted");
+                CreateSchemasStatus = "No schema collections deleted";
+                return;
+            }
+
+            await _dbCommands.DeleteSchemaCollectionsAsync(collections);
+
+            _logger.Information("{Count} schema collections deleted", collections.Count);
+            CreateSchemasStatus = $"{collections.Count} schema collections deleted";
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Error when deleting schema collections");
+            CreateSchemasStatus = ex.FlattenMessages();
+        }
+    }
+
+    private async Task CreateSchemaCollectionAsync(
+        string schemaCollectionName, IReadOnlyList<string> fileNames)
+    {
+        var ret = await _schemaService.CreateCollectionAsync(
+            schemaCollectionName, fileNames[0]);
+        if (ret)
+        {
+            CreateSchemasStatus =
+                $"Schema file '{fileNames[0]}' " +
+                $"successfully added to schema collection '{schemaCollectionName}'";
+        }
+        else
+        {
+            CreateSchemasStatus =
+                $"Adding Schema file '{fileNames[0]}' " +
+                $"to schema collection '{schemaCollectionName}' failed!";
+            return;
+        }
+
+        for (var i = 1; i < fileNames.Count; i++)
+        {
+            ret = await _schemaService.AddToCollectionAsync(
+                schemaCollectionName, fileNames[i]);
+            if (ret)
+            {
+                CreateSchemasStatus =
+                    $"Schema file '{fileNames[0]}' " +
+                    $"successfully added to schema collection '{schemaCollectionName}'";
+            }
+            else
+            {
+                CreateSchemasStatus =
+                    $"Adding Schema file '{fileNames[0]}' " +
+                    $"to schema collection '{schemaCollectionName}' failed!";
+                return;
+            }
+        }
+
+        _logger.Information("All schemas added to schema collection '{SchemaCollectionName}'",
+            schemaCollectionName);
+        CreateSchemasStatus = $"All schemas added to schema collection '{schemaCollectionName}'";
     }
 
     private async Task SelectDataFolderAsync()

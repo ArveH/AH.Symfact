@@ -4,6 +4,7 @@ using Microsoft.SqlServer.Management.Common;
 using Microsoft.SqlServer.Management.Smo;
 using System.Collections.Generic;
 using System.Data;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace AH.Symfact.UI.Database;
@@ -28,6 +29,12 @@ public class DbCommands : IDbCommands
         return GetAllObjectsAsync("FN");
     }
 
+    public Task<List<string>> GetAllSchemaCollectionsAsync()
+    {
+        var sqlTxt = "select name from sys.xml_schema_collections where name != 'sys' order by name";
+        return GetAllAsync(sqlTxt);
+    }
+
     public async Task DeleteTablesAsync(IEnumerable<string> tableNames)
     {
         foreach (var tableName in tableNames)
@@ -41,6 +48,14 @@ public class DbCommands : IDbCommands
         foreach (var name in names)
         {
             await DeleteFunctionAsync(name);
+        }
+    }
+
+    public async Task DeleteSchemaCollectionsAsync(IEnumerable<string> names)
+    {
+        foreach (var name in names)
+        {
+            await DeleteSchemaCollectionAsync(name);
         }
     }
 
@@ -72,11 +87,59 @@ public class DbCommands : IDbCommands
         var _ = server.ConnectionContext.ExecuteNonQuery(script);
     }
 
-    private  async Task<List<string>> GetAllObjectsAsync(string type)
+    public async Task<bool> SchemaCollectionExistsAsync(string name)
     {
         await using var dbConn = _dbConnFactory.CreateConnection();
         await dbConn.ConnectAsync();
+        var sql =
+            $"SELECT name FROM sys.xml_schema_collections WHERE name = '{name}'";
+        await using var cmd = new SqlCommand(sql, dbConn.Conn);
+        var res = await cmd.ExecuteScalarAsync() as string;
+        return !string.IsNullOrWhiteSpace(res);
+    }
+
+    public Task DropSchemaCollectionAsync(string collectionName)
+    {
+        return ExecuteNonQuery($"DROP XML SCHEMA COLLECTION {collectionName}");
+    }
+
+    public Task CreateCollectionAsync(string collectionName, string xmlString)
+    {
+        return CreateOrAddToCollectionAsync(
+            $"CREATE XML SCHEMA COLLECTION {collectionName} AS", 
+            xmlString);
+    }
+
+    public Task AddToCollectionAsync(string collectionName, string xmlString)
+    {
+        return CreateOrAddToCollectionAsync(
+            $"ALTER XML SCHEMA COLLECTION {collectionName} ADD", 
+            xmlString);
+    }
+
+    public async Task CreateOrAddToCollectionAsync(string command, string xmlString)
+    {
+        var sb = new StringBuilder();
+        sb.Append(command);
+        sb.Append(" '");
+        sb.Append(xmlString);
+        sb.Append("'");
+        await using var dbConn = _dbConnFactory.CreateConnection();
+        await dbConn.ConnectAsync();
+        await using var cmd = new SqlCommand(sb.ToString(), dbConn.Conn);
+        await cmd.ExecuteNonQueryAsync();
+    }
+
+    private Task<List<string>> GetAllObjectsAsync(string type)
+    {
         var sqlTxt = $"select name from sys.objects where type = '{type}' order by name";
+        return GetAllAsync(sqlTxt);
+    }
+
+    private  async Task<List<string>> GetAllAsync(string sqlTxt)
+    {
+        await using var dbConn = _dbConnFactory.CreateConnection();
+        await dbConn.ConnectAsync();
         await using var cmd = new SqlCommand(sqlTxt, dbConn.Conn);
         await using var reader = await cmd.ExecuteReaderAsync();
         var tables = new List<string>();
@@ -104,5 +167,10 @@ public class DbCommands : IDbCommands
     private Task DeleteFunctionAsync(string name)
     {
         return ExecuteNonQuery($"drop function {name}");
+    }
+
+    private Task DeleteSchemaCollectionAsync(string name)
+    {
+        return ExecuteNonQuery($"drop xml schema collection {name}");
     }
 }

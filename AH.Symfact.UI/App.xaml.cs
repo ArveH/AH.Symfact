@@ -52,6 +52,7 @@ public partial class App
         services.AddSingleton(new DbConnectionString(config, Log.Logger));
         services.AddSingleton<IDbConnFactory, DbConnFactory>();
         services.AddSingleton<IDbCommands, DbCommands>();
+        services.AddSingleton<ISchemaService, SchemaService>();
         services.AddSingleton<ITaminoFileReader, TaminoFileReader>();
         services.AddSingleton<IXElementHelper, XElementHelper>();
         
