@@ -26,7 +26,8 @@ END;
 GO
 
 CREATE TABLE PartyComputedColumns(
-    Id AS dbo.getpartyid(Data) PERSISTED PRIMARY KEY,
+    Id int IDENTITY PRIMARY KEY,
+    DocName AS dbo.getpartyid(Data) PERSISTED,
     PartnerShortName nvarchar(50),
     PartnerCity nvarchar(200),
     Data Xml(Document contractXCol)
@@ -38,3 +39,5 @@ SELECT Data
 FROM Party
 GO
 
+CREATE UNIQUE INDEX IX_PartyComputedColumns_DocName ON PartyComputedColumns(DocName)
+GO

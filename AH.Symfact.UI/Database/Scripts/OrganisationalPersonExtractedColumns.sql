@@ -2,7 +2,8 @@
 GO
 
 CREATE TABLE OrganisationalPersonExtractedColumns(
-    Id nvarchar(30) PRIMARY KEY,
+    Id int IDENTITY PRIMARY KEY,
+    DocName nvarchar(30),
     Cn nvarchar(50),
     Initials nvarchar(50),
     Data Xml(Document contractXOrg)
@@ -10,11 +11,14 @@ CREATE TABLE OrganisationalPersonExtractedColumns(
 GO
 
 WITH XMLNAMESPACES('contractX/contractXOrganisation' AS ctxO)
-INSERT INTO OrganisationalPersonExtractedColumns (Id, Cn, Initials, Data)
+INSERT INTO OrganisationalPersonExtractedColumns (DocName, Cn, Initials, Data)
 SELECT 
-    Id,
+    DocName,
     Data.value('/ctxO:OrganisationalPerson/ctxO:cn', 'nvarchar(50)'),
     Data.value('/ctxO:OrganisationalPerson/ctxO:initials', 'nvarchar(200)'),
     Data 
 FROM OrganisationalPerson
+GO
+
+CREATE UNIQUE INDEX IX_OrganisationalPersonExtractedColumns_DocName ON OrganisationalPersonExtractedColumns(DocName)
 GO

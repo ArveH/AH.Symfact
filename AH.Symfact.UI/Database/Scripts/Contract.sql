@@ -2,7 +2,11 @@
 GO
 
 CREATE TABLE Contract(
-    Id nvarchar(30) PRIMARY KEY,
+    Id int IDENTITY PRIMARY KEY,
+    DocName nvarchar(30),
     Data Xml(Document contractXCol)
 )
+GO
+
+CREATE UNIQUE INDEX IX_Contract_DocName ON Contract(DocName)
 GO

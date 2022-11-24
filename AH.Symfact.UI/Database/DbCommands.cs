@@ -63,11 +63,11 @@ public class DbCommands : IDbCommands
     {
         if (input == null) return 0;
 
-        var sqlTxt = $"insert into {tableName} (Id, Data) values(@Id, @Xml)";
+        var sqlTxt = $"insert into {tableName} (DocName, Data) values(@DocName, @Xml)";
         await using var dbConn = _dbConnFactory.CreateConnection();
         await dbConn.ConnectAsync();
         await using var cmd = new SqlCommand(sqlTxt, dbConn.Conn);
-        cmd.Parameters.AddWithValue("@Id", SqlDbType.NVarChar);
+        cmd.Parameters.AddWithValue("@DocName", SqlDbType.NVarChar);
         cmd.Parameters.AddWithValue("@Xml", SqlDbType.Xml);
         var cnt = 0;
         foreach (var row in input)

@@ -2,7 +2,8 @@
 GO
 
 CREATE TABLE ContractExtractedColumns(
-    Id nvarchar(30) PRIMARY KEY,
+    Id int IDENTITY PRIMARY KEY,
+    DocName nvarchar(30),
     ContractOwnerCN nvarchar(100),
     Status nvarchar(10),
     Data Xml(Document contractXCol)
@@ -10,11 +11,14 @@ CREATE TABLE ContractExtractedColumns(
 GO
 
 WITH XMLNAMESPACES('symfact/Contract' AS C)
-INSERT INTO ContractExtractedColumns(Id, ContractOwnerCN, Status, Data)
+INSERT INTO ContractExtractedColumns(DocName, ContractOwnerCN, Status, Data)
 SELECT 
-    Id,
+    DocName,
     Data.value('/C:Contract/C:Summary/C:GeneralInfo/C:ContractOwnerCN', 'nvarchar(50)'),
     Data.value('/C:Status/@status', 'nvarchar(50)'),
     Data 
 FROM Contract
+GO
+
+CREATE UNIQUE INDEX IX_ContractExtractedColumns_DocName ON ContractExtractedColumns(DocName)
 GO

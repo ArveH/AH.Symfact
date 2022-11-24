@@ -26,7 +26,8 @@ END;
 GO
 
 CREATE TABLE OrganisationalPersonComputedColumns(
-    Id AS dbo.getorgpersonid(Data) PERSISTED PRIMARY KEY,
+    Id int IDENTITY PRIMARY KEY,
+    DocName AS dbo.getorgpersonid(Data) PERSISTED,
     Cn AS dbo.getorgpersoncn(Data) PERSISTED,
     Initials AS dbo.getorgpersoninitials(Data) PERSISTED,
     Data Xml(Document contractXOrg)
@@ -39,3 +40,8 @@ SELECT
     Data 
 FROM OrganisationalPerson
 GO
+
+CREATE UNIQUE INDEX IX_OrganisationalPersonComputedColumns_DocName ON OrganisationalPersonComputedColumns(DocName)
+GO
+
+

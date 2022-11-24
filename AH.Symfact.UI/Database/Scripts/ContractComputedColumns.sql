@@ -26,7 +26,8 @@ END;
 GO
 
 CREATE TABLE ContractComputedColumns(
-    Id AS dbo.getcontractid(Data) PERSISTED PRIMARY KEY,
+    Id int IDENTITY PRIMARY KEY,
+    DocName AS dbo.getcontractid(Data) PERSISTED,
     ContractOwnerCN AS dbo.getcontractcn(Data) PERSISTED,
     Status AS dbo.getcontractstatus(Data) PERSISTED,
     Data Xml(Document contractXCol)
@@ -35,4 +36,7 @@ GO
 
 INSERT INTO ContractComputedColumns(Data)
 SELECT Data FROM Contract
+GO
+
+CREATE UNIQUE INDEX IX_ContractComputedColumns_DocName ON ContractComputedColumns(DocName)
 GO
