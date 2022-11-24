@@ -4,9 +4,7 @@ using AH.Symfact.UI.ViewModels.Messages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using System;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace AH.Symfact.UI.ViewModels;
 
@@ -33,9 +31,10 @@ public partial class CreateTablesViewModel : ObservableRecipient
 
             if (msg.Value.TableName == TableName)
                 SourceTableStatus = msg.Value.Message ?? "<Message missing>";
-            else if (msg.Value.TableName == TableName+"ComputedCols")
+            else if (msg.Value.TableName == TableName + "ComputedColumns")
                 ComputedColumnsStatus = msg.Value.Message ?? "<Message missing>";
-            else if (msg.Value.TableName == TableName+"ExtractedCols") ComputedColumnsStatus = msg.Value.Message ?? "<Message missing>";
+            else if (msg.Value.TableName == TableName + "ExtractedColumns")
+                ExtractedColumnsStatus = msg.Value.Message ?? "<Message missing>";
         });
     }
 
@@ -43,7 +42,7 @@ public partial class CreateTablesViewModel : ObservableRecipient
     private string _heading = "";
     [ObservableProperty]
     private string _tableName = "";
-    partial void OnTableNameChanging(string value) {Heading = $"{value} tables";}
+    partial void OnTableNameChanging(string value) { Heading = $"{value} tables"; }
     [ObservableProperty]
     private string _sourceTableStatus = "Ready...";
     [ObservableProperty]
@@ -55,18 +54,20 @@ public partial class CreateTablesViewModel : ObservableRecipient
     public IAsyncRelayCommand ComputedColumnsCommand { get; }
     public IAsyncRelayCommand ExtractedColumnsCommand { get; }
 
-    private async Task CreateWithNoColumns()
+    private Task CreateWithNoColumns()
     {
-        await _tableService.CreateTableAsync(TableName, $"{TableName}.sql", $"{TableName}.xml");
+        return _tableService.CreateTableAsync(TableName, $"{TableName}.sql", $"{TableName}.xml");
     }
 
     private Task CreateWithComputedColumns()
     {
-        throw new NotImplementedException();
+        var tableName = TableName + "ComputedColumns";
+        return _tableService.ExecuteScriptAsync(tableName, $"{tableName}.sql");
     }
 
     private Task CreateWithExtractedColumns()
     {
-        throw new NotImplementedException();
+        var tableName = TableName + "ExtractedColumns";
+        return _tableService.ExecuteScriptAsync(tableName, $"{tableName}.sql");
     }
 }

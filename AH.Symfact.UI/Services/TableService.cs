@@ -53,6 +53,29 @@ public class TableService : ITableService
         }
     }
 
+    public async Task ExecuteScriptAsync(
+        string tableName, string fileName)
+    {
+        try
+        {
+            _logger.Information("Running script '{FileName}'...", fileName);
+            SendInfo(tableName, $"Running script '{fileName}'...");
+            var folder = WeakReferenceMessenger.Default.Send<ExeFolderMessage>();
+            var filePath = Path.Combine(folder, "Database", "Scripts", fileName);
+            var scriptTxt = await File.ReadAllTextAsync(filePath);
+            await _dbCommands.ExecuteScriptAsync(scriptTxt);
+            _logger.Information("Script '{FileName}' finished", fileName);
+            SendInfo(tableName, $"Script '{fileName}' finished");
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Failed running script '{FileName}'", fileName);
+            SendInfo(
+                tableName,
+                $"FAILED running script '{fileName}'! " + ex.FlattenMessages());
+        }
+    }
+
     private IEnumerable<TableRow>? ReadFromXml(
         string tableName, string xmlDataFile)
     {
@@ -83,29 +106,6 @@ public class TableService : ITableService
             _logger.Error(ex, "Can't read XML file for {EntityName}", tableName);
             SendInfo(tableName, $"Can't read XML file for {tableName}");
             return null;
-        }
-    }
-
-    private async Task ExecuteScriptAsync(
-        string tableName, string fileName)
-    {
-        try
-        {
-            _logger.Information("Running script '{FileName}'...", fileName);
-            SendInfo(tableName, $"Running script '{fileName}'...");
-            var folder = WeakReferenceMessenger.Default.Send<ExeFolderMessage>();
-            var filePath = Path.Combine(folder, "Database", "Scripts", fileName);
-            var scriptTxt = await File.ReadAllTextAsync(filePath);
-            await _dbCommands.ExecuteScriptAsync(scriptTxt);
-            _logger.Information("Script '{FileName}' finished", fileName);
-            SendInfo(tableName, $"Script '{fileName}' finished");
-        }
-        catch (Exception ex)
-        {
-            _logger.Error(ex, "Failed running script '{FileName}'", fileName);
-            SendInfo(
-                tableName,
-                $"FAILED running script '{fileName}'! " + ex.FlattenMessages());
         }
     }
 

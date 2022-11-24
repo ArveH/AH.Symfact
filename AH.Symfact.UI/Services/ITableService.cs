@@ -8,4 +8,6 @@ public interface ITableService
         string tableName,
         string scriptFile,
         string xmlDataFile);
+    Task ExecuteScriptAsync(
+        string tableName, string fileName);
 }
