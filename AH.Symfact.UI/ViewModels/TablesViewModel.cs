@@ -1,20 +1,15 @@
 ﻿using AH.Symfact.UI.Database;
 using AH.Symfact.UI.Extensions;
-using AH.Symfact.UI.Models;
 using AH.Symfact.UI.Services;
 using AH.Symfact.UI.ViewModels.Messages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.UI.Xaml.Controls;
 using Serilog;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using System.Xml.Linq;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
 
@@ -43,6 +38,7 @@ public partial class TablesViewModel : ObservableRecipient
         CreateSchemasCommand = new AsyncRelayCommand(CreateSchemasAsync);
         SelectDataFolderCommand = new AsyncRelayCommand(SelectDataFolderAsync);
         CreateTablesCommand = new AsyncRelayCommand(CreateAllTablesAsync);
+        CreateTablesCommand.CanExecuteChanged += OnCanExecuteChanged;
         WeakReferenceMessenger.Default.Register<TablesViewModel, DataFolderChangedMessage>(this, (r, m) =>
         {
             m.Reply(r.DataPath);
@@ -55,20 +51,28 @@ public partial class TablesViewModel : ObservableRecipient
         OrgPersonViewModel.TableName = "OrganisationalPerson";
     }
 
+    private void OnCanExecuteChanged(object? sender, EventArgs e)
+    {
+        if (sender is not AsyncRelayCommand cmd) return;
+        IsCreateAvailable = !cmd.IsRunning;
+    }
+
     public CreateTablesViewModel ContractViewModel { get; set; }
     public CreateTablesViewModel PartyViewModel { get; set; }
     public CreateTablesViewModel OrgPersonViewModel { get; set; }
-    
+
     [ObservableProperty]
     private string _createSchemasStatus = "Ready...";
     [ObservableProperty]
     private string _dataPath = @"D:\Temp\Symfact\DataSet";
     [ObservableProperty]
     private string _createTablesStatus = "Ready...";
+    [ObservableProperty]
+    private bool _isCreateAvailable = true;
 
-    public ICommand CreateSchemasCommand { get; }
-    public ICommand SelectDataFolderCommand { get; }
-    public ICommand CreateTablesCommand { get; }
+    public IAsyncRelayCommand CreateSchemasCommand { get; }
+    public IAsyncRelayCommand SelectDataFolderCommand { get; }
+    public IAsyncRelayCommand CreateTablesCommand { get; }
 
     private async Task CreateSchemasAsync()
     {
@@ -248,12 +252,9 @@ public partial class TablesViewModel : ObservableRecipient
     {
         var tasks = new List<Task>
         {
-            CreateTableAsync("Contract",
-                cnt => WeakReferenceMessenger.Default.Send(new ContractLoadedMessage(cnt))),
-            CreateTableAsync("Party",
-                cnt => WeakReferenceMessenger.Default.Send(new PartyLoadedMessage(cnt))),
-            CreateTableAsync("OrganisationalPerson",
-                cnt => WeakReferenceMessenger.Default.Send(new OrgPersonLoadedMessage(cnt)))
+            _tableService.CreateTableAsync("Contract", "Contract.sql", "Contract.xml"),
+            _tableService.CreateTableAsync("Party", "Party.sql", "Party.xml"),
+            _tableService.CreateTableAsync("OrganisationalPerson", "OrganisationalPerson.sql", "OrganisationalPerson.xml"),
         };
         try
         {
@@ -265,80 +266,6 @@ public partial class TablesViewModel : ObservableRecipient
             {
                 _logger.Error(ex, ex.Message);
             }
-        }
-    }
-
-    private async Task CreateTableAsync(string entityName, Func<int, ValueChangedMessage<int>> func)
-    {
-        await ExecuteScriptAsync(entityName + ".sql", s => CreateTablesStatus = s);
-        var contractData = ReadFromXml(entityName);
-        try
-        {
-            func(0);
-            _logger.Information("Inserting into {TableName}...", entityName);
-            CreateTablesStatus = $"Inserting into {entityName}...";
-            var cnt = await _dbCommands.InsertRowsAsync(entityName, contractData);
-            _logger.Information("{RowCount} rows inserted into {TableName}", cnt, entityName);
-            CreateTablesStatus = $"{cnt} rows inserted into {entityName}";
-            func(cnt);
-        }
-        catch (Exception ex)
-        {
-            _logger.Error(ex, "Insert into {TableName} failed", entityName);
-            CreateTablesStatus = $"Insert into {entityName} failed. " + ex.FlattenMessages();
-        }
-    }
-
-    private async Task ExecuteScriptAsync(
-        string fileName, Action<string> writeLog)
-    {
-        try
-        {
-            _logger.Information("Running script '{FileName}'...", fileName);
-            writeLog($"Running script '{fileName}'...");
-            var folder = WeakReferenceMessenger.Default.Send<ExeFolderMessage>();
-            var filePath = Path.Combine(folder, "Database", "Scripts", fileName);
-            var scriptTxt = await File.ReadAllTextAsync(filePath);
-            await _dbCommands.ExecuteScriptAsync(
-                scriptTxt.Replace("<<<PATH>>>", DataPath));
-            _logger.Information("Script '{FileName}' finished", fileName);
-            writeLog($"Script '{fileName}' finished");
-        }
-        catch (Exception ex)
-        {
-            _logger.Error(ex, "Failed running script '{FileName}'", fileName);
-            writeLog($"FAILED running script '{fileName}'! " + ex.FlattenMessages());
-        }
-    }
-
-    private IEnumerable<TableRow>? ReadFromXml(string entityName)
-    {
-        var filePath = Path.Combine(DataPath, $"{entityName}.xml");
-        _logger.Information("Starting to load from file '{FilePath}'...",
-            filePath);
-        CreateTablesStatus = $"Starting to load from file '{filePath}'...";
-        try
-        {
-            var xElem = XElement.Load(filePath);
-            var elemName = _fileReader.GetName(xElem);
-            if (elemName == null)
-            {
-                _logger.Error("Can't find element name for {EntityName}", entityName);
-                CreateTablesStatus = $"Can't find element name for {entityName}";
-                return null;
-            }
-
-            var xmlData = _fileReader.SplitRequests(xElem);
-            _logger.Information("Found {RowCount} rows for '{ElementName}'",
-                xmlData.Count, elemName);
-            CreateTablesStatus = $"Found {xmlData.Count} rows for '{elemName}'";
-            return xmlData;
-        }
-        catch (Exception ex)
-        {
-            _logger.Error(ex, "Can't read XML file for {EntityName}", entityName);
-            CreateTablesStatus = $"Can't read XML file for {entityName}";
-            return null;
         }
     }
 }

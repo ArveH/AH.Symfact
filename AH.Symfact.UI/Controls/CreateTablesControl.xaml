@@ -36,7 +36,7 @@
                 Content="Create source table"/>
             <TextBlock Text="{x:Bind ViewModel.SourceTableStatus, Mode=OneWay}" 
                    Grid.Row="0" Grid.Column="1"
-                   Margin="20 10 0 5"
+                   Margin="20 10 20 5"
                    VerticalAlignment="Center"/>
 
             <!-- Create with computed columns -->
@@ -46,7 +46,7 @@
                 Content="Create with computed columns"/>
             <TextBlock Text="{x:Bind ViewModel.ComputedColumnsStatus, Mode=OneWay}" 
                    Grid.Row="1" Grid.Column="1"
-                   Margin="20 5 0 5"
+                   Margin="20 5 20 5"
                    VerticalAlignment="Center"/>
 
             <!-- Create with extracted columns -->
@@ -56,7 +56,7 @@
                 Content="Create with extracted columns"/>
             <TextBlock Text="{x:Bind ViewModel.ExtractedColumnsStatus, Mode=OneWay}" 
                    Grid.Row="2" Grid.Column="1"
-                   Margin="20 5 0 10"
+                   Margin="20 5 20 10"
                    VerticalAlignment="Center"/>
 
         </Grid>

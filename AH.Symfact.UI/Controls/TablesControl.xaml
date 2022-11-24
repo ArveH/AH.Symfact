@@ -54,22 +54,17 @@
                    Margin="20 30 0 5"
                    VerticalAlignment="Center"/>
 
-        <!-- File info -->
-        <StackPanel  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                     Margin="20 30 20 0"
-                     Orientation="Vertical">
-            <TextBlock Text="Xml files info"
-                       FontWeight="bold"
-                       FontSize="20"/>
-            <controls:XmlFileDetailsControl/>
-        </StackPanel>
-
         <!-- Contract tables-->
-        <StackPanel x:Name="TablesStack"
-                    Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
-                    Margin="20 30 20 0"
-                    Orientation="Vertical">
-        </StackPanel>
+        <ContentControl Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                        Margin="20 30 20 0"
+                        HorizontalAlignment="Stretch"
+                        IsEnabled="{x:Bind ViewModel.IsCreateAvailable, Mode=OneWay}">
+            <StackPanel x:Name="TablesStack"
+                        Margin="20 30 20 0"
+                        HorizontalAlignment="Stretch"
+                        Orientation="Vertical">
+            </StackPanel>
+        </ContentControl>
 
     </Grid>
 
