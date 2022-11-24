@@ -17,8 +17,9 @@ public partial class CreateTablesViewModel : ObservableRecipient
     {
         _tableService = tableService;
         SourceTableCommand = new AsyncRelayCommand(CreateWithNoColumns);
-        ComputedColumnsCommand = new AsyncRelayCommand(CreateWithComputedColumns);
-        ExtractedColumnsCommand = new AsyncRelayCommand(CreateWithExtractedColumns);
+        ComputedColumnsCommand = new AsyncRelayCommand(CreateWithComputedColumnsAsync);
+        ExtractedColumnsCommand = new AsyncRelayCommand(CreateWithExtractedColumnsAsync);
+        SelectiveIndexCommand = new AsyncRelayCommand(CreateWithSelectiveIndexAsync);
         WeakReferenceMessenger.Default.Register<TableChangedMessage>(this, (_, msg) =>
         {
             if (!msg.Value.TableName.StartsWith(TableName)) return;
@@ -31,6 +32,8 @@ public partial class CreateTablesViewModel : ObservableRecipient
 
             if (msg.Value.TableName == TableName)
                 SourceTableStatus = msg.Value.Message ?? "<Message missing>";
+            else if (msg.Value.TableName == TableName + "SelectiveIndex")
+                SelectiveIndexStatus = msg.Value.Message ?? "<Message missing>";
             else if (msg.Value.TableName == TableName + "ComputedColumns")
                 ComputedColumnsStatus = msg.Value.Message ?? "<Message missing>";
             else if (msg.Value.TableName == TableName + "ExtractedColumns")
@@ -46,11 +49,14 @@ public partial class CreateTablesViewModel : ObservableRecipient
     [ObservableProperty]
     private string _sourceTableStatus = "Ready...";
     [ObservableProperty]
+    private string _selectiveIndexStatus = "Ready...";
+    [ObservableProperty]
     private string _computedColumnsStatus = "Ready...";
     [ObservableProperty]
     private string _extractedColumnsStatus = "Ready...";
 
     public IAsyncRelayCommand SourceTableCommand { get; }
+    public IAsyncRelayCommand SelectiveIndexCommand { get; }
     public IAsyncRelayCommand ComputedColumnsCommand { get; }
     public IAsyncRelayCommand ExtractedColumnsCommand { get; }
 
@@ -59,13 +65,19 @@ public partial class CreateTablesViewModel : ObservableRecipient
         return _tableService.CreateTableAsync(TableName, $"{TableName}.sql", $"{TableName}.xml");
     }
 
-    private Task CreateWithComputedColumns()
+    private Task CreateWithSelectiveIndexAsync()
+    {
+        var tableName = TableName + "SelectiveIndex";
+        return _tableService.ExecuteScriptAsync(tableName, $"{tableName}.sql");
+    }
+
+    private Task CreateWithComputedColumnsAsync()
     {
         var tableName = TableName + "ComputedColumns";
         return _tableService.ExecuteScriptAsync(tableName, $"{tableName}.sql");
     }
 
-    private Task CreateWithExtractedColumns()
+    private Task CreateWithExtractedColumnsAsync()
     {
         var tableName = TableName + "ExtractedColumns";
         return _tableService.ExecuteScriptAsync(tableName, $"{tableName}.sql");
