@@ -51,9 +51,9 @@ public partial class CreateTablesViewModel : ObservableRecipient
     [ObservableProperty]
     private string _extractedColumnsStatus = "Ready...";
 
-    public ICommand SourceTableCommand { get; }
-    public ICommand ComputedColumnsCommand { get; }
-    public ICommand ExtractedColumnsCommand { get; }
+    public IAsyncRelayCommand SourceTableCommand { get; }
+    public IAsyncRelayCommand ComputedColumnsCommand { get; }
+    public IAsyncRelayCommand ExtractedColumnsCommand { get; }
 
     private async Task CreateWithNoColumns()
     {

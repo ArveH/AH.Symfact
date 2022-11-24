@@ -60,6 +60,24 @@
     <None Update="AppSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Database\Scripts\ContractExtractedColumns.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Database\Scripts\ContractComputedColumns.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Database\Scripts\OrganisationalPersonComputedColumns.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Database\Scripts\OrganisationalPersonExtractedColumns.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Database\Scripts\PartyComputedColumns.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Database\Scripts\PartyExtractedColumns.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Page Update="Controls\CreateTablesControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
