@@ -63,15 +63,17 @@ public class DbCommands : IDbCommands
     {
         if (input == null) return 0;
 
-        var sqlTxt = $"insert into {tableName} (Data) values(@Xml)";
+        var sqlTxt = $"insert into {tableName} (Id, Data) values(@Id, @Xml)";
         await using var dbConn = _dbConnFactory.CreateConnection();
         await dbConn.ConnectAsync();
         await using var cmd = new SqlCommand(sqlTxt, dbConn.Conn);
+        cmd.Parameters.AddWithValue("@Id", SqlDbType.NVarChar);
         cmd.Parameters.AddWithValue("@Xml", SqlDbType.Xml);
         var cnt = 0;
         foreach (var row in input)
         {
-            cmd.Parameters[0].Value = row.Data;
+            cmd.Parameters[0].Value = row.DocName;
+            cmd.Parameters[1].Value = row.Data.ToString();
             await cmd.ExecuteNonQueryAsync();
             cnt++;
         }

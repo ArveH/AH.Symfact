@@ -71,7 +71,7 @@ public class TaminoFileReader : ITaminoFileReader
                 _logger.Information("Getting {ElementName}s...", elementName);
             }
 
-            tableRows.Add(new TableRow(docName, mainElement.ToString()));
+            tableRows.Add(new TableRow(docName, mainElement));
             elementCounter++;
         }
 
@@ -115,7 +115,7 @@ public class TaminoFileReader : ITaminoFileReader
                 _logger.Information("Getting {ElementName}s...", elementName);
             }
 
-            tableRows.Add(new TableRow(docName, nonXmlElem.ToString()));
+            tableRows.Add(new TableRow(docName, nonXmlElem));
             elementCounter++;
         }
 
