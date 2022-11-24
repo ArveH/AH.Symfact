@@ -54,8 +54,8 @@
                    Margin="20 30 0 5"
                    VerticalAlignment="Center"/>
 
-        <!--File info-->
-        <StackPanel  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+        <!-- File info -->
+        <StackPanel  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                      Margin="20 30 20 0"
                      Orientation="Vertical">
             <TextBlock Text="Xml files info"
@@ -64,11 +64,11 @@
             <controls:XmlFileDetailsControl/>
         </StackPanel>
 
-        <!--File info-->
-        <StackPanel  Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
-                     Margin="20 30 20 0"
-                     Orientation="Vertical">
-            <controls:CreateTablesControl/>
+        <!-- Contract tables-->
+        <StackPanel x:Name="TablesStack"
+                    Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                    Margin="20 30 20 0"
+                    Orientation="Vertical">
         </StackPanel>
 
     </Grid>

@@ -23,17 +23,20 @@ namespace AH.Symfact.UI.ViewModels;
 public partial class TablesViewModel : ObservableRecipient
 {
     private readonly ISchemaService _schemaService;
+    private readonly ITableService _tableService;
     private readonly IDbCommands _dbCommands;
     private readonly ITaminoFileReader _fileReader;
     private readonly ILogger _logger;
 
     public TablesViewModel(
         ISchemaService schemaService,
+        ITableService tableService,
         IDbCommands dbCommands,
         ITaminoFileReader fileReader,
         ILogger logger)
     {
         _schemaService = schemaService;
+        _tableService = tableService;
         _dbCommands = dbCommands;
         _fileReader = fileReader;
         _logger = logger.ForContext<TablesViewModel>();
@@ -44,8 +47,18 @@ public partial class TablesViewModel : ObservableRecipient
         {
             m.Reply(r.DataPath);
         });
+        ContractViewModel = new CreateTablesViewModel(_tableService);
+        ContractViewModel.TableName = "Contract";
+        PartyViewModel = new CreateTablesViewModel(_tableService);
+        PartyViewModel.TableName = "Party";
+        OrgPersonViewModel = new CreateTablesViewModel(_tableService);
+        OrgPersonViewModel.TableName = "OrganisationalPerson";
     }
 
+    public CreateTablesViewModel ContractViewModel { get; set; }
+    public CreateTablesViewModel PartyViewModel { get; set; }
+    public CreateTablesViewModel OrgPersonViewModel { get; set; }
+    
     [ObservableProperty]
     private string _createSchemasStatus = "Ready...";
     [ObservableProperty]

@@ -14,5 +14,8 @@ public sealed partial class TablesControl
                     ?? throw new ApplicationException(
                         "Can't get ViewModel for TablesControl");
         InitializeComponent();
+        TablesStack.Children.Add(new CreateTablesControl(ViewModel.ContractViewModel));
+        TablesStack.Children.Add(new CreateTablesControl(ViewModel.PartyViewModel));
+        TablesStack.Children.Add(new CreateTablesControl(ViewModel.OrgPersonViewModel));
     }
 }

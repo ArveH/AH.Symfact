@@ -7,7 +7,7 @@
     mc:Ignorable="d">
 
     <StackPanel Orientation="Vertical">
-        <TextBlock Text="Contract tables"
+        <TextBlock Text="{x:Bind ViewModel.Heading}"
                    Padding="15 0"
                    FontWeight="bold"
                    FontSize="20"/>
@@ -31,12 +31,12 @@
 
             <!-- Create with no columns apart from Id -->
             <Button Grid.Row="0" Grid.Column="0"
-                Margin="20 20 0 5"
+                Margin="20 10 0 5"
                 Command="{x:Bind ViewModel.SourceTableCommand, Mode=OneWay}"
                 Content="Create source table"/>
             <TextBlock Text="{x:Bind ViewModel.SourceTableStatus, Mode=OneWay}" 
                    Grid.Row="0" Grid.Column="1"
-                   Margin="20 20 0 5"
+                   Margin="20 10 0 5"
                    VerticalAlignment="Center"/>
 
             <!-- Create with computed columns -->
@@ -51,12 +51,12 @@
 
             <!-- Create with extracted columns -->
             <Button Grid.Row="2" Grid.Column="0"
-                Margin="20 5 0 5"
+                Margin="20 5 0 10"
                 Command="{x:Bind ViewModel.ExtractedColumnsCommand, Mode=OneWay}"
                 Content="Create with extracted columns"/>
             <TextBlock Text="{x:Bind ViewModel.ExtractedColumnsStatus, Mode=OneWay}" 
                    Grid.Row="2" Grid.Column="1"
-                   Margin="20 5 0 5"
+                   Margin="20 5 0 10"
                    VerticalAlignment="Center"/>
 
         </Grid>

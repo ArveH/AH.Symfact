@@ -4,7 +4,6 @@ using AH.Symfact.UI.ViewModels.Messages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Serilog;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -14,41 +13,37 @@ namespace AH.Symfact.UI.ViewModels;
 public partial class CreateTablesViewModel : ObservableRecipient
 {
     private readonly ITableService _tableService;
-    private readonly ILogger _logger;
 
     public CreateTablesViewModel(
-        ITableService tableService,
-        ILogger logger)
+        ITableService tableService)
     {
         _tableService = tableService;
-        _logger = logger.ForContext<CreateTablesViewModel>();
         SourceTableCommand = new AsyncRelayCommand(CreateWithNoColumns);
         ComputedColumnsCommand = new AsyncRelayCommand(CreateWithComputedColumns);
         ExtractedColumnsCommand = new AsyncRelayCommand(CreateWithExtractedColumns);
         WeakReferenceMessenger.Default.Register<TableChangedMessage>(this, (_, msg) =>
         {
+            if (!msg.Value.TableName.StartsWith(TableName)) return;
+
             if (msg.Value.Action == TableAction.LoadedXml)
             {
-                Heading = $"Contract tables {msg.Value.Rows} rows";
+                Heading = $"{TableName} tables {msg.Value.Rows} rows";
                 return;
             }
-            switch (msg.Value.TableName)
-            {
-                case "Contract":
-                    SourceTableStatus = msg.Value.Message ?? "<Message missing>";
-                    break;
-                case "ContractComputedCols":
-                    ComputedColumnsStatus = msg.Value.Message ?? "<Message missing>";
-                    break;
-                case "ContractExtractedCols":
-                    ComputedColumnsStatus = msg.Value.Message ?? "<Message missing>";
-                    break;
-            }
+
+            if (msg.Value.TableName == TableName)
+                SourceTableStatus = msg.Value.Message ?? "<Message missing>";
+            else if (msg.Value.TableName == TableName+"ComputedCols")
+                ComputedColumnsStatus = msg.Value.Message ?? "<Message missing>";
+            else if (msg.Value.TableName == TableName+"ExtractedCols") ComputedColumnsStatus = msg.Value.Message ?? "<Message missing>";
         });
     }
 
     [ObservableProperty]
-    private string _heading = "Contract tables";
+    private string _heading = "";
+    [ObservableProperty]
+    private string _tableName = "";
+    partial void OnTableNameChanging(string value) {Heading = $"{value} tables";}
     [ObservableProperty]
     private string _sourceTableStatus = "Ready...";
     [ObservableProperty]
@@ -62,7 +57,7 @@ public partial class CreateTablesViewModel : ObservableRecipient
 
     private async Task CreateWithNoColumns()
     {
-        await _tableService.CreateTableAsync("Contract", "Contract.sql", "Contract.xml");
+        await _tableService.CreateTableAsync(TableName, $"{TableName}.sql", $"{TableName}.xml");
     }
 
     private Task CreateWithComputedColumns()
