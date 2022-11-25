@@ -7,15 +7,21 @@ namespace AH.Symfact.UI.Database;
 public interface IDbCommands
 {
     Task<List<string>> GetAllTablesAsync();
-    Task<List<string>> GetAllFunctionsAsync();
-    Task<List<string>> GetAllSchemaCollectionsAsync();
     Task DeleteTablesAsync(IEnumerable<string> tableNames);
-    Task DeleteFunctionsAsync(IEnumerable<string> names);
-    Task DeleteSchemaCollectionsAsync(IEnumerable<string> names);
-    Task ExecuteScriptAsync(string script);
     Task<int> InsertRowsAsync(string tableName, IEnumerable<TableRow>? input);
+    Task<bool> FullTextIndexExistsAsync(string tableName);
+    Task DropFullTextIndexAsync(string tableName);
+    Task CreateFullTextIndexAsync(string tableName, string catalogName);
+    Task<List<string>> GetAllSchemaCollectionsAsync();
     Task<bool> SchemaCollectionExistsAsync(string name);
+    Task DeleteSchemaCollectionsAsync(IEnumerable<string> names);
     Task DropSchemaCollectionAsync(string collectionName);
     Task CreateCollectionAsync(string collectionName, string xmlString);
     Task AddToCollectionAsync(string collectionName, string xmlString);
+    Task CreateOrAddToCollectionAsync(string command, string xmlString);
+    Task<List<string>> GetAllFunctionsAsync();
+    Task DeleteFunctionsAsync(IEnumerable<string> names);
+    Task ExecuteScriptAsync(string script);
+    Task<List<string>> GetAllFullTextIndexesAsync();
+    Task CreateFulltextCatalogAsync(string catalogName);
 }

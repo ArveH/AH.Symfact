@@ -19,20 +19,10 @@ public class DbCommands : IDbCommands
         _dbConnFactory = dbConnFactory;
     }
 
+    #region Table
     public Task<List<string>> GetAllTablesAsync()
     {
         return GetAllObjectsAsync("U");
-    }
-
-    public Task<List<string>> GetAllFunctionsAsync()
-    {
-        return GetAllObjectsAsync("FN");
-    }
-
-    public Task<List<string>> GetAllSchemaCollectionsAsync()
-    {
-        var sqlTxt = "select name from sys.xml_schema_collections where name != 'sys' order by name";
-        return GetAllAsync(sqlTxt);
     }
 
     public async Task DeleteTablesAsync(IEnumerable<string> tableNames)
@@ -40,22 +30,6 @@ public class DbCommands : IDbCommands
         foreach (var tableName in tableNames)
         {
             await DeleteTableAsync(tableName);
-        }
-    }
-
-    public async Task DeleteFunctionsAsync(IEnumerable<string> names)
-    {
-        foreach (var name in names)
-        {
-            await DeleteFunctionAsync(name);
-        }
-    }
-
-    public async Task DeleteSchemaCollectionsAsync(IEnumerable<string> names)
-    {
-        foreach (var name in names)
-        {
-            await DeleteSchemaCollectionAsync(name);
         }
     }
 
@@ -81,12 +55,56 @@ public class DbCommands : IDbCommands
         return cnt;
     }
 
-    public async Task ExecuteScriptAsync(string script)
+    private Task DeleteTableAsync(string name)
     {
-        await using var dbConn = _dbConnFactory.CreateConnection();
-        await dbConn.ConnectAsync();
-        var server = new Server(new ServerConnection(dbConn.Conn));
-        var _ = server.ConnectionContext.ExecuteNonQuery(script);
+        return ExecuteNonQuery($"drop table {name}");
+    }
+    #endregion
+
+    #region Full-text index
+    public Task<List<string>> GetAllFullTextIndexesAsync()
+    {
+        var sqlTxt = "select object_name(object_id) AS TableName from sys.fulltext_indexes";
+        return GetAllAsync(sqlTxt);
+    }
+
+    public Task<bool> FullTextIndexExistsAsync(string tableName)
+    {
+        var sql =
+            $"SELECT object_id FROM sys.fulltext_indexes WHERE object_name(object_id) = '{tableName}'";
+        return ExistsAsync(sql);
+    }
+
+    public Task DropFullTextIndexAsync(string tableName)
+    {
+        return ExecuteNonQuery($"DROP FULLTEXT INDEX ON {tableName}");
+    }
+
+    public Task CreateFullTextIndexAsync(string tableName, string catalogName)
+    {
+        return ExecuteNonQuery(
+            $"CREATE FULLTEXT INDEX ON {tableName} (Data)\r\n" +
+            $"    KEY INDEX PK_{tableName}_Id \r\n" +
+            $"        ON {catalogName};");
+    }
+
+    public async Task CreateFulltextCatalogAsync(string catalogName)
+    {
+        var sql =
+            $"SELECT name FROM sys.fulltext_catalogs WHERE name = '{catalogName}'";
+        if (await ExistsAsync(sql))
+        {
+            await ExecuteNonQuery($"DROP FULLTEXT CATALOG {catalogName}");
+        }
+        await ExecuteNonQuery($"CREATE FULLTEXT CATALOG {catalogName}");
+    }
+    #endregion
+
+    #region Schema Collection
+    public Task<List<string>> GetAllSchemaCollectionsAsync()
+    {
+        var sqlTxt = "select name from sys.xml_schema_collections where name != 'sys' order by name";
+        return GetAllAsync(sqlTxt);
     }
 
     public async Task<bool> SchemaCollectionExistsAsync(string name)
@@ -98,6 +116,14 @@ public class DbCommands : IDbCommands
         await using var cmd = new SqlCommand(sql, dbConn.Conn);
         var res = await cmd.ExecuteScalarAsync() as string;
         return !string.IsNullOrWhiteSpace(res);
+    }
+
+    public async Task DeleteSchemaCollectionsAsync(IEnumerable<string> names)
+    {
+        foreach (var name in names)
+        {
+            await DropSchemaCollectionAsync(name);
+        }
     }
 
     public Task DropSchemaCollectionAsync(string collectionName)
@@ -131,6 +157,35 @@ public class DbCommands : IDbCommands
         await using var cmd = new SqlCommand(sb.ToString(), dbConn.Conn);
         await cmd.ExecuteNonQueryAsync();
     }
+    #endregion
+
+    #region Function
+    public Task<List<string>> GetAllFunctionsAsync()
+    {
+        return GetAllObjectsAsync("FN");
+    }
+
+    public async Task DeleteFunctionsAsync(IEnumerable<string> names)
+    {
+        foreach (var name in names)
+        {
+            await DeleteFunctionAsync(name);
+        }
+    }
+
+    private Task DeleteFunctionAsync(string name)
+    {
+        return ExecuteNonQuery($"drop function {name}");
+    }
+    #endregion
+
+    public async Task ExecuteScriptAsync(string script)
+    {
+        await using var dbConn = _dbConnFactory.CreateConnection();
+        await dbConn.ConnectAsync();
+        var server = new Server(new ServerConnection(dbConn.Conn));
+        var _ = server.ConnectionContext.ExecuteNonQuery(script);
+    }
 
     private Task<List<string>> GetAllObjectsAsync(string type)
     {
@@ -161,18 +216,12 @@ public class DbCommands : IDbCommands
         await cmd.ExecuteNonQueryAsync();
     }
 
-    private Task DeleteTableAsync(string name)
+    public async Task<bool> ExistsAsync(string sql)
     {
-        return ExecuteNonQuery($"drop table {name}");
-    }
-
-    private Task DeleteFunctionAsync(string name)
-    {
-        return ExecuteNonQuery($"drop function {name}");
-    }
-
-    private Task DeleteSchemaCollectionAsync(string name)
-    {
-        return ExecuteNonQuery($"drop xml schema collection {name}");
+        await using var dbConn = _dbConnFactory.CreateConnection();
+        await dbConn.ConnectAsync();
+        await using var cmd = new SqlCommand(sql, dbConn.Conn);
+        var res = await cmd.ExecuteScalarAsync() as string;
+        return !string.IsNullOrWhiteSpace(res);
     }
 }

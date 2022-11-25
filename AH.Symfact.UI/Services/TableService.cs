@@ -76,6 +76,60 @@ public class TableService : ITableService
         }
     }
 
+    public async Task CreateFullIndexesAsync()
+    {
+        await DropAllFullTextIndexesAsync();
+        await CreateAllFullTextCatalogsAsync();
+        await CreateAllFullTextIndexesAsync();
+    }
+
+    private async Task CreateAllFullTextCatalogsAsync()
+    {
+        await _dbCommands.CreateFulltextCatalogAsync(SymfactConstants.Name.ContractCatalog);
+        await _dbCommands.CreateFulltextCatalogAsync(SymfactConstants.Name.OrgPersonCatalog);
+        await _dbCommands.CreateFulltextCatalogAsync(SymfactConstants.Name.PartyCatalog);
+    }
+
+    private async Task CreateAllFullTextIndexesAsync()
+    {
+        foreach (var tableName in SymfactConstants.AllTables)
+        {
+            await CreateFullTextIndexAsync(tableName, tableName.CatalogName());
+        }
+    }
+
+    private async Task DropAllFullTextIndexesAsync()
+    {
+        var indexes = await _dbCommands.GetAllFullTextIndexesAsync();
+        foreach (var index in indexes)
+        {
+            await _dbCommands.DropFullTextIndexAsync(index);
+        }
+    }
+
+    private async Task CreateFullTextIndexAsync(string tableName, string catalogName)
+    {
+        try
+        {
+            _logger.Information("Creating full-text index on '{TableName}'...", tableName);
+            SendInfo(tableName, $"Creating full-text index on '{tableName}'...");
+            if (await _dbCommands.FullTextIndexExistsAsync(tableName))
+            {
+                await _dbCommands.DropFullTextIndexAsync(tableName);
+            }
+            await _dbCommands.CreateFullTextIndexAsync(tableName, catalogName);
+            _logger.Information("Full-text index created on '{TableName}'", tableName);
+            SendInfo(tableName, $"Full-text index created on '{tableName}'");
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "FAILED to create full-text index on '{TableName}'", tableName);
+            SendInfo(
+                tableName,
+                $"FAILED to create full-text index on '{tableName}'! " + ex.FlattenMessages());
+        }
+    }
+
     private IEnumerable<TableRow>? ReadFromXml(
         string tableName, string xmlDataFile)
     {

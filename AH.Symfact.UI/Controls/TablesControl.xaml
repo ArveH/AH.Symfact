@@ -59,7 +59,7 @@
                     Command="{x:Bind ViewModel.CreateTablesCommand, Mode=OneWay}"
                     Content="Create all source tables"/>
             <Button Margin="20 0 0 0"
-                    Command="{x:Bind ViewModel.CreateTablesCommand, Mode=OneWay}"
+                    Command="{x:Bind ViewModel.CreateFullTextIndexesCommand, Mode=OneWay}"
                     Content="Create full-text indexes"/>
         </StackPanel >
 

@@ -36,17 +36,17 @@ public partial class TablesViewModel : ObservableRecipient
         SelectDataFolderCommand = new AsyncRelayCommand(SelectDataFolderAsync);
         CreateTablesCommand = new AsyncRelayCommand(CreateAllTablesAsync);
         CreateTablesCommand.CanExecuteChanged += OnCanExecuteChanged;
-        CreateFullTextIndexesCommand = new AsyncRelayCommand(CreateFullTextIndexesAsync);
+        CreateFullTextIndexesCommand = new AsyncRelayCommand(_tableService.CreateFullIndexesAsync);
         WeakReferenceMessenger.Default.Register<TablesViewModel, DataFolderChangedMessage>(this, (r, m) =>
         {
             m.Reply(r.DataPath);
         });
         ContractViewModel = new CreateTablesViewModel(_tableService);
-        ContractViewModel.TableName = "Contract";
+        ContractViewModel.TableName = SymfactConstants.Name.Contract;
         PartyViewModel = new CreateTablesViewModel(_tableService);
-        PartyViewModel.TableName = "Party";
+        PartyViewModel.TableName = SymfactConstants.Name.Party;
         OrgPersonViewModel = new CreateTablesViewModel(_tableService);
-        OrgPersonViewModel.TableName = "OrganisationalPerson";
+        OrgPersonViewModel.TableName = SymfactConstants.Name.OrganisationalPerson;
     }
 
     private void OnCanExecuteChanged(object? sender, EventArgs e)
@@ -249,9 +249,18 @@ public partial class TablesViewModel : ObservableRecipient
     {
         var tasks = new List<Task>
         {
-            _tableService.CreateTableAsync("Contract", "Contract.sql", "Contract.xml"),
-            _tableService.CreateTableAsync("Party", "Party.sql", "Party.xml"),
-            _tableService.CreateTableAsync("OrganisationalPerson", "OrganisationalPerson.sql", "OrganisationalPerson.xml"),
+            _tableService.CreateTableAsync(
+                SymfactConstants.Name.Contract, 
+                SymfactConstants.Name.Contract + ".sql", 
+                SymfactConstants.Name.Contract + ".xml"),
+            _tableService.CreateTableAsync(
+                SymfactConstants.Name.Party, 
+                SymfactConstants.Name.Party + ".sql", 
+                SymfactConstants.Name.Party + ".xml"),
+            _tableService.CreateTableAsync(
+                SymfactConstants.Name.OrganisationalPerson, 
+                SymfactConstants.Name.OrganisationalPerson + ".sql", 
+                SymfactConstants.Name.OrganisationalPerson + ".xml"),
         };
         try
         {
@@ -264,10 +273,5 @@ public partial class TablesViewModel : ObservableRecipient
                 _logger.Error(ex, ex.Message);
             }
         }
-    }
-
-    private Task CreateFullTextIndexesAsync()
-    {
-        throw new NotImplementedException();
     }
 }

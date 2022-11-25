@@ -10,4 +10,6 @@ public interface ITableService
         string xmlDataFile);
     Task ExecuteScriptAsync(
         string tableName, string fileName);
+
+    Task CreateFullIndexesAsync();
 }
