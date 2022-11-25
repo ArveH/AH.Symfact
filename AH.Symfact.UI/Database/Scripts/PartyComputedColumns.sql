@@ -26,7 +26,7 @@ END;
 GO
 
 CREATE TABLE PartyComputedColumns(
-    Id int IDENTITY PRIMARY KEY,
+    Id int IDENTITY CONSTRAINT PK_PartyComputedColumns_Id PRIMARY KEY CLUSTERED (Id),
     DocName AS dbo.getpartyid(Data) PERSISTED,
     PartnerShortName AS dbo.getpartyshortname(Data) PERSISTED,
     PartnerCity AS dbo.getpartycity(Data) PERSISTED,

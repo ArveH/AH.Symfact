@@ -2,7 +2,7 @@
 GO
 
 CREATE TABLE OrganisationalPerson(
-    Id int IDENTITY PRIMARY KEY,
+    Id int IDENTITY CONSTRAINT PK_OrganisationalPerson_Id PRIMARY KEY CLUSTERED (Id),
 	DocName nvarchar(30),
 	Data Xml(Document contractXOrg)
 )

@@ -2,7 +2,7 @@
 GO
 
 CREATE TABLE PartySelectiveIndex(
-    Id int IDENTITY PRIMARY KEY,
+    Id int IDENTITY CONSTRAINT PK_PartySelectiveIndex_Id PRIMARY KEY CLUSTERED (Id),
     DocName nvarchar(30),
     Data Xml
 )

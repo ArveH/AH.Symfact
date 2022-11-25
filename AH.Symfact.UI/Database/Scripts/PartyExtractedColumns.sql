@@ -2,7 +2,7 @@
 GO
 
 CREATE TABLE PartyExtractedColumns(
-    Id int IDENTITY PRIMARY KEY,
+    Id int IDENTITY CONSTRAINT PK_PartyExtractedColumns_Id PRIMARY KEY CLUSTERED (Id),
     DocName nvarchar(30),
     PartnerShortName nvarchar(200),
     PartnerCity nvarchar(200),

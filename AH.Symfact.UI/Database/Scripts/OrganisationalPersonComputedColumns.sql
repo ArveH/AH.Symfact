@@ -26,7 +26,7 @@ END;
 GO
 
 CREATE TABLE OrganisationalPersonComputedColumns(
-    Id int IDENTITY PRIMARY KEY,
+    Id int IDENTITY CONSTRAINT PK_OrganisationalPersonComputedColumns_Id PRIMARY KEY CLUSTERED (Id),
     DocName AS dbo.getorgpersonid(Data) PERSISTED,
     Cn AS dbo.getorgpersoncn(Data) PERSISTED,
     Initials AS dbo.getorgpersoninitials(Data) PERSISTED,

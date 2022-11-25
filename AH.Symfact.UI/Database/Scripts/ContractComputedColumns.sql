@@ -26,7 +26,7 @@ END;
 GO
 
 CREATE TABLE ContractComputedColumns(
-    Id int IDENTITY PRIMARY KEY,
+    Id int IDENTITY CONSTRAINT PK_ContractComputedColumns_Id PRIMARY KEY CLUSTERED (Id),
     DocName AS dbo.getcontractid(Data) PERSISTED,
     ContractOwnerCN AS dbo.getcontractcn(Data) PERSISTED,
     Status AS dbo.getcontractstatus(Data) PERSISTED,

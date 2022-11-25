@@ -2,7 +2,7 @@
 GO
 
 CREATE TABLE ContractSelectiveIndex(
-    Id int IDENTITY PRIMARY KEY,
+    Id int IDENTITY CONSTRAINT PK_ContractSelectiveIndex_Id PRIMARY KEY CLUSTERED (Id),
     DocName nvarchar(30),
     Data Xml
 )

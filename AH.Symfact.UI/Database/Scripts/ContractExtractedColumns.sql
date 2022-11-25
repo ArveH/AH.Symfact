@@ -2,7 +2,7 @@
 GO
 
 CREATE TABLE ContractExtractedColumns(
-    Id int IDENTITY PRIMARY KEY,
+    Id int IDENTITY CONSTRAINT PK_ContractExtractedColumns_Id PRIMARY KEY CLUSTERED (Id),
     DocName nvarchar(30),
     ContractOwnerCN nvarchar(100),
     Status nvarchar(10),

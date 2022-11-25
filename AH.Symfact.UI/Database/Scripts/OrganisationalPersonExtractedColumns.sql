@@ -2,7 +2,7 @@
 GO
 
 CREATE TABLE OrganisationalPersonExtractedColumns(
-    Id int IDENTITY PRIMARY KEY,
+    Id int IDENTITY CONSTRAINT PK_OrganisationalPersonExtractedColumns_Id PRIMARY KEY CLUSTERED (Id),
     DocName nvarchar(30),
     Cn nvarchar(50),
     Initials nvarchar(50),
