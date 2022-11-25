@@ -36,6 +36,7 @@ public partial class TablesViewModel : ObservableRecipient
         SelectDataFolderCommand = new AsyncRelayCommand(SelectDataFolderAsync);
         CreateTablesCommand = new AsyncRelayCommand(CreateAllTablesAsync);
         CreateTablesCommand.CanExecuteChanged += OnCanExecuteChanged;
+        CreateFullTextIndexesCommand = new AsyncRelayCommand(CreateFullTextIndexesAsync);
         WeakReferenceMessenger.Default.Register<TablesViewModel, DataFolderChangedMessage>(this, (r, m) =>
         {
             m.Reply(r.DataPath);
@@ -68,6 +69,7 @@ public partial class TablesViewModel : ObservableRecipient
     public IAsyncRelayCommand CreateSchemasCommand { get; }
     public IAsyncRelayCommand SelectDataFolderCommand { get; }
     public IAsyncRelayCommand CreateTablesCommand { get; }
+    public IAsyncRelayCommand CreateFullTextIndexesCommand { get; }
 
     private async Task CreateSchemasAsync()
     {
@@ -262,5 +264,10 @@ public partial class TablesViewModel : ObservableRecipient
                 _logger.Error(ex, ex.Message);
             }
         }
+    }
+
+    private Task CreateFullTextIndexesAsync()
+    {
+        throw new NotImplementedException();
     }
 }
