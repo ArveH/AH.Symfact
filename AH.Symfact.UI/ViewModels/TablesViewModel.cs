@@ -20,20 +20,17 @@ public partial class TablesViewModel : ObservableRecipient
     private readonly ISchemaService _schemaService;
     private readonly ITableService _tableService;
     private readonly IDbCommands _dbCommands;
-    private readonly ITaminoFileReader _fileReader;
     private readonly ILogger _logger;
 
     public TablesViewModel(
         ISchemaService schemaService,
         ITableService tableService,
         IDbCommands dbCommands,
-        ITaminoFileReader fileReader,
         ILogger logger)
     {
         _schemaService = schemaService;
         _tableService = tableService;
         _dbCommands = dbCommands;
-        _fileReader = fileReader;
         _logger = logger.ForContext<TablesViewModel>();
         CreateSchemasCommand = new AsyncRelayCommand(CreateSchemasAsync);
         SelectDataFolderCommand = new AsyncRelayCommand(SelectDataFolderAsync);
@@ -65,8 +62,6 @@ public partial class TablesViewModel : ObservableRecipient
     private string _createSchemasStatus = "Ready...";
     [ObservableProperty]
     private string _dataPath = @"D:\Temp\Symfact\DataSet";
-    [ObservableProperty]
-    private string _createTablesStatus = "Ready...";
     [ObservableProperty]
     private bool _isCreateAvailable = true;
 
