@@ -27,6 +27,9 @@
         <controls:TablesControl Grid.Row="1" Grid.Column="1" 
                                  HorizontalAlignment="Stretch"
                                  Visibility="{x:Bind ViewModel.IsTablesPage, Mode=OneWay}"/>
+        <controls:TestingControl Grid.Row="1" Grid.Column="1" 
+                                HorizontalAlignment="Stretch"
+                                Visibility="{x:Bind ViewModel.IsTestingPage, Mode=OneWay}"/>
 
     </Grid>
 </Window>

@@ -20,6 +20,8 @@ public partial class MainViewModel : ObservableRecipient
     private bool _isConnectPage = true;
     [ObservableProperty]
     private bool _isTablesPage;
+    [ObservableProperty]
+    private bool _isTestingPage;
 
     public MainViewModel(ILogger logger)
     {
@@ -30,10 +32,17 @@ public partial class MainViewModel : ObservableRecipient
                 case PageName.Connect:
                     IsConnectPage = true;
                     IsTablesPage = false;
+                    IsTestingPage = false;
                     break;
                 case PageName.Tables:
                     IsConnectPage = false;
                     IsTablesPage = true;
+                    IsTestingPage = false;
+                    break;
+                case PageName.Testing:
+                    IsConnectPage = false;
+                    IsTablesPage = false;
+                    IsTestingPage = true;
                     break;
                 default:
                     logger.Error("Illegal value for PageName enum {PageName}", msg.Value);

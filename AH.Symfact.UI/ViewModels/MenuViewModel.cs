@@ -29,4 +29,11 @@ public partial class MenuViewModel : ObservableRecipient
         _logger.Information("Loading Tables page details");
         WeakReferenceMessenger.Default.Send(new PageChangedMessage(PageName.Tables));
     }
+
+    [RelayCommand]
+    private void LoadTestingDetails()
+    {
+        _logger.Information("Loading Testing page details");
+        WeakReferenceMessenger.Default.Send(new PageChangedMessage(PageName.Testing));
+    }
 }

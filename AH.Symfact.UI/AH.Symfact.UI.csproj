@@ -13,9 +13,6 @@
     <Nullable>Enable</Nullable>
     <UserSecretsId>f40ef935-6add-41f0-8535-68a7f5f6f954</UserSecretsId>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Controls\CreateTablesControl.xaml" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -60,6 +57,9 @@
     <None Update="AppSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Controls\TestingControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <None Update="Database\Scripts\ContractSelectiveIndex.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
