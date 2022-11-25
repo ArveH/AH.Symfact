@@ -21,7 +21,7 @@ CREATE OR ALTER FUNCTION getcontractstatus(@contract xml(Document dbo.contractXC
 RETURNS NVARCHAR(50) WITH SCHEMABINDING AS
 BEGIN
 RETURN @contract.value(
-    'declare namespace C="symfact/Contract";/C:Status/@status', 'NVARCHAR(10)')
+    'declare namespace C="symfact/Contract";/C:Contract/C:Status/@status', 'NVARCHAR(10)')
 END;
 GO
 

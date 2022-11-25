@@ -28,8 +28,8 @@ GO
 CREATE TABLE PartyComputedColumns(
     Id int IDENTITY PRIMARY KEY,
     DocName AS dbo.getpartyid(Data) PERSISTED,
-    PartnerShortName nvarchar(50),
-    PartnerCity nvarchar(200),
+    PartnerShortName AS dbo.getpartyshortname(Data) PERSISTED,
+    PartnerCity AS dbo.getpartycity(Data) PERSISTED,
     Data Xml(Document contractXCol)
 )
 GO
@@ -41,3 +41,6 @@ GO
 
 CREATE UNIQUE INDEX IX_PartyComputedColumns_DocName ON PartyComputedColumns(DocName)
 GO
+
+select top 10 * from PartyComputedColumns
+

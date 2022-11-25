@@ -15,7 +15,7 @@ INSERT INTO ContractExtractedColumns(DocName, ContractOwnerCN, Status, Data)
 SELECT 
     DocName,
     Data.value('/C:Contract/C:Summary/C:GeneralInfo/C:ContractOwnerCN', 'nvarchar(50)'),
-    Data.value('/C:Status/@status', 'nvarchar(50)'),
+    Data.value('/C:Contract/C:Status/@status', 'nvarchar(50)'),
     Data 
 FROM Contract
 GO

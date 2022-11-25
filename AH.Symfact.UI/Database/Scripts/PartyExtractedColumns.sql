@@ -4,14 +4,14 @@ GO
 CREATE TABLE PartyExtractedColumns(
     Id int IDENTITY PRIMARY KEY,
     DocName nvarchar(30),
-    PartyShortName nvarchar(200),
-    PartyCity nvarchar(200),
+    PartnerShortName nvarchar(200),
+    PartnerCity nvarchar(200),
     Data Xml(Document contractXCol)
 )
 GO
 
 WITH XMLNAMESPACES('symfact/Party' AS P)
-INSERT INTO PartyExtractedColumns (DocName, PartyShortName, PartyCity, Data)
+INSERT INTO PartyExtractedColumns (DocName, PartnerShortName, PartnerCity, Data)
 SELECT 
     DocName,
     Data.value('/P:Party/P:Partner/P:PartnerDetails/P:ShortName', 'nvarchar(50)'),
