@@ -33,11 +33,21 @@
             </StackPanel>
             <!-- Buttons -->
             <StackPanel Orientation="Horizontal">
-            
                 <Button Margin="10 10 0 10"
-                        Content="Clear Messages"/>
+                        Content="Execute Script"
+                        Command="{x:Bind ViewModel.ExecuteSequentialCommand, Mode=OneWay}"/>
+                <TextBox Text="{x:Bind ViewModel.SequentialCount, Mode=TwoWay}"
+                         TextAlignment="Right"
+                         Margin="10 10 0 10"/>
+
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
                 <Button Margin="10 10 0 10"
-                        Content="Clear Messages"/>
+                        Content="Run in parallel"
+                        Command="{x:Bind ViewModel.ExecuteParallelCommand, Mode=OneWay}"/>
+                <TextBox Text="{x:Bind ViewModel.ParallelCount, Mode=TwoWay}"
+                         TextAlignment="Right"
+                         Margin="10 10 0 10"/>
 
             </StackPanel>
         </StackPanel>
@@ -56,14 +66,19 @@
                            Text="Messages:"/>
                 <Button Grid.Row="0" Grid.Column="1"
                         Margin="0 10 20 10"
+                        Command="{x:Bind ViewModel.ClearMessagesCommand, Mode=OneWay}"
                         Content="Clear Messages"/>
 
             </Grid>
-            <ListBox Margin="10"
-                     HorizontalAlignment="Stretch"
-                     VerticalAlignment="Stretch"
-                     BorderBrush="Gray"
-                     BorderThickness="1"/>
+            <ScrollViewer HorizontalScrollMode="Auto"
+                          Height="600"
+                          Margin="10"
+                          VerticalScrollMode="Enabled"
+                          BorderBrush="Gray"
+                          BorderThickness="1">
+                <ListBox HorizontalAlignment="Stretch"
+                         ItemsSource="{x:Bind ViewModel.Messages, Mode=TwoWay}"/>
+            </ScrollViewer>
         </StackPanel>
     </StackPanel>
 </UserControl>
