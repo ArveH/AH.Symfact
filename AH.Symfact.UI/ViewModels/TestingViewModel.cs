@@ -1,41 +1,41 @@
 ﻿using AH.Symfact.UI.Database;
-using AH.Symfact.UI.Services;
+using AH.Symfact.UI.Extensions;
+using AH.Symfact.UI.Models;
 using AH.Symfact.UI.ViewModels.Messages;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
-using AH.Symfact.UI.Extensions;
-using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Dispatching;
 
 namespace AH.Symfact.UI.ViewModels;
 
 public partial class TestingViewModel : ObservableRecipient
 {
-    private readonly ISchemaService _schemaService;
-    private readonly ITableService _tableService;
     private readonly IDbCommands _dbCommands;
     private readonly ILogger _logger;
 
     public TestingViewModel
     (
-        ISchemaService schemaService,
-        ITableService tableService,
         IDbCommands dbCommands,
         ILogger logger)
     {
-        _schemaService = schemaService;
-        _tableService = tableService;
         _dbCommands = dbCommands;
         _logger = logger.ForContext<TestingViewModel>();
         ExecuteSequentialCommand = new AsyncRelayCommand(ExecuteSequentialAsync);
         ExecuteParallelCommand = new AsyncRelayCommand(ExecuteParallelAsync);
         ClearMessagesCommand = new RelayCommand(ClearMessages);
+        DispatcherQueue = WeakReferenceMessenger.Default.Send<DispatcherQueueMessage>();
     }
+
+    public DispatcherQueue? DispatcherQueue { get; }
 
     [ObservableProperty]
     private string _selectedFile = string.Empty;
@@ -47,14 +47,14 @@ public partial class TestingViewModel : ObservableRecipient
     private int _sequentialCount = 10;
     partial void OnSequentialCountChanging(int value)
     {
-        Messages.Add($"SequentialCount changed to {value}");
+        WriteMessage($"SequentialCount changed to {value}");
     }
 
     [ObservableProperty]
     private int _parallelCount = 10;
     partial void OnParallelCountChanging(int value)
     {
-        Messages.Add($"ParallelCount changed to {value}");
+        WriteMessage($"ParallelCount changed to {value}");
     }
 
     public void QueryFileChanged(string? queryFile)
@@ -62,7 +62,7 @@ public partial class TestingViewModel : ObservableRecipient
         if (!string.IsNullOrWhiteSpace(queryFile))
         {
             SelectedFile = queryFile;
-            Messages.Add($"Script file = '{SelectedFile}'");
+            WriteMessage($"Script file = '{SelectedFile}'");
         }
     }
 
@@ -75,32 +75,42 @@ public partial class TestingViewModel : ObservableRecipient
         Messages.Clear();
     }
 
-    private async Task<bool> ExecuteScriptAsync(int index, int total)
+    private async Task<ScriptResult> ExecuteScriptAsync(int index, int total)
     {
         try
         {
-            var script = await File.ReadAllTextAsync(SelectedFile);
+            var queryFolder = WeakReferenceMessenger.Default.Send<DataFolderChangedMessage>();
+            var path = Path.Combine(queryFolder, "Queries", SelectedFile);
+            var script = await File.ReadAllTextAsync(path);
+            var sw = new Stopwatch();
+            _logger.Debug("Executing Script '{FileName}' ({Index} of {Total}) ...",
+                SelectedFile, index, total);
+            sw.Start();
             await _dbCommands.ExecuteScriptAsync(script);
-            _logger.Information("({Index} of {Total}) Script '{FileName}' executed", 
-                index, total, SelectedFile);
-            Messages.Add($"({index} of {total}) Script '{SelectedFile}' executed");
-            return true;
+            sw.Stop();
+            _logger.Information("({Index} of {Total}) Script '{FileName}' executed in {Ms}ms",
+                index, total, SelectedFile, sw.ElapsedMilliseconds);
+            WriteMessage($"({index} of {total}) Script '{SelectedFile}' executed in {sw.ElapsedMilliseconds}ms");
+            return new ScriptResult(sw.ElapsedMilliseconds);
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Executing script '{FileName}' ({Index} of {Total}) failed", 
+            _logger.Error(ex, "Executing script '{FileName}' ({Index} of {Total}) failed",
                 SelectedFile, index, total);
-            Messages.Add($"Executing script Script '{SelectedFile}' ({index} of {total}) failed. " + ex.FlattenMessages());
-            return false;
+            WriteMessage($"Executing script Script '{SelectedFile}' ({index} of {total}) failed. " + ex.FlattenMessages());
+            return new ScriptResult();
         }
     }
 
     private async Task ExecuteSequentialAsync()
     {
+        var results = new List<ScriptResult>();
         for (var i = 0; i < SequentialCount; i++)
         {
-            await ExecuteScriptAsync(i+1, SequentialCount);
+            results.Add(await ExecuteScriptAsync(i + 1, SequentialCount));
         }
+
+        PrintResults(results);
     }
 
     private async Task ExecuteParallelAsync()
@@ -108,10 +118,24 @@ public partial class TestingViewModel : ObservableRecipient
         var tasks = new List<Task>();
         for (var i = 0; i < ParallelCount; i++)
         {
-            tasks.Add(ExecuteScriptAsync(i+1, ParallelCount));
+            tasks.Add(ExecuteScriptAsync(i + 1, ParallelCount));
         }
 
         await Task.WhenAll(tasks);
+        PrintResults(tasks.Select(t => ((Task<ScriptResult>)t).Result));
+    }
+
+    private void PrintResults(IEnumerable<ScriptResult> results)
+    {
+        var timings = results.Where(r => r.Succeeded).Select(r => r.Ms).ToList();
+        if (!timings.Any()) return;
+        var max = timings.Max();
+        var min = timings.Min();
+        var avg = timings.Average();
+
+        WriteMessage($"Total: {timings.Count} Avg: {avg}ms Fastest: {min}ms Slowest: {max}ms");
+        _logger.Information("Total: {Total} Avg: {Avg}ms Fastest: {Min}ms Slowest: {Max}ms",
+            timings.Count, avg, min, max);
     }
 
     public void SelectQueryFile()
@@ -131,7 +155,7 @@ public partial class TestingViewModel : ObservableRecipient
             QueryFiles.Clear();
             foreach (var file in files)
             {
-                QueryFiles.Add(file);
+                QueryFiles.Add(Path.GetFileName(file));
             }
             _logger.Debug("{FileCount} files found in folder '{QueryFolder}'",
                 files.Length, queryFolder);
@@ -140,5 +164,10 @@ public partial class TestingViewModel : ObservableRecipient
         {
             _logger.Error(ex, "Failed to open file picker for XSD files");
         }
+    }
+
+    private void WriteMessage(string message)
+    {
+        Messages.Add(message);
     }
 }

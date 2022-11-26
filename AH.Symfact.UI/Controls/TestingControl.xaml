@@ -71,7 +71,7 @@
 
             </Grid>
             <ScrollViewer HorizontalScrollMode="Auto"
-                          Height="600"
+                          Height="708"
                           Margin="10"
                           VerticalScrollMode="Enabled"
                           BorderBrush="Gray"

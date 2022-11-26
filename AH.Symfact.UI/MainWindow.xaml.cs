@@ -31,6 +31,7 @@ public sealed partial class MainWindow
     {
         _logger.Information("Started Symfact.UI");
         SetMainXamlRootHandle();
+        ViewModel.DispatcherQueue = this.DispatcherQueue;
         await Task.CompletedTask;
     }
 
