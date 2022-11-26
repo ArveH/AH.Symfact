@@ -7,6 +7,8 @@ public static class SymfactConstants
     public const string ContractXCol = "contractXCol";
     public const string ContractXOrg = "contractXOrg";
 
+    public const string TableSuffixPlaceHolder = "<<<TABLESUFFIX>>>";
+
     public static IReadOnlyList<string> ContractXColFiles = new List<string>{
         "Contract.xsd",
         "Clause.xsd",

@@ -91,9 +91,7 @@ public partial class TestingViewModel : ObservableRecipient
     {
         try
         {
-            var queryFolder = WeakReferenceMessenger.Default.Send<DataFolderChangedMessage>();
-            var path = Path.Combine(queryFolder, "Queries", SelectedFile);
-            var script = await File.ReadAllTextAsync(path);
+            var script = await GetScriptAsync();
             var sw = new Stopwatch();
             _logger.Debug("Executing Script '{FileName}' ({Index} of {Total}) ...",
                 SelectedFile, index, total);
@@ -112,6 +110,15 @@ public partial class TestingViewModel : ObservableRecipient
             WriteMessage($"Executing script Script '{SelectedFile}' ({index} of {total}) failed. " + ex.FlattenMessages());
             return new ScriptResult();
         }
+    }
+
+    private async Task<string> GetScriptAsync()
+    {
+        var queryFolder = WeakReferenceMessenger.Default.Send<DataFolderChangedMessage>();
+        var path = Path.Combine(queryFolder, "Queries", SelectedFile);
+        var script = await File.ReadAllTextAsync(path);
+        if (TableType == SymfactConstants.TableTypes[0]) return script.Replace(SymfactConstants.TableSuffixPlaceHolder, "");
+        return script.Replace(SymfactConstants.TableSuffixPlaceHolder, TableType);
     }
 
     private async Task ExecuteSequentialAsync()
