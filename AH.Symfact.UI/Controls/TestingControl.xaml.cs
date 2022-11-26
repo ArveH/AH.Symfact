@@ -22,11 +22,19 @@ public sealed partial class TestingControl
         ViewModel.SelectQueryFile();
     }
 
-    private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void OnQueryFileChanged(object sender, SelectionChangedEventArgs e)
     {
         if (e.AddedItems.Count > 0)
         {
             ViewModel.QueryFileChanged(e.AddedItems[0].ToString());
+        }
+    }
+
+    private void OnTableTypeChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.AddedItems.Count > 0)
+        {
+            ViewModel.TableTypeChanged();
         }
     }
 }

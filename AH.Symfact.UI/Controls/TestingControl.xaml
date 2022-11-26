@@ -19,36 +19,52 @@
                     BorderBrush="Gray"
                     BorderThickness="1">
             <!-- Folder -->
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Query file: " 
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0"
+                           Text="Query file: " 
                            Margin="10 10 0 5"
                            VerticalAlignment="Center"/>
-                <ComboBox PlaceholderText="Select Query file"
+                <ComboBox Grid.Column="1" Grid.Row="0"
+                          PlaceholderText="Select Query file"
                           Margin="10 10 0 5"
+                          VerticalAlignment="Center"
                           ItemsSource="{x:Bind ViewModel.QueryFiles, Mode=OneWay}"
                           Text="{x:Bind ViewModel.SelectedFile, Mode=TwoWay}"
-                          SelectionChanged="OnSelectionChanged"
-                          DropDownOpened="OnDropDownOpened">
-                </ComboBox>
-            </StackPanel>
+                          SelectionChanged="OnQueryFileChanged"
+                          DropDownOpened="OnDropDownOpened"/>
+                <TextBlock Grid.Column="0" Grid.Row="1"
+                           Text="Table type: " 
+                           Margin="10 0 0 5"
+                           VerticalAlignment="Center"/>
+                <ComboBox Grid.Column="1" Grid.Row="1"
+                          Margin="10 0 0 5"
+                          VerticalAlignment="Center"
+                          ItemsSource="{x:Bind ViewModel.TableTypes}"
+                          SelectedItem="{x:Bind ViewModel.TableType, Mode=TwoWay}"
+                          SelectionChanged="OnTableTypeChanged"/>
+            </Grid>
             <!-- Buttons -->
             <StackPanel Orientation="Horizontal">
                 <Button Margin="10 10 0 10"
-                        Content="Execute Script"
+                        Content="Run Sequential"
                         Command="{x:Bind ViewModel.ExecuteSequentialCommand, Mode=OneWay}"/>
                 <TextBox Text="{x:Bind ViewModel.SequentialCount, Mode=TwoWay}"
                          TextAlignment="Right"
                          Margin="10 10 0 10"/>
-
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Button Margin="10 10 0 10"
-                        Content="Run in parallel"
-                        Command="{x:Bind ViewModel.ExecuteParallelCommand, Mode=OneWay}"/>
+                <Button Margin="60 10 0 10"
+                            Content="Run Parallel"
+                            Command="{x:Bind ViewModel.ExecuteParallelCommand, Mode=OneWay}"/>
                 <TextBox Text="{x:Bind ViewModel.ParallelCount, Mode=TwoWay}"
-                         TextAlignment="Right"
-                         Margin="10 10 0 10"/>
-
+                             TextAlignment="Right"
+                             Margin="10 10 0 10"/>
             </StackPanel>
         </StackPanel>
 

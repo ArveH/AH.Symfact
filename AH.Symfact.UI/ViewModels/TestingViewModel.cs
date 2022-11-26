@@ -40,6 +40,10 @@ public partial class TestingViewModel : ObservableRecipient
     [ObservableProperty]
     private string _selectedFile = string.Empty;
     [ObservableProperty]
+    private string _tableType = SymfactConstants.TableTypes[0];
+    [ObservableProperty]
+    private List<string> _tableTypes = new(SymfactConstants.TableTypes);
+    [ObservableProperty]
     private ObservableCollection<string> _queryFiles = new();
     [ObservableProperty]
     private ObservableCollection<string> _messages = new();
@@ -47,6 +51,7 @@ public partial class TestingViewModel : ObservableRecipient
     private int _sequentialCount = 10;
     partial void OnSequentialCountChanging(int value)
     {
+        _logger.Information("SequentialCount changed to {SequentialCount}", value);
         WriteMessage($"SequentialCount changed to {value}");
     }
 
@@ -54,6 +59,7 @@ public partial class TestingViewModel : ObservableRecipient
     private int _parallelCount = 10;
     partial void OnParallelCountChanging(int value)
     {
+        _logger.Information("ParallelCount changed to {ParallelCount}", value);
         WriteMessage($"ParallelCount changed to {value}");
     }
 
@@ -62,8 +68,14 @@ public partial class TestingViewModel : ObservableRecipient
         if (!string.IsNullOrWhiteSpace(queryFile))
         {
             SelectedFile = queryFile;
+            _logger.Information("Script file = '{SelectedFile}'", SelectedFile);
             WriteMessage($"Script file = '{SelectedFile}'");
         }
+    }
+
+    public void TableTypeChanged()
+    {
+
     }
 
     public IAsyncRelayCommand ExecuteSequentialCommand { get; }

@@ -23,6 +23,13 @@ public static class SymfactConstants
         "UserProfile.xsd"
     };
 
+    public static IReadOnlyList<string> TableTypes = new List<string>{
+        "Source",
+        "ComputedColumns",
+        "ExtractedColumns",
+        "SelectiveIndex"
+    };
+
     public static class Name
     {
         public const string Contract = "Contract";
