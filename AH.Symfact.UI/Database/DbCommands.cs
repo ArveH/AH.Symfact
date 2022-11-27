@@ -134,14 +134,14 @@ public class DbCommands : IDbCommands
     public Task CreateCollectionAsync(string collectionName, string xmlString)
     {
         return CreateOrAddToCollectionAsync(
-            $"CREATE XML SCHEMA COLLECTION {collectionName} AS", 
+            $"CREATE XML SCHEMA COLLECTION {collectionName} AS",
             xmlString);
     }
 
     public Task AddToCollectionAsync(string collectionName, string xmlString)
     {
         return CreateOrAddToCollectionAsync(
-            $"ALTER XML SCHEMA COLLECTION {collectionName} ADD", 
+            $"ALTER XML SCHEMA COLLECTION {collectionName} ADD",
             xmlString);
     }
 
@@ -187,13 +187,22 @@ public class DbCommands : IDbCommands
         var _ = server.ConnectionContext.ExecuteNonQuery(script);
     }
 
+    public int ExecuteQuery(string script)
+    {
+        using var dbConn = _dbConnFactory.CreateConnection();
+        dbConn.Connect();
+        var server = new Server(new ServerConnection(dbConn.Conn));
+        var result = server.ConnectionContext.ExecuteWithResults(script);
+        return result.Tables[0].Rows.Count;
+    }
+
     private Task<List<string>> GetAllObjectsAsync(string type)
     {
         var sqlTxt = $"select name from sys.objects where type = '{type}' order by name";
         return GetAllAsync(sqlTxt);
     }
 
-    private  async Task<List<string>> GetAllAsync(string sqlTxt)
+    private async Task<List<string>> GetAllAsync(string sqlTxt)
     {
         await using var dbConn = _dbConnFactory.CreateConnection();
         await dbConn.ConnectAsync();

@@ -24,4 +24,5 @@ public interface IDbCommands
     Task ExecuteScriptAsync(string script);
     Task<List<string>> GetAllFullTextIndexesAsync();
     Task CreateFulltextCatalogAsync(string catalogName);
+    int ExecuteQuery(string script);
 }

@@ -54,14 +54,53 @@ public class DbConn : IDbConn
         }
     }
 
+    public bool Connect()
+    {
+        if (IsConnected) return true;
+
+        try
+        {
+            Conn = new SqlConnection(_dbConnectionString.ConnectionString);
+            Conn.Open();
+            var sqlTxt = "select @@VERSION";
+
+            using var cmd = new SqlCommand(sqlTxt, Conn);
+            var version = (string?)cmd.ExecuteScalar();
+            if (!string.IsNullOrWhiteSpace(version))
+            {
+                _logger.Verbose("Connected to '{DbName}'. Database version: {DbVersion}",
+                    Conn.Database, version);
+                return true;
+            }
+
+            _logger.Error("Connect failed!");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex.FlattenMessages());
+            if (Conn != null) Conn.Close();
+            return false;
+        }
+    }
+
     public async Task DisconnectAsync()
     {
         if (Conn != null)
+        {
             await Conn.DisposeAsync();
+            Conn = null;
+        }
     }
 
     public async ValueTask DisposeAsync()
     {
         await DisconnectAsync();
+    }
+
+    public void Dispose()
+    {
+        Conn?.Dispose();
+        Conn = null;
     }
 }

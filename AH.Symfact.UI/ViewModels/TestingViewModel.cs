@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Serilog;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -14,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Dispatching;
+using Windows.UI.Core;
 
 namespace AH.Symfact.UI.ViewModels;
 
@@ -32,10 +34,10 @@ public partial class TestingViewModel : ObservableRecipient
         ExecuteSequentialCommand = new AsyncRelayCommand(ExecuteSequentialAsync);
         ExecuteParallelCommand = new AsyncRelayCommand(ExecuteParallelAsync);
         ClearMessagesCommand = new RelayCommand(ClearMessages);
-        DispatcherQueue = WeakReferenceMessenger.Default.Send<DispatcherQueueMessage>();
     }
 
-    public DispatcherQueue? DispatcherQueue { get; }
+    public CoreDispatcher? Dispatcher { get; set; }
+    public DispatcherQueue? DispatcherQueue { get; set; }
 
     [ObservableProperty]
     private string _selectedFile = string.Empty;
@@ -87,20 +89,20 @@ public partial class TestingViewModel : ObservableRecipient
         Messages.Clear();
     }
 
-    private async Task<ScriptResult> ExecuteScriptAsync(int index, int total)
+    private ScriptResult ExecuteScript(int index, int total)
     {
         try
         {
-            var script = await GetScriptAsync();
+            var script = GetScript();
             var sw = new Stopwatch();
             _logger.Debug("Executing Script '{FileName}' ({Index} of {Total}) ...",
                 SelectedFile, index, total);
             sw.Start();
-            await _dbCommands.ExecuteScriptAsync(script);
+            var rows = _dbCommands.ExecuteQuery(script);
             sw.Stop();
-            _logger.Information("({Index} of {Total}) Script '{FileName}' executed in {Ms}ms",
-                index, total, SelectedFile, sw.ElapsedMilliseconds);
-            WriteMessage($"({index} of {total}) Script '{SelectedFile}' executed in {sw.ElapsedMilliseconds}ms");
+            _logger.Information("({Index} of {Total}) Script '{FileName}' returned {Rows} rows and executed in {Ms}ms",
+                index, total, SelectedFile, rows, sw.ElapsedMilliseconds);
+            WriteMessage($"({index} of {total}) Script '{SelectedFile}' returned {rows} rows and executed in {sw.ElapsedMilliseconds}ms");
             return new ScriptResult(sw.ElapsedMilliseconds);
         }
         catch (Exception ex)
@@ -112,11 +114,11 @@ public partial class TestingViewModel : ObservableRecipient
         }
     }
 
-    private async Task<string> GetScriptAsync()
+    private string GetScript()
     {
         var queryFolder = WeakReferenceMessenger.Default.Send<DataFolderChangedMessage>();
         var path = Path.Combine(queryFolder, "Queries", SelectedFile);
-        var script = await File.ReadAllTextAsync(path);
+        var script = File.ReadAllText(path);
         if (TableType == SymfactConstants.TableTypes[0]) return script.Replace(SymfactConstants.TableSuffixPlaceHolder, "");
         return script.Replace(SymfactConstants.TableSuffixPlaceHolder, TableType);
     }
@@ -126,25 +128,31 @@ public partial class TestingViewModel : ObservableRecipient
         var results = new List<ScriptResult>();
         for (var i = 0; i < SequentialCount; i++)
         {
-            results.Add(await ExecuteScriptAsync(i + 1, SequentialCount));
+            await Task.Run(() =>
+            {
+                results.Add(ExecuteScript(i + 1, SequentialCount));
+            });
         }
 
-        PrintResults(results);
+        PrintResult(results);
     }
 
     private async Task ExecuteParallelAsync()
     {
-        var tasks = new List<Task>();
-        for (var i = 0; i < ParallelCount; i++)
+        var results = new ConcurrentBag<ScriptResult>();
+        var cnt = ParallelCount + 1;
+        await Task.Run(() =>
         {
-            tasks.Add(ExecuteScriptAsync(i + 1, ParallelCount));
-        }
+            Parallel.For(1, cnt, (i) => 
+            {
+                results.Add(ExecuteScript(i, ParallelCount));
+            });
+        });
 
-        await Task.WhenAll(tasks);
-        PrintResults(tasks.Select(t => ((Task<ScriptResult>)t).Result));
+        PrintResult(results);
     }
 
-    private void PrintResults(IEnumerable<ScriptResult> results)
+    private void PrintResult(IEnumerable<ScriptResult> results)
     {
         var timings = results.Where(r => r.Succeeded).Select(r => r.Ms).ToList();
         if (!timings.Any()) return;
@@ -187,6 +195,9 @@ public partial class TestingViewModel : ObservableRecipient
 
     private void WriteMessage(string message)
     {
-        Messages.Add(message);
+        DispatcherQueue?.TryEnqueue(() =>
+        {
+            Messages.Add(message);
+        });
     }
 }

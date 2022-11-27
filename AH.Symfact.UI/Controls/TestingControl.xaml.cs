@@ -1,7 +1,7 @@
 using AH.Symfact.UI.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using Microsoft.UI.Xaml.Controls;
+using System;
 
 namespace AH.Symfact.UI.Controls;
 
@@ -15,6 +15,8 @@ public sealed partial class TestingControl
                     ?? throw new ApplicationException(
                         "Can't get ViewModel for TestingControl");
         this.InitializeComponent();
+        ViewModel.Dispatcher = this.Dispatcher;
+        ViewModel.DispatcherQueue = this.DispatcherQueue;
     }
 
     private void OnDropDownOpened(object? sender, object e)
