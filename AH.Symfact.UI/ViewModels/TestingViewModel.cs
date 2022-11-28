@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.UI.Dispatching;
 using Windows.UI.Core;
@@ -42,7 +43,9 @@ public partial class TestingViewModel : ObservableRecipient
     [ObservableProperty]
     private string _selectedFile = string.Empty;
     [ObservableProperty]
-    private string _tableType = SymfactConstants.TableTypes[0];
+    private string _tableType = SymfactConstants.TableTypes[2];
+    [ObservableProperty]
+    private string _logMessage = string.Empty;
     [ObservableProperty]
     private List<string> _tableTypes = new(SymfactConstants.TableTypes);
     [ObservableProperty]
@@ -89,7 +92,7 @@ public partial class TestingViewModel : ObservableRecipient
         Messages.Clear();
     }
 
-    private ScriptResult ExecuteScript(int index, int total)
+    private ScriptResult ExecuteScript(int index, int threadId, int total)
     {
         try
         {
@@ -100,9 +103,9 @@ public partial class TestingViewModel : ObservableRecipient
             sw.Start();
             var rows = _dbCommands.ExecuteQuery(script);
             sw.Stop();
-            _logger.Information("({Index} of {Total}) Script '{FileName}' returned {Rows} rows and executed in {Ms}ms",
-                index, total, SelectedFile, rows, sw.ElapsedMilliseconds);
-            WriteMessage($"({index} of {total}) Script '{SelectedFile}' returned {rows} rows and executed in {sw.ElapsedMilliseconds}ms");
+            _logger.Information("Script '{FileName}' returned {Rows} rows and executed in {Ms}ms ({Index} of {Total}, ThreadId: {ThreadId}) ",
+                SelectedFile, rows, sw.ElapsedMilliseconds, index, total, threadId);
+            WriteMessage($"(Script '{SelectedFile}' returned {rows} rows and executed in {sw.ElapsedMilliseconds}ms ({index} of {total}, ThreadId: {threadId}) ");
             return new ScriptResult(sw.ElapsedMilliseconds);
         }
         catch (Exception ex)
@@ -130,29 +133,33 @@ public partial class TestingViewModel : ObservableRecipient
         {
             await Task.Run(() =>
             {
-                results.Add(ExecuteScript(i + 1, SequentialCount));
+                results.Add(ExecuteScript(i + 1, Thread.CurrentThread.ManagedThreadId, SequentialCount));
             });
         }
 
+        _logger.Information("Sequential: {LogMessage}", LogMessage);
         PrintResult(results);
     }
 
     private async Task ExecuteParallelAsync()
     {
         var results = new ConcurrentBag<ScriptResult>();
+        var threadIds = new ConcurrentBag<int>();
         var cnt = ParallelCount + 1;
         await Task.Run(() =>
         {
-            Parallel.For(1, cnt, (i) => 
+            Parallel.For(1, cnt, (i) =>
             {
-                results.Add(ExecuteScript(i, ParallelCount));
+                results.Add(ExecuteScript(i, Thread.CurrentThread.ManagedThreadId, ParallelCount));
+                threadIds.Add(Thread.CurrentThread.ManagedThreadId);
             });
         });
 
-        PrintResult(results);
+        _logger.Information("Parallel: {LogMessage}", LogMessage);
+        PrintResult(results, threadIds);
     }
 
-    private void PrintResult(IEnumerable<ScriptResult> results)
+    private void PrintResult(IEnumerable<ScriptResult> results, IEnumerable<int>? threadIds=null)
     {
         var timings = results.Where(r => r.Succeeded).Select(r => r.Ms).ToList();
         if (!timings.Any()) return;
@@ -163,6 +170,12 @@ public partial class TestingViewModel : ObservableRecipient
         WriteMessage($"Total: {timings.Count} Avg: {avg}ms Fastest: {min}ms Slowest: {max}ms");
         _logger.Information("Total: {Total} Avg: {Avg}ms Fastest: {Min}ms Slowest: {Max}ms",
             timings.Count, avg, min, max);
+
+        if (threadIds != null)
+        {
+            _logger.Information("{DistinctThreadIds} distinct threads",
+                threadIds.Distinct().Count());
+        }
     }
 
     public void SelectQueryFile()

@@ -18,13 +18,13 @@
                     HorizontalAlignment="Stretch" 
                     BorderBrush="Gray"
                     BorderThickness="1">
-            <!-- Folder -->
             <Grid >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -50,6 +50,15 @@
                           ItemsSource="{x:Bind ViewModel.TableTypes}"
                           SelectedItem="{x:Bind ViewModel.TableType, Mode=TwoWay}"
                           SelectionChanged="OnTableTypeChanged"/>
+                <TextBlock Grid.Column="0" Grid.Row="2"
+                           Text="Log message: " 
+                           Margin="10 0 0 5"
+                           VerticalAlignment="Center"/>
+                <TextBox Grid.Column="1" Grid.Row="2"
+                         Text="{x:Bind ViewModel.LogMessage, Mode=TwoWay}"
+                         Margin="10 0 10 5"
+                         VerticalAlignment="Center">
+                </TextBox >
             </Grid>
             <!-- Buttons -->
             <StackPanel Orientation="Horizontal">
