@@ -23,6 +23,7 @@ ON ContractSelectiveIndex(Data)
 FOR
 (
     pathCn = 'declare namespace C="symfact/Contract";/C:Contract/C:Summary/C:GeneralInfo/C:ContractOwnerCN' AS XQUERY 'xs:string',
-    pathStatus = 'declare namespace C="symfact/Contract";/C:Contract/C:Status/@status' AS XQUERY 'xs:string'
+    pathStatus = 'declare namespace C="symfact/Contract";/C:Contract/C:Status/@status' AS XQUERY 'xs:string',
+    pathContractType = 'declare namespace C="symfact/Contract";/C:Contract/C:Summary/C:GeneralInfo/C:ContractType' AS XQUERY 'xs:string'
 )
 GO
