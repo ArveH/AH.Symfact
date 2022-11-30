@@ -13,5 +13,6 @@ public class ScriptResult
     }
 
     public long Ms { get; set; }
+    public int ThreadId { get; set; }
     public bool Succeeded { get; set; }
 }

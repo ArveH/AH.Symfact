@@ -12,7 +12,8 @@ internal class Program
     {
         if (args.Length != 3)
         {
-            Console.WriteLine("Usage: AH.Symfact.Cmd.exe <runCount> <script> <connection string>");
+            Console.WriteLine("\n\nUsage: AH.Symfact.Cmd.exe <runCount> <script> <connection string>\n");
+            return;
         }
 
         var results = new ConcurrentBag<ScriptResult>();
@@ -21,42 +22,61 @@ internal class Program
         var path = args[1];
         var connectionString = args[2];
         var toInclusive = runCount + 1;
+        Console.WriteLine($"Executing Script '{path}'...");
         Parallel.For(1, toInclusive, (i) =>
         {
-            results.Add(ExecuteScript(i, Thread.CurrentThread.ManagedThreadId, runCount, path, connectionString));
+            results.Add(ExecuteScript(i, runCount, path, connectionString));
             threadIds.Add(Thread.CurrentThread.ManagedThreadId);
         });
+        foreach (var res in results.OrderBy(r => r.Ms))
+        {
+            Console.WriteLine($"ThreadId {res.ThreadId,3}: {res.Ms,6}");
+        }
+        PrintResult(results, threadIds);
     }
 
-    private static ScriptResult ExecuteScript(int index, int threadId, int total, string path, string connectionString)
+    private static ScriptResult ExecuteScript(int index, int total, string path, string connectionString)
     {
         try
         {
-            var script = File.ReadAllText(path);
-            var fileName = Path.GetFileName(path);
-            Console.WriteLine($"Executing Script '{fileName}' ({index} of {total}) ...");
-            var sw = new Stopwatch();
-            sw.Start();
-            var rows = ExecuteQuery(script, connectionString);
-            sw.Stop();
-            Console.WriteLine("Script '{0}' returned {1} rows and executed in {2}ms ({3} of {4}, ThreadId: {5}) ",
-                fileName, rows, sw.ElapsedMilliseconds, index, total, threadId);
-            return new ScriptResult(sw.ElapsedMilliseconds);
+            var script = File.ReadAllText(path).Replace("<<<TABLESUFFIX>>>", "ExtractedColumns");
+            var result = ExecuteQuery(script, connectionString);
+            result.ThreadId = Thread.CurrentThread.ManagedThreadId;
+            return result;
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Executing script '{0}' ({1} of {2}) failed. " + ex.Message,
-                Path.GetFileName(path), index, total);
+            Console.WriteLine("Execution failed! ({1} of {2}). " + ex.Message,
+                index, total);
             return new ScriptResult();
         }
     }
 
-    private static int ExecuteQuery(string script, string connectionString)
+    private static ScriptResult ExecuteQuery(string script, string connectionString)
     {
         using var dbConn = new SqlConnection(connectionString);
         dbConn.Open();
         var server = new Server(new ServerConnection(dbConn));
-        var result = server.ConnectionContext.ExecuteWithResults(script);
-        return result.Tables[0].Rows.Count;
+        var sw = new Stopwatch();
+        sw.Start();
+        server.ConnectionContext.ExecuteWithResults(script);
+        sw.Stop();
+        return new ScriptResult(sw.ElapsedMilliseconds);
+    }
+
+    private static void PrintResult(IEnumerable<ScriptResult> results, IEnumerable<int>? threadIds=null)
+    {
+        var timings = results.Where(r => r.Succeeded).Select(r => r.Ms).ToList();
+        if (!timings.Any()) return;
+        var max = timings.Max();
+        var min = timings.Min();
+        var avg = timings.Average();
+
+        Console.WriteLine($"Total: {timings.Count} Avg: {avg}ms Fastest: {min}ms Slowest: {max}ms");
+
+        if (threadIds != null)
+        {
+            Console.WriteLine($"{threadIds.Distinct().Count()} distinct threads");
+        }
     }
 }
