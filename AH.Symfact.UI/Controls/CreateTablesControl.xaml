@@ -59,7 +59,7 @@
                    Margin="20 5 20 10"
                    VerticalAlignment="Center"/>
 
-            <!-- Create with computed columns -->
+            <!-- Create with selective index -->
             <Button Grid.Row="3" Grid.Column="0"
                     Margin="20 5 0 5"
                     Command="{x:Bind ViewModel.SelectiveIndexCommand, Mode=OneWay}"
@@ -69,6 +69,15 @@
                        Margin="20 5 20 5"
                        VerticalAlignment="Center"/>
 
+            <!-- Create with no schema -->
+            <Button Grid.Row="4" Grid.Column="0"
+                    Margin="20 5 0 5"
+                    Command="{x:Bind ViewModel.NoSchemaCommand, Mode=OneWay}"
+                    Content="Add with no schema"/>
+            <TextBlock Text="{x:Bind ViewModel.NoSchemaColumnsStatus, Mode=OneWay}" 
+                       Grid.Row="4" Grid.Column="1"
+                       Margin="20 5 20 5"
+                       VerticalAlignment="Center"/>
         </Grid>
     </StackPanel>
 

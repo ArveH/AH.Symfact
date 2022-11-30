@@ -20,6 +20,7 @@ public partial class CreateTablesViewModel : ObservableRecipient
         ComputedColumnsCommand = new AsyncRelayCommand(CreateWithComputedColumnsAsync);
         ExtractedColumnsCommand = new AsyncRelayCommand(CreateWithExtractedColumnsAsync);
         SelectiveIndexCommand = new AsyncRelayCommand(CreateWithSelectiveIndexAsync);
+        NoSchemaCommand = new AsyncRelayCommand(CreateWithNoSchemaAsync);
         WeakReferenceMessenger.Default.Register<TableChangedMessage>(this, (_, msg) =>
         {
             if (!msg.Value.TableName.StartsWith(TableName)) return;
@@ -38,6 +39,8 @@ public partial class CreateTablesViewModel : ObservableRecipient
                 ComputedColumnsStatus = msg.Value.Message ?? "<Message missing>";
             else if (msg.Value.TableName == TableName + "ExtractedColumns")
                 ExtractedColumnsStatus = msg.Value.Message ?? "<Message missing>";
+            else if (msg.Value.TableName == TableName + "NoSchema")
+                NoSchemaColumnsStatus = msg.Value.Message ?? "<Message missing>";
         });
     }
 
@@ -54,15 +57,24 @@ public partial class CreateTablesViewModel : ObservableRecipient
     private string _computedColumnsStatus = "Ready...";
     [ObservableProperty]
     private string _extractedColumnsStatus = "Ready...";
+    [ObservableProperty]
+    private string _noSchemaColumnsStatus = "Ready...";
 
     public IAsyncRelayCommand SourceTableCommand { get; }
     public IAsyncRelayCommand SelectiveIndexCommand { get; }
     public IAsyncRelayCommand ComputedColumnsCommand { get; }
     public IAsyncRelayCommand ExtractedColumnsCommand { get; }
+    public IAsyncRelayCommand NoSchemaCommand { get; }
 
     private Task CreateWithNoColumns()
     {
         return _tableService.CreateTableAsync(TableName, $"{TableName}.sql", $"{TableName}.xml");
+    }
+
+    private Task CreateWithNoSchemaAsync()
+    {
+        var tableName = TableName + "NoSchema";
+        return _tableService.ExecuteScriptAsync(tableName, $"{tableName}.sql");
     }
 
     private Task CreateWithSelectiveIndexAsync()

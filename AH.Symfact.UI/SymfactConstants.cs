@@ -29,7 +29,8 @@ public static class SymfactConstants
         "Source",
         "ComputedColumns",
         "ExtractedColumns",
-        "SelectiveIndex"
+        "SelectiveIndex",
+        "NoSchema"
     };
 
     public static class Name
@@ -38,14 +39,17 @@ public static class SymfactConstants
         public const string ContractComputedColumns = "ContractComputedColumns";
         public const string ContractExtractedColumns = "ContractExtractedColumns";
         public const string ContractSelectiveIndex = "ContractSelectiveIndex";
+        public const string ContractNoSchema = "ContractNoSchema";
         public const string OrganisationalPerson = "OrganisationalPerson";
         public const string OrganisationalPersonComputedColumns = "OrganisationalPersonComputedColumns";
         public const string OrganisationalPersonExtractedColumns = "OrganisationalPersonExtractedColumns";
         public const string OrganisationalPersonSelectiveIndex = "OrganisationalPersonSelectiveIndex";
+        public const string OrganisationalPersonNoSchema = "OrganisationalPersonNoSchema";
         public const string Party = "Party";
         public const string PartyComputedColumns = "PartyComputedColumns";
         public const string PartyExtractedColumns = "PartyExtractedColumns";
         public const string PartySelectiveIndex = "PartySelectiveIndex";
+        public const string PartyNoSchema = "PartyNoSchema";
 
         public const string ContractCatalog = "ContractCatalog";
         public const string OrgPersonCatalog = "OrgPersonCatalog";
@@ -57,13 +61,16 @@ public static class SymfactConstants
         Name.ContractComputedColumns,
         Name.ContractExtractedColumns,
         Name.ContractSelectiveIndex,
+        Name.ContractNoSchema,
         Name.OrganisationalPerson,
         Name.OrganisationalPersonComputedColumns,
         Name.OrganisationalPersonExtractedColumns,
         Name.OrganisationalPersonSelectiveIndex,
+        Name.OrganisationalPersonNoSchema,
         Name.Party,
         Name.PartyComputedColumns,
         Name.PartyExtractedColumns,
-        Name.PartySelectiveIndex
+        Name.PartySelectiveIndex,
+        Name.PartyNoSchema
     };
 }
