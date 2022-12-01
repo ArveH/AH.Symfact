@@ -17,7 +17,7 @@ SELECT
     Data.value('declare namespace C="symfact/Contract";/C:Contract/C:Summary/C:GeneralInfo/C:ContractOwnerCN', 'nvarchar(50)'),
     Data.value('declare namespace C="symfact/Contract";/C:Contract/C:Status/@status', 'nvarchar(50)'),
     Data.value('declare namespace C="symfact/Contract";/C:Contract/C:Summary/C:GeneralInfo/C:ContractType', 'nvarchar(100)'),
-    Data 
+    Data
 FROM Contract
 GO
 

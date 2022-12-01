@@ -6,7 +6,7 @@ CREATE TABLE PartyNoSchema(
     DocName nvarchar(30),
     PartnerShortName nvarchar(200),
     PartnerCity nvarchar(200),
-    Data Xml(Document contractXCol)
+    Data Xml
 )
 GO
 
