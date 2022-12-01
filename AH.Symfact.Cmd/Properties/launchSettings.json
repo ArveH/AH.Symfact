@@ -2,7 +2,7 @@
   "profiles": {
     "AH.Symfact.Cmd": {
       "commandName": "Project",
-      "commandLineArgs": "20 \"D:\\Temp\\Symfact\\DataSet\\Queries\\3-way - Using columns - All Contracts.sql\""
+      "commandLineArgs": "20 \"D:\\Temp\\Symfact\\DataSet\\Queries\\3-way - Using columns - All Contracts.sql\" \"Server=.;Database=Symfact;TrustServerCertificate=True;Trusted_Connection=True;MultipleActiveResultSets=true\""
     }
   }
 }

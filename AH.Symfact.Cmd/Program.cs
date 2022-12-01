@@ -54,15 +54,23 @@ internal class Program
 
     private static ScriptResult ExecuteQuery(string script, string connectionString)
     {
-        using var dbConn = new SqlConnection(connectionString);
-        dbConn.Open();
-        var server = new Server(new ServerConnection(dbConn));
         var sw = new Stopwatch();
         sw.Start();
-        server.ConnectionContext.ExecuteWithResults(script);
+        using var dbConn = new SqlConnection(connectionString);
+        dbConn.Open();
+        using var cmd = dbConn.CreateCommand();
+        cmd.CommandText = "    SELECT \r\n        c.DocName, \r\n        op.Initials\r\n    FROM TestContractWithNoXml c\r\n    JOIN TestOrganisationalPersonWithNoXml op \r\n        ON op.Cn = c.ContractOwnerCN\r\n    WHERE c.Status != 'deleted'\r\n      AND c.ContractType = 'Insurance'";
+        using var reader = cmd.ExecuteReader();
+        //while (reader.Read())
+        //{
+        //    var docName = reader.GetString(0);
+        //    var xml = reader.GetString(1);
+        //}
+        reader.Close();
         sw.Stop();
         return new ScriptResult(sw.ElapsedMilliseconds);
     }
+
 
     private static void PrintResult(IEnumerable<ScriptResult> results, IEnumerable<int>? threadIds=null)
     {
