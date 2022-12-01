@@ -59,7 +59,14 @@ internal class Program
         using var dbConn = new SqlConnection(connectionString);
         dbConn.Open();
         using var cmd = dbConn.CreateCommand();
-        cmd.CommandText = "    SELECT \r\n        c.DocName, \r\n        op.Initials\r\n    FROM TestContractWithNoXml c\r\n    JOIN TestOrganisationalPersonWithNoXml op \r\n        ON op.Cn = c.ContractOwnerCN\r\n    WHERE c.Status != 'deleted'\r\n      AND c.ContractType = 'Insurance'";
+        cmd.CommandText = "SELECT \r\n" +
+                          "    c.DocName, \r\n" +
+                          "    op.Initials\r\n" +
+                          "FROM ContractNoSchema c\r\n" +
+                          "JOIN OrganisationalPersonNoSchema op \r\n" +
+                          "    ON op.Cn = c.ContractOwnerCN\r\n" +
+                          "WHERE c.Status != 'deleted'\r\n" +
+                          "  AND c.ContractType = 'Insurance'";
         using var reader = cmd.ExecuteReader();
         //while (reader.Read())
         //{
@@ -67,6 +74,7 @@ internal class Program
         //    var xml = reader.GetString(1);
         //}
         reader.Close();
+        dbConn.Close();
         sw.Stop();
         return new ScriptResult(sw.ElapsedMilliseconds);
     }
