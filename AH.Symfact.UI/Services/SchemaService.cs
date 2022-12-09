@@ -10,14 +10,14 @@ namespace AH.Symfact.UI.Services;
 
 public class SchemaService : ISchemaService
 {
-    private readonly IDbCommands _dbCommands;
+    private readonly ISqlServerCommands _sqlServerCommands;
     private readonly ILogger _logger;
 
     public SchemaService(
-        IDbCommands dbCommands,
+        ISqlServerCommands sqlServerCommands,
         ILogger logger)
     {
-        _dbCommands = dbCommands;
+        _sqlServerCommands = sqlServerCommands;
         _logger = logger.ForContext<SchemaService>();
     }
 
@@ -27,13 +27,13 @@ public class SchemaService : ISchemaService
         {
             var xmlString = await GetXmlStringAsync(fileName);
 
-            if (await _dbCommands.SchemaCollectionExistsAsync(collectionName))
+            if (await _sqlServerCommands.SchemaCollectionExistsAsync(collectionName))
             {
-                await _dbCommands.DropSchemaCollectionAsync(collectionName);
+                await _sqlServerCommands.DropSchemaCollectionAsync(collectionName);
                 _logger.Debug("Schema collection '{SchemaCollectionName}' dropped", collectionName);
             }
 
-            await _dbCommands.CreateCollectionAsync(collectionName, xmlString);
+            await _sqlServerCommands.CreateCollectionAsync(collectionName, xmlString);
             _logger.Debug("Schema collection '{SchemaCollectionName}' created from '{FileName}'", 
                 collectionName, fileName);
             return true;
@@ -52,7 +52,7 @@ public class SchemaService : ISchemaService
         {
             var xmlString = await GetXmlStringAsync(fileName);
 
-            await _dbCommands.AddToCollectionAsync(collectionName, xmlString);
+            await _sqlServerCommands.AddToCollectionAsync(collectionName, xmlString);
             _logger.Debug("Added '{FileName}' to collection '{SchemaCollectionName}' created", 
                 fileName, collectionName);
             return true;

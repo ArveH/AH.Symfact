@@ -19,18 +19,18 @@ public partial class TablesViewModel : ObservableRecipient
 {
     private readonly ISchemaService _schemaService;
     private readonly ITableService _tableService;
-    private readonly IDbCommands _dbCommands;
+    private readonly ISqlServerCommands _sqlServerCommands;
     private readonly ILogger _logger;
 
     public TablesViewModel(
         ISchemaService schemaService,
         ITableService tableService,
-        IDbCommands dbCommands,
+        ISqlServerCommands sqlServerCommands,
         ILogger logger)
     {
         _schemaService = schemaService;
         _tableService = tableService;
-        _dbCommands = dbCommands;
+        _sqlServerCommands = sqlServerCommands;
         _logger = logger.ForContext<TablesViewModel>();
         CreateSchemasCommand = new AsyncRelayCommand(CreateSchemasAsync);
         SelectDataFolderCommand = new AsyncRelayCommand(SelectDataFolderAsync);
@@ -106,7 +106,7 @@ public partial class TablesViewModel : ObservableRecipient
             _logger.Information("Deleting all tables...");
             CreateSchemasStatus = "Deleting all tables...";
 
-            var tables = await _dbCommands.GetAllTablesAsync();
+            var tables = await _sqlServerCommands.GetAllTablesAsync();
             if (tables.Count < 1)
             {
                 _logger.Information("No tables deleted");
@@ -114,7 +114,7 @@ public partial class TablesViewModel : ObservableRecipient
                 return;
             }
 
-            await _dbCommands.DeleteTablesAsync(tables);
+            await _sqlServerCommands.DeleteTablesAsync(tables);
 
             _logger.Information("{Count} tables deleted", tables.Count);
             CreateSchemasStatus = $"{tables.Count} tables deleted";
@@ -133,7 +133,7 @@ public partial class TablesViewModel : ObservableRecipient
             _logger.Information("Deleting all functions...");
             CreateSchemasStatus = "Deleting all functions...";
 
-            var functions = await _dbCommands.GetAllFunctionsAsync();
+            var functions = await _sqlServerCommands.GetAllFunctionsAsync();
             if (functions.Count < 1)
             {
                 _logger.Information("No functions deleted");
@@ -141,7 +141,7 @@ public partial class TablesViewModel : ObservableRecipient
                 return;
             }
 
-            await _dbCommands.DeleteFunctionsAsync(functions);
+            await _sqlServerCommands.DeleteFunctionsAsync(functions);
 
             _logger.Information("{Count} functions deleted", functions.Count);
             CreateSchemasStatus = $"{functions.Count} functions deleted";
@@ -160,7 +160,7 @@ public partial class TablesViewModel : ObservableRecipient
             _logger.Information("Deleting all schema collections...");
             CreateSchemasStatus = "Deleting all schema collections...";
 
-            var collections = await _dbCommands.GetAllSchemaCollectionsAsync();
+            var collections = await _sqlServerCommands.GetAllSchemaCollectionsAsync();
             if (collections.Count < 1)
             {
                 _logger.Information("No schema collections deleted");
@@ -168,7 +168,7 @@ public partial class TablesViewModel : ObservableRecipient
                 return;
             }
 
-            await _dbCommands.DeleteSchemaCollectionsAsync(collections);
+            await _sqlServerCommands.DeleteSchemaCollectionsAsync(collections);
 
             _logger.Information("{Count} schema collections deleted", collections.Count);
             CreateSchemasStatus = $"{collections.Count} schema collections deleted";

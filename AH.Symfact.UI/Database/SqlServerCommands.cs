@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace AH.Symfact.UI.Database;
 
-public class DbCommands : IDbCommands
+public class SqlServerCommands : ISqlServerCommands
 {
     private readonly IDbConnFactory _dbConnFactory;
 
-    public DbCommands(
+    public SqlServerCommands(
         IDbConnFactory dbConnFactory)
     {
         _dbConnFactory = dbConnFactory;

@@ -14,16 +14,16 @@ namespace AH.Symfact.UI.Services;
 
 public class TableService : ITableService
 {
-    private readonly IDbCommands _dbCommands;
+    private readonly ISqlServerCommands _sqlServerCommands;
     private readonly ITaminoFileReader _fileReader;
     private readonly ILogger _logger;
 
     public TableService(
-        IDbCommands dbCommands,
+        ISqlServerCommands sqlServerCommands,
         ITaminoFileReader fileReader,
         ILogger logger)
     {
-        _dbCommands = dbCommands;
+        _sqlServerCommands = sqlServerCommands;
         _fileReader = fileReader;
         _logger = logger;
     }
@@ -41,7 +41,7 @@ public class TableService : ITableService
             _logger.Information("Inserting into {TableName}...", tableName);
             SendInfo(tableName, $"Inserting into {tableName}...");
 
-            var cnt = await _dbCommands.InsertRowsAsync(tableName, contractData);
+            var cnt = await _sqlServerCommands.InsertRowsAsync(tableName, contractData);
 
             _logger.Information("{RowCount} rows inserted into {TableName}", cnt, tableName);
             Send(tableName, TableAction.LoadedTable, $"{cnt} rows inserted into {tableName}");
@@ -63,7 +63,7 @@ public class TableService : ITableService
             var folder = WeakReferenceMessenger.Default.Send<ExeFolderMessage>();
             var filePath = Path.Combine(folder, "Database", "Scripts", fileName);
             var scriptTxt = await File.ReadAllTextAsync(filePath);
-            await _dbCommands.ExecuteScriptAsync(scriptTxt);
+            await _sqlServerCommands.ExecuteScriptAsync(scriptTxt);
             _logger.Information("Script '{FileName}' finished", fileName);
             SendInfo(tableName, $"Script '{fileName}' finished");
         }
@@ -85,9 +85,9 @@ public class TableService : ITableService
 
     private async Task CreateAllFullTextCatalogsAsync()
     {
-        await _dbCommands.CreateFulltextCatalogAsync(SymfactConstants.Name.ContractCatalog);
-        await _dbCommands.CreateFulltextCatalogAsync(SymfactConstants.Name.OrgPersonCatalog);
-        await _dbCommands.CreateFulltextCatalogAsync(SymfactConstants.Name.PartyCatalog);
+        await _sqlServerCommands.CreateFulltextCatalogAsync(SymfactConstants.Name.ContractCatalog);
+        await _sqlServerCommands.CreateFulltextCatalogAsync(SymfactConstants.Name.OrgPersonCatalog);
+        await _sqlServerCommands.CreateFulltextCatalogAsync(SymfactConstants.Name.PartyCatalog);
     }
 
     private async Task CreateAllFullTextIndexesAsync()
@@ -100,10 +100,10 @@ public class TableService : ITableService
 
     private async Task DropAllFullTextIndexesAsync()
     {
-        var indexes = await _dbCommands.GetAllFullTextIndexesAsync();
+        var indexes = await _sqlServerCommands.GetAllFullTextIndexesAsync();
         foreach (var index in indexes)
         {
-            await _dbCommands.DropFullTextIndexAsync(index);
+            await _sqlServerCommands.DropFullTextIndexAsync(index);
         }
     }
 
@@ -113,11 +113,11 @@ public class TableService : ITableService
         {
             _logger.Information("Creating full-text index on '{TableName}'...", tableName);
             SendInfo(tableName, $"Creating full-text index on '{tableName}'...");
-            if (await _dbCommands.FullTextIndexExistsAsync(tableName))
+            if (await _sqlServerCommands.FullTextIndexExistsAsync(tableName))
             {
-                await _dbCommands.DropFullTextIndexAsync(tableName);
+                await _sqlServerCommands.DropFullTextIndexAsync(tableName);
             }
-            await _dbCommands.CreateFullTextIndexAsync(tableName, catalogName);
+            await _sqlServerCommands.CreateFullTextIndexAsync(tableName, catalogName);
             _logger.Information("Full-text index created on '{TableName}'", tableName);
             SendInfo(tableName, $"Full-text index created on '{tableName}'");
         }

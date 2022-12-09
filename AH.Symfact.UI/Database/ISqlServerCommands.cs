@@ -4,7 +4,7 @@ using AH.Symfact.UI.Models;
 
 namespace AH.Symfact.UI.Database;
 
-public interface IDbCommands
+public interface ISqlServerCommands
 {
     Task<List<string>> GetAllTablesAsync();
     Task DeleteTablesAsync(IEnumerable<string> tableNames);

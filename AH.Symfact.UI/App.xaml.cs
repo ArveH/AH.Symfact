@@ -51,7 +51,7 @@ public partial class App
         services.AddTransient<MainWindow>();
         services.AddSingleton(new SqlConnectionString(config, Log.Logger));
         services.AddSingleton<IDbConnFactory, DbConnFactory>();
-        services.AddSingleton<IDbCommands, DbCommands>();
+        services.AddSingleton<ISqlServerCommands, SqlServerCommands>();
         services.AddSingleton<ISchemaService, SchemaService>();
         services.AddSingleton<ITableService, TableService>();
         services.AddSingleton<ITaminoFileReader, TaminoFileReader>();

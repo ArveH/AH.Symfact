@@ -22,15 +22,15 @@ namespace AH.Symfact.UI.ViewModels;
 
 public partial class TestingViewModel : ObservableRecipient
 {
-    private readonly IDbCommands _dbCommands;
+    private readonly ISqlServerCommands _sqlServerCommands;
     private readonly ILogger _logger;
 
     public TestingViewModel
     (
-        IDbCommands dbCommands,
+        ISqlServerCommands sqlServerCommands,
         ILogger logger)
     {
-        _dbCommands = dbCommands;
+        _sqlServerCommands = sqlServerCommands;
         _logger = logger.ForContext<TestingViewModel>();
         ExecuteSequentialCommand = new AsyncRelayCommand(ExecuteSequentialAsync);
         ExecuteParallelCommand = new AsyncRelayCommand(ExecuteParallelAsync);
@@ -101,7 +101,7 @@ public partial class TestingViewModel : ObservableRecipient
             _logger.Debug("Executing Script '{FileName}' ({Index} of {Total}) ...",
                 SelectedFile, index, total);
             sw.Start();
-            var rows = _dbCommands.ExecuteQuery(script);
+            var rows = _sqlServerCommands.ExecuteQuery(script);
             sw.Stop();
             _logger.Information("Script '{FileName}' returned {Rows} rows and executed in {Ms}ms ({Index} of {Total}, ThreadId: {ThreadId}) ",
                 SelectedFile, rows, sw.ElapsedMilliseconds, index, total, threadId);
