@@ -49,7 +49,7 @@ public partial class App
         services.AddSingleton(config);
         services.AddSingleton(Log.Logger);
         services.AddTransient<MainWindow>();
-        services.AddSingleton(new DbConnectionString(config, Log.Logger));
+        services.AddSingleton(new SqlConnectionString(config, Log.Logger));
         services.AddSingleton<IDbConnFactory, DbConnFactory>();
         services.AddSingleton<IDbCommands, DbCommands>();
         services.AddSingleton<ISchemaService, SchemaService>();

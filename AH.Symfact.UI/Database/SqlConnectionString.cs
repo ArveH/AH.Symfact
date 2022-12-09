@@ -3,11 +3,11 @@ using Serilog;
 
 namespace AH.Symfact.UI.Database;
 
-public class DbConnectionString
+public class SqlConnectionString
 {
     private readonly ILogger _logger;
 
-    public DbConnectionString(
+    public SqlConnectionString(
         IConfiguration config,
         ILogger logger)
     {

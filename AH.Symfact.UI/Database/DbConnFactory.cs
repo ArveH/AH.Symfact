@@ -7,17 +7,17 @@ public class DbConnFactory : IDbConnFactory
     private readonly ILogger _logger;
 
     public DbConnFactory(
-        DbConnectionString dbConnectionString,
+        SqlConnectionString sqlConnectionString,
         ILogger logger)
     {
-        DbConnectionString = dbConnectionString;
+        SqlConnectionString = sqlConnectionString;
         _logger = logger;
     }
 
-    public DbConnectionString DbConnectionString { get; }
+    public SqlConnectionString SqlConnectionString { get; }
 
     public IDbConn CreateConnection()
     {
-        return new DbConn(DbConnectionString, _logger);
+        return new DbConn(SqlConnectionString, _logger);
     }
 }

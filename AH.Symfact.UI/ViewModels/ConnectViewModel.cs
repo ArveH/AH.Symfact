@@ -21,16 +21,16 @@ public partial class ConnectViewModel : ObservableObject
     {
         _dbConnFactory = dbConnFactory;
         _logger = logger.ForContext<ConnectViewModel>();
-        _connectionString = _dbConnFactory.DbConnectionString.ConnectionString ?? "";
+        _sqlConnectionString = _dbConnFactory.SqlConnectionString.ConnectionString ?? "";
         ConnectCommand = new AsyncRelayCommand(ConnectAsync);
     }
 
     [ObservableProperty]
-    private string _connectionString;
+    private string _sqlConnectionString;
 
-    partial void OnConnectionStringChanging(string value)
+    partial void OnSqlConnectionStringChanging(string value)
     {
-        _dbConnFactory.DbConnectionString.ConnectionString = value;
+        _dbConnFactory.SqlConnectionString.ConnectionString = value;
     }
 
     [ObservableProperty]
@@ -40,11 +40,11 @@ public partial class ConnectViewModel : ObservableObject
 
     private async Task ConnectAsync()
     {
-        var csBuilder = GetConnectionStringBuilder(ConnectionString);
+        var csBuilder = GetConnectionStringBuilder(SqlConnectionString);
         if (csBuilder == null)
         {
             _logger.Error("Invalid ConnectionString '{ConnectionString}'",
-                ConnectionString);
+                SqlConnectionString);
             ConnectionStatus = "Invalid ConnectionString";
             return;
         }
@@ -61,7 +61,7 @@ public partial class ConnectViewModel : ObservableObject
                 if (string.IsNullOrWhiteSpace(database))
                 {
                     _logger.Error("Can't get DbName from '{ConnectionString}'",
-                        ConnectionString);
+                        SqlConnectionString);
                     ConnectionStatus = "Can't get DbName";
                     return;
                 }

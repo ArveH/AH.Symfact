@@ -32,7 +32,7 @@
                  TextAlignment="Left"
                  HorizontalAlignment="Stretch"
                  Margin="2 20 20 2"
-                 Text="{x:Bind ViewModel.ConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                 Text="{x:Bind ViewModel.SqlConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Text="Status:" 
                    Grid.Row="1" Grid.Column="0"
                    Margin="20 2 0 2"

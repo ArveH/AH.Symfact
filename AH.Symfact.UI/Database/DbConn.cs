@@ -9,14 +9,14 @@ namespace AH.Symfact.UI.Database;
 
 public class DbConn : IDbConn
 {
-    private readonly DbConnectionString _dbConnectionString;
+    private readonly SqlConnectionString _sqlConnectionString;
     private readonly ILogger _logger;
 
     public DbConn(
-        DbConnectionString dbConnectionString,
+        SqlConnectionString sqlConnectionString,
         ILogger logger)
     {
-        _dbConnectionString = dbConnectionString;
+        _sqlConnectionString = sqlConnectionString;
         _logger = logger.ForContext<DbConn>();
     }
 
@@ -30,7 +30,7 @@ public class DbConn : IDbConn
 
         try
         {
-            Conn = new SqlConnection(_dbConnectionString.ConnectionString);
+            Conn = new SqlConnection(_sqlConnectionString.ConnectionString);
             await Conn.OpenAsync();
             var sqlTxt = "select @@VERSION";
 
@@ -60,7 +60,7 @@ public class DbConn : IDbConn
 
         try
         {
-            Conn = new SqlConnection(_dbConnectionString.ConnectionString);
+            Conn = new SqlConnection(_sqlConnectionString.ConnectionString);
             Conn.Open();
             var sqlTxt = "select @@VERSION";
 

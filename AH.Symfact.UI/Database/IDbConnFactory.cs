@@ -2,6 +2,6 @@
 
 public interface IDbConnFactory
 {
-    DbConnectionString DbConnectionString { get; }
+    SqlConnectionString SqlConnectionString { get; }
     IDbConn CreateConnection();
 }
