@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace AH.Symfact.UI.Database;
 
-public class DbConn : IDbConn
+public class SqlServerConn : ISqlServerConn
 {
     private readonly SqlConnectionString _sqlConnectionString;
     private readonly ILogger _logger;
 
-    public DbConn(
+    public SqlServerConn(
         SqlConnectionString sqlConnectionString,
         ILogger logger)
     {
         _sqlConnectionString = sqlConnectionString;
-        _logger = logger.ForContext<DbConn>();
+        _logger = logger.ForContext<SqlServerConn>();
     }
 
     public string? DbName => Conn?.Database;

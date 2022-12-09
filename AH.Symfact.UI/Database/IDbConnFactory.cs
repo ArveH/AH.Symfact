@@ -3,5 +3,5 @@
 public interface IDbConnFactory
 {
     SqlConnectionString SqlConnectionString { get; }
-    IDbConn CreateConnection();
+    ISqlServerConn CreateConnection();
 }

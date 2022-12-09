@@ -23,7 +23,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="ConnectionString:" 
+        <TextBlock Text="SQL Server ConnectionString:" 
                    Grid.Row="0" Grid.Column="0"
                    Margin="20 20 0 20"
                    VerticalAlignment="Center"/>

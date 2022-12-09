@@ -16,8 +16,8 @@ public class DbConnFactory : IDbConnFactory
 
     public SqlConnectionString SqlConnectionString { get; }
 
-    public IDbConn CreateConnection()
+    public ISqlServerConn CreateConnection()
     {
-        return new DbConn(SqlConnectionString, _logger);
+        return new SqlServerConn(SqlConnectionString, _logger);
     }
 }

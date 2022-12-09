@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace AH.Symfact.UI.Database;
 
-public interface IDbConn : IAsyncDisposable, IDisposable
+public interface ISqlServerConn : IAsyncDisposable, IDisposable
 {
     string? DbName { get; }
     SqlConnection? Conn { get; }
