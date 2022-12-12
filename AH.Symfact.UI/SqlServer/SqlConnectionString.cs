@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Serilog;
-
-namespace AH.Symfact.UI.SqlServer;
+﻿namespace AH.Symfact.UI.SqlServer;
 
 public class SqlConnectionString
 {
@@ -12,7 +9,7 @@ public class SqlConnectionString
         ILogger logger)
     {
         _logger = logger;
-        ConnectionString = config.GetConnectionString(SymfactConstants.ConfigKey.SqlConnectionString);
+        ConnectionString = config.GetConnectionString(SharedConstants.ConfigKey.SqlConnectionString);
     }
 
     private string? _connectionString;

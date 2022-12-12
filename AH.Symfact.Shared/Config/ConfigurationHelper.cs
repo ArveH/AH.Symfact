@@ -1,7 +1,4 @@
-﻿using System.IO;
-using Microsoft.Extensions.Configuration;
-
-namespace AH.Symfact.UI.Config;
+﻿namespace AH.Symfact.Shared.Config;
 
 public static class ConfigurationHelper
 {

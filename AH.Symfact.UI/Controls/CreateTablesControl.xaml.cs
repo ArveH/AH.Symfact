@@ -1,5 +1,3 @@
-using AH.Symfact.UI.ViewModels;
-
 namespace AH.Symfact.UI.Controls;
 
 public sealed partial class CreateTablesControl

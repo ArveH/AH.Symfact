@@ -1,11 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using AH.Symfact.UI.Extensions;
-using Serilog;
-
-namespace AH.Symfact.UI.Services;
+﻿namespace AH.Symfact.UI.Services;
 
 public class XElementHelper : IXElementHelper
 {

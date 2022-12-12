@@ -1,24 +1,4 @@
-﻿using AH.Symfact.UI.Extensions;
-using AH.Symfact.UI.Models;
-using AH.Symfact.UI.ViewModels.Messages;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Serilog;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.UI.Dispatching;
-using Windows.UI.Core;
-using AH.Symfact.UI.SqlServer;
-
-namespace AH.Symfact.UI.ViewModels;
+﻿namespace AH.Symfact.UI.ViewModels;
 
 public partial class TestingViewModel : ObservableRecipient
 {

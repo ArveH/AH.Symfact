@@ -1,11 +1,4 @@
-﻿using AH.Symfact.UI.Controls;
-using AH.Symfact.UI.ViewModels.Messages;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Serilog;
-
-namespace AH.Symfact.UI.ViewModels;
+﻿namespace AH.Symfact.UI.ViewModels;
 
 public partial class MenuViewModel : ObservableRecipient
 {

@@ -1,6 +1,4 @@
-﻿using Serilog;
-
-namespace AH.Symfact.UI.SqlServer;
+﻿namespace AH.Symfact.UI.SqlServer;
 
 public class SqlConnectionFactory : ISqlConnectionFactory
 {

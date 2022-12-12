@@ -1,13 +1,4 @@
-﻿using AH.Symfact.UI.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.Data.SqlClient;
-using Serilog;
-using System;
-using System.Threading.Tasks;
-using AH.Symfact.UI.MongoDb;
-using MongoDB.Driver;
-using AH.Symfact.UI.SqlServer;
+﻿using MongoDB.Driver;
 using MongoDB.Bson;
 
 namespace AH.Symfact.UI.ViewModels;

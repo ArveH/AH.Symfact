@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
-using Serilog;
-
-namespace AH.Symfact.UI.MongoDb;
+﻿namespace AH.Symfact.MongoLib.Database;
 
 public class MongoDbConnectionString
 {
@@ -13,7 +9,7 @@ public class MongoDbConnectionString
         ILogger logger)
     {
         _logger = logger.ForContext<MongoDbConnectionString>();
-        ConnectionString = config.GetConnectionString(SymfactConstants.ConfigKey.MongoConnectionString);
+        ConnectionString = config.GetConnectionString(SharedConstants.ConfigKey.MongoConnectionString);
     }
 
     public string? DatabaseName => MongoUrl.Create(ConnectionString).DatabaseName;

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Data;
-using System.Threading.Tasks;
-using AH.Symfact.UI.Extensions;
-using Microsoft.Data.SqlClient;
-using Serilog;
+﻿using System.Data;
 
 namespace AH.Symfact.UI.SqlServer;
 

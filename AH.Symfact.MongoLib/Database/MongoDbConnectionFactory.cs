@@ -1,6 +1,4 @@
-﻿using MongoDB.Driver;
-
-namespace AH.Symfact.UI.MongoDb;
+﻿namespace AH.Symfact.MongoLib.Database;
 
 public class MongoDbConnectionFactory : IMongoDbConnectionFactory
 {

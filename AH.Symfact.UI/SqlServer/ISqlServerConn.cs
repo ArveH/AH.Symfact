@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
-
-namespace AH.Symfact.UI.SqlServer;
+﻿namespace AH.Symfact.UI.SqlServer;
 
 public interface ISqlServerConn : IAsyncDisposable, IDisposable
 {

@@ -1,11 +1,3 @@
-using System;
-using AH.Symfact.UI.ViewModels;
-using AH.Symfact.UI.ViewModels.Messages;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml;
-using Microsoft.Extensions.DependencyInjection;
-using Serilog;
-
 namespace AH.Symfact.UI.Controls;
 
 public sealed partial class CollectionsControl

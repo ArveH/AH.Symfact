@@ -1,7 +1,3 @@
-using AH.Symfact.UI.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-
 namespace AH.Symfact.UI.Controls;
 
 public sealed partial class MenuControl

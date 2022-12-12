@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace AH.Symfact.UI.Services;
+﻿namespace AH.Symfact.UI.Services;
 
 public interface ITableService
 {

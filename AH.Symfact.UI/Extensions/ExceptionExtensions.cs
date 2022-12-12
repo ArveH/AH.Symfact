@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-
-namespace AH.Symfact.UI.Extensions;
+﻿namespace AH.Symfact.UI.Extensions;
 
 public static class ExceptionExtensions
 {

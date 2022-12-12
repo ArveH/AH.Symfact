@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AH.Symfact.UI.Models;
-
-namespace AH.Symfact.UI.SqlServer;
+﻿namespace AH.Symfact.UI.SqlServer;
 
 public interface ISqlServerCommands
 {

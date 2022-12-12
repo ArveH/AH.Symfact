@@ -1,19 +1,4 @@
-﻿using AH.Symfact.UI.Extensions;
-using AH.Symfact.UI.Services;
-using AH.Symfact.UI.ViewModels.Messages;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml.Controls;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.Storage.Pickers;
-using AH.Symfact.UI.SqlServer;
-using WinRT.Interop;
-
-namespace AH.Symfact.UI.ViewModels;
+﻿namespace AH.Symfact.UI.ViewModels;
 
 public partial class TablesViewModel : ObservableRecipient
 {

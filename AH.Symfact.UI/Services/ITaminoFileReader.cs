@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
-using AH.Symfact.UI.Models;
-
-namespace AH.Symfact.UI.Services;
+﻿namespace AH.Symfact.UI.Services;
 
 public interface ITaminoFileReader
 {

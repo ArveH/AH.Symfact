@@ -1,12 +1,3 @@
-using AH.Symfact.UI.ViewModels;
-using AH.Symfact.UI.ViewModels.Messages;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml;
-using Serilog;
-using System;
-using System.Threading.Tasks;
-using WinRT.Interop;
-
 namespace AH.Symfact.UI;
 
 public sealed partial class MainWindow

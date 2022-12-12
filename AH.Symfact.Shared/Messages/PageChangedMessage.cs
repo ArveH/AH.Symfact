@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Messaging.Messages;
-
-namespace AH.Symfact.UI.ViewModels.Messages;
+﻿namespace AH.Symfact.Shared.Messages;
 
 public class PageChangedMessage : ValueChangedMessage<PageName>
 {

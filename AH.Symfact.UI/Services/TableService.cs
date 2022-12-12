@@ -1,16 +1,4 @@
-﻿using AH.Symfact.UI.Extensions;
-using AH.Symfact.UI.Models;
-using AH.Symfact.UI.ViewModels.Messages;
-using CommunityToolkit.Mvvm.Messaging;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using AH.Symfact.UI.SqlServer;
-
-namespace AH.Symfact.UI.Services;
+﻿namespace AH.Symfact.UI.Services;
 
 public class TableService : ITableService
 {

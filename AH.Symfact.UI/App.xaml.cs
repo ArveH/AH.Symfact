@@ -1,15 +1,3 @@
-using AH.Symfact.UI.Config;
-using AH.Symfact.UI.ViewModels;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
-using Serilog;
-using System;
-using Windows.ApplicationModel;
-using AH.Symfact.UI.MongoDb;
-using AH.Symfact.UI.Services;
-using AH.Symfact.UI.SqlServer;
-
 namespace AH.Symfact.UI;
 
 public partial class App

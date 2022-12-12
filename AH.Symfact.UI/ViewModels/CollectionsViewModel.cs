@@ -1,7 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Serilog;
-
-namespace AH.Symfact.UI.ViewModels;
+﻿namespace AH.Symfact.UI.ViewModels;
 
 public class CollectionsViewModel: ObservableRecipient
 {

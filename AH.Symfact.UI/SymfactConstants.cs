@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace AH.Symfact.UI;
+﻿namespace AH.Symfact.UI;
 
 public static class SymfactConstants
 {
@@ -32,12 +30,6 @@ public static class SymfactConstants
         "SelectiveIndex",
         "NoSchema"
     };
-
-    public static class ConfigKey
-    {
-        public const string SqlConnectionString = "SqlServer";
-        public const string MongoConnectionString = "MongoDb";
-    }
 
     public static class Name
     {

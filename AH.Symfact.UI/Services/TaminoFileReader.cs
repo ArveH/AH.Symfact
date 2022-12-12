@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using AH.Symfact.UI.Models;
-using Serilog;
-
-namespace AH.Symfact.UI.Services;
+﻿namespace AH.Symfact.UI.Services;
 
 public class TaminoFileReader : ITaminoFileReader
 {

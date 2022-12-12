@@ -1,11 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.UI.Dispatching;
-using Serilog;
-
-namespace AH.Symfact.UI.ViewModels;
+﻿namespace AH.Symfact.UI.ViewModels;
 
 public partial class CollectionViewModel: ObservableRecipient
 {

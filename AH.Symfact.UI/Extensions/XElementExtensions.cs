@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace AH.Symfact.UI.Extensions;
+﻿namespace AH.Symfact.UI.Extensions;
 
 public static class XElementExtensions
 {

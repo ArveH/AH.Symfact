@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace AH.Symfact.UI.Models;
+﻿namespace AH.Symfact.UI.Models;
 
 public class TableRow
 {

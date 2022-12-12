@@ -1,10 +1,3 @@
-using AH.Symfact.UI.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using Microsoft.UI.Xaml;
-using AH.Symfact.UI.ViewModels.Messages;
-using CommunityToolkit.Mvvm.Messaging;
-
 namespace AH.Symfact.UI.Controls;
 
 public sealed partial class TablesControl

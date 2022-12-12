@@ -1,12 +1,4 @@
-﻿using AH.Symfact.UI.ViewModels.Messages;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml;
-using Serilog;
-using System;
-using Microsoft.UI.Dispatching;
-
-namespace AH.Symfact.UI.ViewModels;
+﻿namespace AH.Symfact.UI.ViewModels;
 
 public partial class MainViewModel : ObservableRecipient
 {
@@ -23,10 +15,6 @@ public partial class MainViewModel : ObservableRecipient
         WeakReferenceMessenger.Default.Register<MainViewModel, XamlRootMessage>(this, (r, m) =>
         {
             m.Reply(r.XamlRoot);
-        });
-        WeakReferenceMessenger.Default.Register<MainViewModel, DispatcherQueueMessage>(this, (r, m) =>
-        {
-            m.Reply(r.DispatcherQueue);
         });
     }
 
