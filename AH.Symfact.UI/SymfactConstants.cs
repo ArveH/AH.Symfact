@@ -33,6 +33,12 @@ public static class SymfactConstants
         "NoSchema"
     };
 
+    public static class ConfigKey
+    {
+        public const string SqlConnectionString = "SqlServer";
+        public const string MongoConnectionString = "MongoDb";
+    }
+
     public static class Name
     {
         public const string Contract = "Contract";

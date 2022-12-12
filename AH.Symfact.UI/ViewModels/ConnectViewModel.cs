@@ -1,12 +1,12 @@
-﻿using AH.Symfact.UI.Database;
-using AH.Symfact.UI.Extensions;
+﻿using AH.Symfact.UI.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Data.SqlClient;
 using Serilog;
 using System;
 using System.Threading.Tasks;
-using System.Windows.Input;
+using AH.Symfact.UI.SqlServer;
+using MongoDB.Driver;
 
 namespace AH.Symfact.UI.ViewModels;
 
@@ -22,7 +22,6 @@ public partial class ConnectViewModel : ObservableObject
         _dbConnFactory = dbConnFactory;
         _logger = logger.ForContext<ConnectViewModel>();
         _sqlConnectionString = _dbConnFactory.SqlConnectionString.ConnectionString ?? "";
-        ConnectCommand = new AsyncRelayCommand(ConnectAsync);
     }
 
     [ObservableProperty]
@@ -36,9 +35,8 @@ public partial class ConnectViewModel : ObservableObject
     [ObservableProperty]
     private string _connectionStatus = "Ready...";
 
-    public ICommand ConnectCommand { get; }
-
-    private async Task ConnectAsync()
+    [RelayCommand]
+    public async Task ConnectSqlAsync()
     {
         var csBuilder = GetConnectionStringBuilder(SqlConnectionString);
         if (csBuilder == null)
@@ -84,6 +82,12 @@ public partial class ConnectViewModel : ObservableObject
             _logger.Error(ex, "Connection failed");
             ConnectionStatus = ex.FlattenMessages();
         }
+    }
+
+    [RelayCommand]
+    public async Task ConnectMongoAsync()
+    {
+        var dbClient = new MongoClient();
     }
 
     private SqlConnectionStringBuilder? GetConnectionStringBuilder(string connectionString)

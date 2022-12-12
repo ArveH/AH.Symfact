@@ -12,7 +12,7 @@ public class SqlConnectionString
         ILogger logger)
     {
         _logger = logger;
-        ConnectionString = config.GetConnectionString("Symfact");
+        ConnectionString = config.GetConnectionString(SymfactConstants.ConfigKey.SqlConnectionString);
     }
 
     private string? _connectionString;
