@@ -23,11 +23,11 @@ public partial class TestingViewModel : ObservableRecipient
     [ObservableProperty]
     private string _selectedFile = string.Empty;
     [ObservableProperty]
-    private string _tableType = SymfactConstants.TableTypes[2];
+    private string _tableType = SqlServerConstants.TableTypes[2];
     [ObservableProperty]
     private string _logMessage = string.Empty;
     [ObservableProperty]
-    private List<string> _tableTypes = new(SymfactConstants.TableTypes);
+    private List<string> _tableTypes = new(SqlServerConstants.TableTypes);
     [ObservableProperty]
     private ObservableCollection<string> _queryFiles = new();
     [ObservableProperty]
@@ -102,8 +102,8 @@ public partial class TestingViewModel : ObservableRecipient
         var queryFolder = WeakReferenceMessenger.Default.Send<DataFolderChangedMessage>();
         var path = Path.Combine(queryFolder, "Queries", SelectedFile);
         var script = File.ReadAllText(path);
-        if (TableType == SymfactConstants.TableTypes[0]) return script.Replace(SymfactConstants.TableSuffixPlaceHolder, "");
-        return script.Replace(SymfactConstants.TableSuffixPlaceHolder, TableType);
+        if (TableType == SqlServerConstants.TableTypes[0]) return script.Replace(SqlServerConstants.TableSuffixPlaceHolder, "");
+        return script.Replace(SqlServerConstants.TableSuffixPlaceHolder, TableType);
     }
 
     private async Task ExecuteSequentialAsync()

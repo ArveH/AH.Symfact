@@ -1,6 +1,6 @@
 ﻿namespace AH.Symfact.SqlServerLib;
 
-public static class SymfactConstants
+public static class SqlServerConstants
 {
     public const string ContractXCol = "contractXCol";
     public const string ContractXOrg = "contractXOrg";

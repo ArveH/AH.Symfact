@@ -27,11 +27,11 @@ public partial class TablesViewModel : ObservableRecipient
             m.Reply(r.DataPath);
         });
         ContractViewModel = new CreateTablesViewModel(_tableService);
-        ContractViewModel.TableName = SymfactConstants.Name.Contract;
+        ContractViewModel.TableName = SqlServerConstants.Name.Contract;
         PartyViewModel = new CreateTablesViewModel(_tableService);
-        PartyViewModel.TableName = SymfactConstants.Name.Party;
+        PartyViewModel.TableName = SqlServerConstants.Name.Party;
         OrgPersonViewModel = new CreateTablesViewModel(_tableService);
-        OrgPersonViewModel.TableName = SymfactConstants.Name.OrganisationalPerson;
+        OrgPersonViewModel.TableName = SqlServerConstants.Name.OrganisationalPerson;
     }
 
     private void OnCanExecuteChanged(object? sender, EventArgs e)
@@ -79,9 +79,9 @@ public partial class TablesViewModel : ObservableRecipient
         await DeleteSchemaCollectionsAsync();
 
         await CreateSchemaCollectionAsync(
-            SymfactConstants.ContractXCol, SymfactConstants.ContractXColFiles);
+            SqlServerConstants.ContractXCol, SqlServerConstants.ContractXColFiles);
         await CreateSchemaCollectionAsync(
-            SymfactConstants.ContractXOrg, SymfactConstants.ContractXOrgFiles);
+            SqlServerConstants.ContractXOrg, SqlServerConstants.ContractXOrgFiles);
     }
 
     private async Task DeleteTablesAsync()
@@ -235,17 +235,17 @@ public partial class TablesViewModel : ObservableRecipient
         var tasks = new List<Task>
         {
             _tableService.CreateTableAsync(
-                SymfactConstants.Name.Contract, 
-                SymfactConstants.Name.Contract + ".sql", 
-                SymfactConstants.Name.Contract + ".xml"),
+                SqlServerConstants.Name.Contract, 
+                SqlServerConstants.Name.Contract + ".sql", 
+                SqlServerConstants.Name.Contract + ".xml"),
             _tableService.CreateTableAsync(
-                SymfactConstants.Name.Party, 
-                SymfactConstants.Name.Party + ".sql", 
-                SymfactConstants.Name.Party + ".xml"),
+                SqlServerConstants.Name.Party, 
+                SqlServerConstants.Name.Party + ".sql", 
+                SqlServerConstants.Name.Party + ".xml"),
             _tableService.CreateTableAsync(
-                SymfactConstants.Name.OrganisationalPerson, 
-                SymfactConstants.Name.OrganisationalPerson + ".sql", 
-                SymfactConstants.Name.OrganisationalPerson + ".xml"),
+                SqlServerConstants.Name.OrganisationalPerson, 
+                SqlServerConstants.Name.OrganisationalPerson + ".sql", 
+                SqlServerConstants.Name.OrganisationalPerson + ".xml"),
         };
         try
         {

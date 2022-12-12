@@ -4,12 +4,12 @@ public static class StringExtensions
 {
     public static string CatalogName(this string tableName)
     {
-        if (tableName.StartsWith(SymfactConstants.Name.Contract)) 
-            return SymfactConstants.Name.ContractCatalog;
-        if (tableName.StartsWith(SymfactConstants.Name.OrganisationalPerson))
-            return SymfactConstants.Name.OrgPersonCatalog;
-        if (tableName.StartsWith(SymfactConstants.Name.Party))
-            return SymfactConstants.Name.PartyCatalog;
+        if (tableName.StartsWith(SqlServerConstants.Name.Contract)) 
+            return SqlServerConstants.Name.ContractCatalog;
+        if (tableName.StartsWith(SqlServerConstants.Name.OrganisationalPerson))
+            return SqlServerConstants.Name.OrgPersonCatalog;
+        if (tableName.StartsWith(SqlServerConstants.Name.Party))
+            return SqlServerConstants.Name.PartyCatalog;
 
         throw new ArgumentOutOfRangeException(nameof(tableName), $"Table '{tableName}' is unrecognized");
     }

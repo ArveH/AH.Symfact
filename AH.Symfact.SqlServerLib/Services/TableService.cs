@@ -73,14 +73,14 @@ public class TableService : ITableService
 
     private async Task CreateAllFullTextCatalogsAsync()
     {
-        await _sqlServerCommands.CreateFulltextCatalogAsync(SymfactConstants.Name.ContractCatalog);
-        await _sqlServerCommands.CreateFulltextCatalogAsync(SymfactConstants.Name.OrgPersonCatalog);
-        await _sqlServerCommands.CreateFulltextCatalogAsync(SymfactConstants.Name.PartyCatalog);
+        await _sqlServerCommands.CreateFulltextCatalogAsync(SqlServerConstants.Name.ContractCatalog);
+        await _sqlServerCommands.CreateFulltextCatalogAsync(SqlServerConstants.Name.OrgPersonCatalog);
+        await _sqlServerCommands.CreateFulltextCatalogAsync(SqlServerConstants.Name.PartyCatalog);
     }
 
     private async Task CreateAllFullTextIndexesAsync()
     {
-        foreach (var tableName in SymfactConstants.AllTables)
+        foreach (var tableName in SqlServerConstants.AllTables)
         {
             await CreateFullTextIndexAsync(tableName, tableName.CatalogName());
         }
