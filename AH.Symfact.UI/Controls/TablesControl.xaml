@@ -6,7 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Margin="0 10 10 10"
+    <Grid x:Name="SqlTables"
+          Margin="0 10 10 10"
           HorizontalAlignment="Stretch"
           BorderBrush="Gray"
           BorderThickness="1">

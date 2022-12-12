@@ -1,4 +1,6 @@
 using AH.Symfact.UI.ViewModels;
+using AH.Symfact.UI.ViewModels.Messages;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Serilog;
 using System;
@@ -32,6 +34,7 @@ public sealed partial class MainWindow
         _logger.Information("Started Symfact.UI");
         SetMainXamlRootHandle();
         ViewModel.DispatcherQueue = this.DispatcherQueue;
+        WeakReferenceMessenger.Default.Send(new PageChangedMessage(PageName.Connect));
         await Task.CompletedTask;
     }
 

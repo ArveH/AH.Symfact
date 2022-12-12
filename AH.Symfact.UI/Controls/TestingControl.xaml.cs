@@ -1,7 +1,10 @@
 using AH.Symfact.UI.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
 using System;
+using Microsoft.UI.Xaml;
+using AH.Symfact.UI.ViewModels.Messages;
+using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Xaml.Controls;
 
 namespace AH.Symfact.UI.Controls;
 
@@ -17,6 +20,12 @@ public sealed partial class TestingControl
         this.InitializeComponent();
         ViewModel.Dispatcher = this.Dispatcher;
         ViewModel.DispatcherQueue = this.DispatcherQueue;
+
+        Visibility = Visibility.Collapsed;
+        WeakReferenceMessenger.Default.Register<PageChangedMessage>(this, (_, msg) =>
+        {
+            Visibility = msg.Value == PageName.SqlTesting ? Visibility.Visible : Visibility.Collapsed;
+        });
     }
 
     private void OnDropDownOpened(object? sender, object e)

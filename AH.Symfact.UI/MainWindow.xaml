@@ -22,14 +22,11 @@
         <controls:HeaderControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
         <controls:MenuControl Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left"/>
         <controls:ConnectControl Grid.Row="1" Grid.Column="1" 
-                              HorizontalAlignment="Stretch"
-                              Visibility="{x:Bind ViewModel.IsConnectPage, Mode=OneWay}"/>
+                              HorizontalAlignment="Stretch"/>
         <controls:TablesControl Grid.Row="1" Grid.Column="1" 
-                                 HorizontalAlignment="Stretch"
-                                 Visibility="{x:Bind ViewModel.IsTablesPage, Mode=OneWay}"/>
+                                 HorizontalAlignment="Stretch"/>
         <controls:TestingControl Grid.Row="1" Grid.Column="1" 
-                                HorizontalAlignment="Stretch"
-                                Visibility="{x:Bind ViewModel.IsTestingPage, Mode=OneWay}"/>
+                                HorizontalAlignment="Stretch"/>
 
     </Grid>
 </Window>

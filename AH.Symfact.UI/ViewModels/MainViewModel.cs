@@ -12,30 +12,6 @@ public partial class MainViewModel : ObservableRecipient
 {
     public MainViewModel(ILogger logger)
     {
-        WeakReferenceMessenger.Default.Register<PageChangedMessage>(this, (_, msg) =>
-        {
-            switch (msg.Value)
-            {
-                case PageName.Connect:
-                    IsConnectPage = true;
-                    IsTablesPage = false;
-                    IsTestingPage = false;
-                    break;
-                case PageName.Tables:
-                    IsConnectPage = false;
-                    IsTablesPage = true;
-                    IsTestingPage = false;
-                    break;
-                case PageName.Testing:
-                    IsConnectPage = false;
-                    IsTablesPage = false;
-                    IsTestingPage = true;
-                    break;
-                default:
-                    logger.Error("Illegal value for PageName enum {PageName}", msg.Value);
-                    break;
-            }
-        });
         WeakReferenceMessenger.Default.Register<MainViewModel, ExeFolderMessage>(this, (r, m) =>
         {
             m.Reply(r.ExeFolder);
@@ -62,11 +38,4 @@ public partial class MainViewModel : ObservableRecipient
     private XamlRoot? _xamlRoot;
     [ObservableProperty]
     private string _exeFolder = "";
-
-    [ObservableProperty]
-    private bool _isConnectPage = true;
-    [ObservableProperty]
-    private bool _isTablesPage;
-    [ObservableProperty]
-    private bool _isTestingPage;
 }
