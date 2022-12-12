@@ -7,23 +7,30 @@
     mc:Ignorable="d">
 
     <StackPanel Margin="10 10 10 10"
+                HorizontalAlignment="Stretch"
                 BorderBrush="Gray"
                 BorderThickness="1">
         <TextBlock Text="Menu" 
                    FontSize="20" FontWeight="Bold"
                    Margin="0 5" 
                    HorizontalTextAlignment="Center"></TextBlock>
-        <Button Content="Connect" 
-                HorizontalAlignment="Left"
+        <Button HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
                 Margin="5" 
-                Command="{x:Bind ViewModel.LoadConnectDetailsCommand}"/>
-        <Button Content="Tables" 
-                HorizontalAlignment="Left"
+                Command="{x:Bind ViewModel.LoadConnectDetailsCommand}">
+            <TextBlock Text="Connect"/>
+        </Button>
+        <Button HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
                 Margin="5" 
-                Command="{x:Bind ViewModel.LoadTablesDetailsCommand}"/>
-        <Button Content="Testing" 
-                HorizontalAlignment="Left"
+                Command="{x:Bind ViewModel.LoadTablesDetailsCommand}">
+            <TextBlock Text="SQLServer Tables"/>
+        </Button>
+        <Button HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
                 Margin="5" 
-                Command="{x:Bind ViewModel.LoadTestingDetailsCommand}"/>
+                Command="{x:Bind ViewModel.LoadTestingDetailsCommand}">
+            <TextBlock Text="SQLServer Testing"/>
+        </Button>
     </StackPanel>
 </UserControl>

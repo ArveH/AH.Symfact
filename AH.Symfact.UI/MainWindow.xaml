@@ -10,7 +10,7 @@
 
     <Grid x:Name="Root">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -20,7 +20,7 @@
         </Grid.RowDefinitions>
 
         <controls:HeaderControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
-        <controls:MenuControl Grid.Row="1" Grid.Column="0" Width="140" HorizontalAlignment="Left"/>
+        <controls:MenuControl Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left"/>
         <controls:ConnectControl Grid.Row="1" Grid.Column="1" 
                               HorizontalAlignment="Stretch"
                               Visibility="{x:Bind ViewModel.IsConnectPage, Mode=OneWay}"/>
