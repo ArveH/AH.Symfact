@@ -1,7 +1,4 @@
-﻿using MongoDB.Driver;
-using MongoDB.Bson;
-
-namespace AH.Symfact.UI.ViewModels;
+﻿namespace AH.Symfact.UI.ViewModels;
 
 public partial class ConnectViewModel : ObservableObject
 {

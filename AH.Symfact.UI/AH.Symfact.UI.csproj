@@ -25,13 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="170.8.0" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221116.1" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
-    <PackageReference Include="Serilog" Version="2.12.0" />
     <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
     <PackageReference Include="Serilog.Enrichers.Process" Version="2.0.2" />
     <PackageReference Include="Serilog.Expressions" Version="3.4.1" />
@@ -51,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AH.Symfact.MongoLib\AH.Symfact.MongoLib.csproj" />
+    <ProjectReference Include="..\AH.Symfact.SqlServerLib\AH.Symfact.SqlServerLib.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="AppSettings.json">
@@ -62,57 +59,12 @@
     <Page Update="Controls\CollectionsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <None Update="SqlServer\Scripts\ContractNoSchema.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SqlServer\Scripts\OrganisationalPersonNoSchema.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SqlServer\Scripts\PartyNoSchema.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Page Update="Controls\TestingControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <None Update="SqlServer\Scripts\ContractSelectiveIndex.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SqlServer\Scripts\ContractExtractedColumns.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SqlServer\Scripts\ContractComputedColumns.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SqlServer\Scripts\OrganisationalPersonSelectiveIndex.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SqlServer\Scripts\OrganisationalPersonComputedColumns.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SqlServer\Scripts\OrganisationalPersonExtractedColumns.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SqlServer\Scripts\PartySelectiveIndex.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SqlServer\Scripts\PartyComputedColumns.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SqlServer\Scripts\PartyExtractedColumns.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Page Update="Controls\CreateTablesControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <None Update="SqlServer\Scripts\OrganisationalPerson.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SqlServer\Scripts\Party.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SqlServer\Scripts\Contract.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Page Update="Controls\TablesControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
