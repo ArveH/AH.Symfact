@@ -67,6 +67,7 @@ public partial class App
         services.AddTransient<TablesViewModel>();
         services.AddTransient<CreateTablesViewModel>();
         services.AddTransient<TestingViewModel>();
+        services.AddTransient<CollectionsViewModel>();
 
         return services.BuildServiceProvider();
     }

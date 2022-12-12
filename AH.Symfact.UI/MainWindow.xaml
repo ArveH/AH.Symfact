@@ -27,6 +27,7 @@
                                  HorizontalAlignment="Stretch"/>
         <controls:TestingControl Grid.Row="1" Grid.Column="1" 
                                 HorizontalAlignment="Stretch"/>
-
+        <controls:CollectionsControl Grid.Row="1" Grid.Column="1" 
+                                 HorizontalAlignment="Stretch"/>
     </Grid>
 </Window>

@@ -58,6 +58,12 @@
     <None Update="AppSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Controls\CollectionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Controls\CollectionsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <None Update="SqlServer\Scripts\ContractNoSchema.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -1,0 +1,19 @@
+<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<UserControl
+    x:Class="AH.Symfact.UI.Controls.CollectionsControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AH.Symfact.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel x:Name="CollectionStack" Orientation="Vertical">
+        <TextBlock Text="MongoDb Collections"
+                   Padding="15 20 10 10"
+                   FontWeight="bold"
+                   FontSize="20"/>
+    </StackPanel>
+</UserControl>

@@ -32,5 +32,11 @@
                 Command="{x:Bind ViewModel.LoadTestingDetailsCommand}">
             <TextBlock Text="SQLServer Testing"/>
         </Button>
+        <Button HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                Margin="5" 
+                Command="{x:Bind ViewModel.LoadCollectionsDetailsCommand}">
+            <TextBlock Text="MongoDb Collections"/>
+        </Button>
     </StackPanel>
 </UserControl>
