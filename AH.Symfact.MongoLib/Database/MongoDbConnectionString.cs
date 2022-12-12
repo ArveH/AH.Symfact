@@ -27,4 +27,26 @@ public class MongoDbConnectionString
             }
         }
     }
+
+    public bool IsValid
+    {
+        get
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(DatabaseName))
+                {
+                    _logger.Error("Database name missing from MongoDb connection string.");
+                    return false;
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                _logger.Error("Invalid MongoDb ConnectionString '{ConnectionString}'",
+                    ConnectionString);
+                return false;
+            }
+        }
+    }
 }

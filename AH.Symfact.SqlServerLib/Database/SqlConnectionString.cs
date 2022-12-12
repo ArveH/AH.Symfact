@@ -25,4 +25,42 @@ public class SqlConnectionString
             }
         }
     }
+
+    public bool IsValid
+    {
+        get
+        {
+            try
+            {
+                var _ = new SqlConnectionStringBuilder(ConnectionString);
+                return true;
+            }
+            catch (Exception)
+            {
+                _logger.Error("Invalid SqlServer ConnectionString '{ConnectionString}'",
+                    ConnectionString);
+                return false;
+            }
+        }
+    }
+
+    public string? DatabaseName
+    {
+        get
+        {
+            try
+            {
+                var csBuilder = new SqlConnectionStringBuilder(ConnectionString);
+                if (csBuilder.TryGetValue("Database", out var dbName))
+                    return (string)dbName;
+                return null;
+            }
+            catch (Exception)
+            {
+                _logger.Error("Could not get Database from ConnectionString '{ConnectionString}'",
+                    ConnectionString);
+                return null;
+            }
+        }
+    }
 }

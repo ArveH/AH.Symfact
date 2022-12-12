@@ -38,11 +38,8 @@ public partial class ConnectViewModel : ObservableObject
     [RelayCommand]
     public async Task ConnectSqlAsync()
     {
-        var csBuilder = GetConnectionStringBuilder(SqlConnectionString);
-        if (csBuilder == null)
+        if (!_sqlConnectionFactory.SqlConnectionString.IsValid)
         {
-            _logger.Error("Invalid SqlServer ConnectionString '{ConnectionString}'",
-                SqlConnectionString);
             ConnectionStatus = "Invalid SqlServer ConnectionString";
             return;
         }
@@ -69,10 +66,7 @@ public partial class ConnectViewModel : ObservableObject
             }
             else
             {
-                if (!csBuilder.TryGetValue("Database", out var dbName))
-                {
-                    dbName = "<null>";
-                }
+                var dbName = _sqlConnectionFactory.SqlConnectionString.DatabaseName ?? "<null>";
                 _logger.Error("Failed to connect to database SqlServer '{Database}'", dbName);
                 ConnectionStatus = $"Failed to connect to SqlServer database '{dbName}'";
             }
@@ -92,23 +86,20 @@ public partial class ConnectViewModel : ObservableObject
             _logger.Information("Connecting...");
             ConnectionStatus = "Connecting...";
 
-            var dbName = MongoUrl.Create(MongoDbConnectionString).DatabaseName;
-            if (string.IsNullOrWhiteSpace(dbName))
+            if (!_mongoDbConnectionFactory.MongoDbConnectionString.IsValid)
             {
-                _logger.Error("Database name missing from MongoDb connection string.");
                 ConnectionStatus = "Database name missing from MongoDb connection string.";
                 return;
             }
 
-            var db = _mongoDbConnectionFactory.GetDatabase();
-            var res = await db.RunCommandAsync((Command<BsonDocument>)"{ping:1}");
-            if (res["ok"].ToInt32() != 1)
+            if (!_mongoDbConnectionFactory.CanConnect)
             {
-                _logger.Error("Connection to MongoDb failed");
                 ConnectionStatus = "Connection to MongoDb failed";
                 return;
             }
 
+            var dbName = _mongoDbConnectionFactory.MongoDbConnectionString.DatabaseName;
+            var db = _mongoDbConnectionFactory.GetDatabase();
             var collections = await db.ListCollectionNamesAsync();
             if (!await collections.MoveNextAsync())
             {
@@ -125,18 +116,6 @@ public partial class ConnectViewModel : ObservableObject
         {
             _logger.Error(ex, "Connection to MongoDb failed");
             ConnectionStatus = ex.FlattenMessages();
-        }
-    }
-
-    private SqlConnectionStringBuilder? GetConnectionStringBuilder(string connectionString)
-    {
-        try
-        {
-            return new SqlConnectionStringBuilder(connectionString);
-        }
-        catch (Exception)
-        {
-            return null;
         }
     }
 }
