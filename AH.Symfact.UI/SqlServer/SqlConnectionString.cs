@@ -24,7 +24,7 @@ public class SqlConnectionString
             if (value != _connectionString)
             {
                 _connectionString = value;
-                _logger.Debug("ConnectionString changed '{ConnectionString}'", value);
+                _logger.Debug("SqlServer ConnectionString changed '{ConnectionString}'", value);
             }
         }
     }

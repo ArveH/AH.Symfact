@@ -1,6 +1,6 @@
 ﻿namespace AH.Symfact.UI.SqlServer;
 
-public interface IDbConnFactory
+public interface ISqlConnectionFactory
 {
     SqlConnectionString SqlConnectionString { get; }
     ISqlServerConn CreateConnection();

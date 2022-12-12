@@ -2,16 +2,16 @@
 
 namespace AH.Symfact.UI.SqlServer;
 
-public class DbConnFactory : IDbConnFactory
+public class SqlConnectionFactory : ISqlConnectionFactory
 {
     private readonly ILogger _logger;
 
-    public DbConnFactory(
+    public SqlConnectionFactory(
         SqlConnectionString sqlConnectionString,
         ILogger logger)
     {
         SqlConnectionString = sqlConnectionString;
-        _logger = logger;
+        _logger = logger.ForContext<SqlConnectionFactory>();
     }
 
     public SqlConnectionString SqlConnectionString { get; }

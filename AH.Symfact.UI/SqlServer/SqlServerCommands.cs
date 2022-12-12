@@ -11,12 +11,12 @@ namespace AH.Symfact.UI.SqlServer;
 
 public class SqlServerCommands : ISqlServerCommands
 {
-    private readonly IDbConnFactory _dbConnFactory;
+    private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
     public SqlServerCommands(
-        IDbConnFactory dbConnFactory)
+        ISqlConnectionFactory sqlConnectionFactory)
     {
-        _dbConnFactory = dbConnFactory;
+        _sqlConnectionFactory = sqlConnectionFactory;
     }
 
     #region Table
@@ -38,7 +38,7 @@ public class SqlServerCommands : ISqlServerCommands
         if (input == null) return 0;
 
         var sqlTxt = $"insert into {tableName} (DocName, Data) values(@DocName, @Xml)";
-        await using var dbConn = _dbConnFactory.CreateConnection();
+        await using var dbConn = _sqlConnectionFactory.CreateConnection();
         await dbConn.ConnectAsync();
         await using var cmd = new SqlCommand(sqlTxt, dbConn.Conn);
         cmd.Parameters.AddWithValue("@DocName", SqlDbType.NVarChar);
@@ -109,7 +109,7 @@ public class SqlServerCommands : ISqlServerCommands
 
     public async Task<bool> SchemaCollectionExistsAsync(string name)
     {
-        await using var dbConn = _dbConnFactory.CreateConnection();
+        await using var dbConn = _sqlConnectionFactory.CreateConnection();
         await dbConn.ConnectAsync();
         var sql =
             $"SELECT name FROM sys.xml_schema_collections WHERE name = '{name}'";
@@ -152,7 +152,7 @@ public class SqlServerCommands : ISqlServerCommands
         sb.Append(" '");
         sb.Append(xmlString);
         sb.Append("'");
-        await using var dbConn = _dbConnFactory.CreateConnection();
+        await using var dbConn = _sqlConnectionFactory.CreateConnection();
         await dbConn.ConnectAsync();
         await using var cmd = new SqlCommand(sb.ToString(), dbConn.Conn);
         await cmd.ExecuteNonQueryAsync();
@@ -181,7 +181,7 @@ public class SqlServerCommands : ISqlServerCommands
 
     public async Task ExecuteScriptAsync(string script)
     {
-        await using var dbConn = _dbConnFactory.CreateConnection();
+        await using var dbConn = _sqlConnectionFactory.CreateConnection();
         await dbConn.ConnectAsync();
         var server = new Server(new ServerConnection(dbConn.Conn));
         var _ = server.ConnectionContext.ExecuteNonQuery(script);
@@ -189,7 +189,7 @@ public class SqlServerCommands : ISqlServerCommands
 
     public int ExecuteQuery(string script)
     {
-        using var dbConn = _dbConnFactory.CreateConnection();
+        using var dbConn = _sqlConnectionFactory.CreateConnection();
         dbConn.Connect();
         var server = new Server(new ServerConnection(dbConn.Conn));
         var result = server.ConnectionContext.ExecuteWithResults(script);
@@ -204,7 +204,7 @@ public class SqlServerCommands : ISqlServerCommands
 
     private async Task<List<string>> GetAllAsync(string sqlTxt)
     {
-        await using var dbConn = _dbConnFactory.CreateConnection();
+        await using var dbConn = _sqlConnectionFactory.CreateConnection();
         await dbConn.ConnectAsync();
         await using var cmd = new SqlCommand(sqlTxt, dbConn.Conn);
         await using var reader = await cmd.ExecuteReaderAsync();
@@ -219,7 +219,7 @@ public class SqlServerCommands : ISqlServerCommands
 
     private async Task ExecuteNonQuery(string sql)
     {
-        await using var dbConn = _dbConnFactory.CreateConnection();
+        await using var dbConn = _sqlConnectionFactory.CreateConnection();
         await dbConn.ConnectAsync();
         await using var cmd = new SqlCommand(sql, dbConn.Conn);
         await cmd.ExecuteNonQueryAsync();
@@ -227,7 +227,7 @@ public class SqlServerCommands : ISqlServerCommands
 
     public async Task<bool> ExistsAsync(string sql)
     {
-        await using var dbConn = _dbConnFactory.CreateConnection();
+        await using var dbConn = _sqlConnectionFactory.CreateConnection();
         await dbConn.ConnectAsync();
         await using var cmd = new SqlCommand(sql, dbConn.Conn);
         var res = await cmd.ExecuteScalarAsync() as string;

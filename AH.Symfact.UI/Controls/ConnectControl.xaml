@@ -23,6 +23,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <TextBlock Text="SQL Server" 
@@ -57,13 +58,13 @@
                    Grid.Row="4" Grid.Column="0"
                    Margin="20 2 0 2"
                    VerticalAlignment="Center"/>
-        <TextBox PlaceholderText="Enter SQL Server connection string here" 
+        <TextBox PlaceholderText="Enter MongoDb connection string here" 
                  Grid.Row="4" Grid.Column="1"
                  TextAlignment="Left"
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Center"
                  Margin="2 2 20 2"
-                 Text="{x:Bind ViewModel.SqlConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                 Text="{x:Bind ViewModel.MongoDbConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <Button Grid.Row="5" Grid.Column="0"
                 Margin="20 10"
                 Command="{x:Bind ViewModel.ConnectMongoCommand, Mode=OneWay}"

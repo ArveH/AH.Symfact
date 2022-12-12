@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml;
 using Serilog;
 using System;
 using Windows.ApplicationModel;
+using AH.Symfact.UI.MongoDb;
 using AH.Symfact.UI.Services;
 using AH.Symfact.UI.SqlServer;
 
@@ -50,7 +51,9 @@ public partial class App
         services.AddSingleton(Log.Logger);
         services.AddTransient<MainWindow>();
         services.AddSingleton(new SqlConnectionString(config, Log.Logger));
-        services.AddSingleton<IDbConnFactory, DbConnFactory>();
+        services.AddSingleton(new MongoDbConnectionString(config, Log.Logger));
+        services.AddSingleton<IMongoDbConnectionFactory, MongoDbConnectionFactory>();
+        services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
         services.AddSingleton<ISqlServerCommands, SqlServerCommands>();
         services.AddSingleton<ISchemaService, SchemaService>();
         services.AddSingleton<ITableService, TableService>();
