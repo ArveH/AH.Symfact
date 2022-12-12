@@ -1,4 +1,4 @@
-﻿namespace AH.Symfact.UI.Database;
+﻿namespace AH.Symfact.UI.SqlServer;
 
 public interface IDbConnFactory
 {

@@ -1,5 +1,4 @@
-﻿using AH.Symfact.UI.Database;
-using AH.Symfact.UI.Extensions;
+﻿using AH.Symfact.UI.Extensions;
 using AH.Symfact.UI.Services;
 using AH.Symfact.UI.ViewModels.Messages;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -11,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage.Pickers;
+using AH.Symfact.UI.SqlServer;
 using WinRT.Interop;
 
 namespace AH.Symfact.UI.ViewModels;

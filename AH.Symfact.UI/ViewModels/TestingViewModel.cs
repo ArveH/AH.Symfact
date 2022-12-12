@@ -1,5 +1,4 @@
-﻿using AH.Symfact.UI.Database;
-using AH.Symfact.UI.Extensions;
+﻿using AH.Symfact.UI.Extensions;
 using AH.Symfact.UI.Models;
 using AH.Symfact.UI.ViewModels.Messages;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -17,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.UI.Dispatching;
 using Windows.UI.Core;
+using AH.Symfact.UI.SqlServer;
 
 namespace AH.Symfact.UI.ViewModels;
 

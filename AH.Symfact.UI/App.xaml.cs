@@ -6,8 +6,8 @@ using Microsoft.UI.Xaml;
 using Serilog;
 using System;
 using Windows.ApplicationModel;
-using AH.Symfact.UI.Database;
 using AH.Symfact.UI.Services;
+using AH.Symfact.UI.SqlServer;
 
 namespace AH.Symfact.UI;
 

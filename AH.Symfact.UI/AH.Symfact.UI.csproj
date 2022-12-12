@@ -58,55 +58,55 @@
     <None Update="AppSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Database\Scripts\ContractNoSchema.sql">
+    <None Update="SqlServer\Scripts\ContractNoSchema.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Database\Scripts\OrganisationalPersonNoSchema.sql">
+    <None Update="SqlServer\Scripts\OrganisationalPersonNoSchema.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Database\Scripts\PartyNoSchema.sql">
+    <None Update="SqlServer\Scripts\PartyNoSchema.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Page Update="Controls\TestingControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <None Update="Database\Scripts\ContractSelectiveIndex.sql">
+    <None Update="SqlServer\Scripts\ContractSelectiveIndex.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Database\Scripts\ContractExtractedColumns.sql">
+    <None Update="SqlServer\Scripts\ContractExtractedColumns.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Database\Scripts\ContractComputedColumns.sql">
+    <None Update="SqlServer\Scripts\ContractComputedColumns.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Database\Scripts\OrganisationalPersonSelectiveIndex.sql">
+    <None Update="SqlServer\Scripts\OrganisationalPersonSelectiveIndex.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Database\Scripts\OrganisationalPersonComputedColumns.sql">
+    <None Update="SqlServer\Scripts\OrganisationalPersonComputedColumns.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Database\Scripts\OrganisationalPersonExtractedColumns.sql">
+    <None Update="SqlServer\Scripts\OrganisationalPersonExtractedColumns.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Database\Scripts\PartySelectiveIndex.sql">
+    <None Update="SqlServer\Scripts\PartySelectiveIndex.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Database\Scripts\PartyComputedColumns.sql">
+    <None Update="SqlServer\Scripts\PartyComputedColumns.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Database\Scripts\PartyExtractedColumns.sql">
+    <None Update="SqlServer\Scripts\PartyExtractedColumns.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Page Update="Controls\CreateTablesControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <None Update="Database\Scripts\OrganisationalPerson.sql">
+    <None Update="SqlServer\Scripts\OrganisationalPerson.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Database\Scripts\Party.sql">
+    <None Update="SqlServer\Scripts\Party.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Database\Scripts\Contract.sql">
+    <None Update="SqlServer\Scripts\Contract.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Page Update="Controls\TablesControl.xaml">

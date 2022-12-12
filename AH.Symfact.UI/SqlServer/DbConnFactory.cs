@@ -1,6 +1,6 @@
 ﻿using Serilog;
 
-namespace AH.Symfact.UI.Database;
+namespace AH.Symfact.UI.SqlServer;
 
 public class DbConnFactory : IDbConnFactory
 {

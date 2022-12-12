@@ -1,11 +1,11 @@
-﻿using AH.Symfact.UI.Extensions;
-using Microsoft.Data.SqlClient;
-using Serilog;
-using System;
+﻿using System;
 using System.Data;
 using System.Threading.Tasks;
+using AH.Symfact.UI.Extensions;
+using Microsoft.Data.SqlClient;
+using Serilog;
 
-namespace AH.Symfact.UI.Database;
+namespace AH.Symfact.UI.SqlServer;
 
 public class SqlServerConn : ISqlServerConn
 {
