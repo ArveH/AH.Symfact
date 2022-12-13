@@ -3,8 +3,12 @@
 public interface IMongoCollectionService
 {
     Task<int> InsertAsync(
-        string xmlDataFile,
-        string nodesPath,
         string collectionName,
-        Action<int> progress);
+        XmlNodeList nodes,
+        Action<int> progress,
+        CancellationToken ct);
+
+    Task DeleteCollectionAsync(
+        string collectionName,
+        CancellationToken ct);
 }

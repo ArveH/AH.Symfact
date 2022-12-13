@@ -2,8 +2,11 @@
 
 public static class MongoConstants
 {
-    public static class Entity
+    public static Dictionary<string, (string, string)> DataInfo = new Dictionary<string, (string, string)>
     {
-        public const string Contract = "Contract";
-    }
+        { SharedConstants.Name.Contract, ("Contract.xml", "//C:Contract") },
+        { SharedConstants.Name.Party, ("Party.xml", "//P:Party") },
+        { SharedConstants.Name.OrganisationalPerson, ("OrganisationalPerson.xml", "//ctxO:OrganisationalPerson") },
+        { SharedConstants.Name.NonXMLFull, ("NonXMLFull.xml", "//nonXML") },
+    };
 }

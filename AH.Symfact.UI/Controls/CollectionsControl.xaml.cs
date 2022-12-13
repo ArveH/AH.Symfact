@@ -1,5 +1,3 @@
-using AH.Symfact.MongoLib.Services;
-
 namespace AH.Symfact.UI.Controls;
 
 public sealed partial class CollectionsControl
@@ -13,16 +11,33 @@ public sealed partial class CollectionsControl
                         "Can't get ViewModel for CollectionsControl");
         var logger = App.Current.Services.GetService<ILogger>() ?? Log.Logger;
         var collectionService = App.Current.Services.GetService<IMongoCollectionService>();
+        var fileReader = App.Current.Services.GetService<ISymfactFileReader>();
         ArgumentNullException.ThrowIfNull(nameof(collectionService));
         InitializeComponent();
         CollectionStack.Children.Add(new CollectionControl(
-            new CollectionViewModel("Contract", collectionService!, logger)));
+            new CollectionViewModel(
+                SharedConstants.Name.Contract, 
+                collectionService!, 
+                fileReader!, 
+                logger)));
         CollectionStack.Children.Add(new CollectionControl(
-            new CollectionViewModel("Party", collectionService!, logger)));
+            new CollectionViewModel(
+                SharedConstants.Name.Party, 
+                collectionService!, 
+                fileReader!, 
+                logger)));
         CollectionStack.Children.Add(new CollectionControl(
-            new CollectionViewModel("OrganisationalPerson", collectionService!, logger)));
+            new CollectionViewModel(
+                SharedConstants.Name.OrganisationalPerson, 
+                collectionService!, 
+                fileReader!, 
+                logger)));
         CollectionStack.Children.Add(new CollectionControl(
-            new CollectionViewModel("NonXMLFull", collectionService!, logger)));
+            new CollectionViewModel(
+                SharedConstants.Name.NonXMLFull, 
+                collectionService!, 
+                fileReader!, 
+                logger)));
 
         Visibility = Visibility.Collapsed;
         WeakReferenceMessenger.Default.Register<PageChangedMessage>(this, (_, msg) =>

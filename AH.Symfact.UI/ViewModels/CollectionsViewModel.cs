@@ -1,6 +1,4 @@
-﻿using AH.Symfact.MongoLib.Services;
-
-namespace AH.Symfact.UI.ViewModels;
+﻿namespace AH.Symfact.UI.ViewModels;
 
 public class CollectionsViewModel: ObservableRecipient
 {
