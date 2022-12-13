@@ -1,13 +1,18 @@
-﻿namespace AH.Symfact.UI.ViewModels;
+﻿using AH.Symfact.MongoLib.Services;
+
+namespace AH.Symfact.UI.ViewModels;
 
 public partial class CollectionViewModel: ObservableRecipient
 {
+    private readonly IMongoCollectionService _collectionService;
     private readonly ILogger _logger;
 
     public CollectionViewModel(
         string name,
+        IMongoCollectionService collectionService,
         ILogger logger)
     {
+        _collectionService = collectionService;
         CollectionName = name;
         _logger = logger.ForContext<CollectionViewModel>();
     }
@@ -25,15 +30,13 @@ public partial class CollectionViewModel: ObservableRecipient
     [RelayCommand]
     public async Task RecreateCollectionAsync()
     {
-        ProgressDone = 0;
-        Count = 0;
-        for (int i = 0; i < 10; i++)
-        {
-            ProgressDone += 10;
-            Count += 10;
-            await Task.Delay(1000);
-        }
-
-        ProgressDone = 100;
+        var count = await _collectionService.InsertAsync(
+            CollectionName + ".xml",
+            "//C:Contract",
+            CollectionName,
+            c =>
+            {
+                Count = c;
+            });
     }
 }

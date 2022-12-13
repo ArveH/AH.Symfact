@@ -27,11 +27,11 @@ public partial class TablesViewModel : ObservableRecipient
             m.Reply(r.DataPath);
         });
         ContractViewModel = new CreateTablesViewModel(_tableService);
-        ContractViewModel.TableName = SqlServerConstants.Name.Contract;
+        ContractViewModel.TableName = SharedConstants.Name.Contract;
         PartyViewModel = new CreateTablesViewModel(_tableService);
-        PartyViewModel.TableName = SqlServerConstants.Name.Party;
+        PartyViewModel.TableName = SharedConstants.Name.Party;
         OrgPersonViewModel = new CreateTablesViewModel(_tableService);
-        OrgPersonViewModel.TableName = SqlServerConstants.Name.OrganisationalPerson;
+        OrgPersonViewModel.TableName = SharedConstants.Name.OrganisationalPerson;
     }
 
     private void OnCanExecuteChanged(object? sender, EventArgs e)
@@ -235,17 +235,17 @@ public partial class TablesViewModel : ObservableRecipient
         var tasks = new List<Task>
         {
             _tableService.CreateTableAsync(
-                SqlServerConstants.Name.Contract, 
-                SqlServerConstants.Name.Contract + ".sql", 
-                SqlServerConstants.Name.Contract + ".xml"),
+                SharedConstants.Name.Contract, 
+                SharedConstants.Name.Contract + ".sql", 
+                SharedConstants.Name.Contract + ".xml"),
             _tableService.CreateTableAsync(
-                SqlServerConstants.Name.Party, 
-                SqlServerConstants.Name.Party + ".sql", 
-                SqlServerConstants.Name.Party + ".xml"),
+                SharedConstants.Name.Party, 
+                SharedConstants.Name.Party + ".sql", 
+                SharedConstants.Name.Party + ".xml"),
             _tableService.CreateTableAsync(
-                SqlServerConstants.Name.OrganisationalPerson, 
-                SqlServerConstants.Name.OrganisationalPerson + ".sql", 
-                SqlServerConstants.Name.OrganisationalPerson + ".xml"),
+                SharedConstants.Name.OrganisationalPerson, 
+                SharedConstants.Name.OrganisationalPerson + ".sql", 
+                SharedConstants.Name.OrganisationalPerson + ".xml"),
         };
         try
         {

@@ -13,6 +13,7 @@ global using Windows.ApplicationModel;
 global using Windows.Storage.Pickers;
 global using Windows.UI.Core;
 global using AH.Symfact.MongoLib.Database;
+global using AH.Symfact.Shared;
 global using AH.Symfact.Shared.Config;
 global using AH.Symfact.Shared.Extensions;
 global using AH.Symfact.Shared.Messages;

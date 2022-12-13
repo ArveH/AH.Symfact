@@ -1,3 +1,5 @@
+using AH.Symfact.MongoLib.Services;
+
 namespace AH.Symfact.UI;
 
 public partial class App
@@ -45,6 +47,7 @@ public partial class App
         services.AddSingleton<ISqlServerCommands, SqlServerCommands>();
         services.AddSingleton<ISchemaService, SchemaService>();
         services.AddSingleton<ITableService, TableService>();
+        services.AddSingleton<IMongoCollectionService, MongoCollectionService>();
         services.AddSingleton<ITaminoFileReader, TaminoFileReader>();
         services.AddSingleton<IXElementHelper, XElementHelper>();
         

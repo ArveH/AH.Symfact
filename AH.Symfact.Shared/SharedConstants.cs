@@ -7,4 +7,12 @@ public static class SharedConstants
         public const string SqlConnectionString = "SqlServer";
         public const string MongoConnectionString = "MongoDb";
     }
+
+    public static class Name
+    {
+        public const string Contract = "Contract";
+        public const string OrganisationalPerson = "OrganisationalPerson";
+        public const string Party = "Party";
+        public const string NonXMLFull = "NonXMLFull";
+    }
 }
