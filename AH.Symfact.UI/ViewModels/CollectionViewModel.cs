@@ -43,26 +43,34 @@ public partial class CollectionViewModel: ObservableRecipient
             return;
         }
 
-        try
+        await Task.Run(async () =>
         {
-            await _collectionService.DeleteCollectionAsync(CollectionName, _cts.Token);
-            var nodes = _fileReader.ReadFromFile(
-                pos.filePath, pos.elementPath);
-            var count = await _collectionService.InsertAsync(
-                CollectionName,
-                nodes,
-                c =>
+            try
+            {
+                await _collectionService.DeleteCollectionAsync(CollectionName, _cts.Token);
+                var nodes = _fileReader.ReadFromFile(
+                    pos.filePath, pos.elementPath);
+                DispatcherQueue?.TryEnqueue(() =>
                 {
-                    DispatcherQueue?.TryEnqueue(() =>
+                    ProgressDone = 0;
+                    Count = nodes.Count;
+                });
+                await _collectionService.InsertAsync(
+                    CollectionName,
+                    nodes,
+                    c =>
                     {
-                        Count = c;
-                    });
-                },
-                _cts.Token);
-        }
-        catch (Exception ex)
-        {
-            _logger.Error(ex, $"(Re)Create '{CollectionName}' failed");
-        }
+                        DispatcherQueue?.TryEnqueue(() =>
+                        {
+                            ProgressDone = c * 100 / nodes.Count;
+                        });
+                    },
+                    _cts.Token);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, $"(Re)Create '{CollectionName}' failed");
+            }
+        });
     }
 }

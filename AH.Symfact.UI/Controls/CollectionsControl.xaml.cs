@@ -34,7 +34,7 @@ public sealed partial class CollectionsControl
                 logger)));
         CollectionStack.Children.Add(new CollectionControl(
             new CollectionViewModel(
-                SharedConstants.Name.NonXMLFull, 
+                SharedConstants.Name.NonXML, 
                 collectionService!, 
                 fileReader!, 
                 logger)));

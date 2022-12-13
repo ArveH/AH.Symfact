@@ -7,6 +7,6 @@ public static class MongoConstants
         { SharedConstants.Name.Contract, ("Contract.xml", "//C:Contract") },
         { SharedConstants.Name.Party, ("Party.xml", "//P:Party") },
         { SharedConstants.Name.OrganisationalPerson, ("OrganisationalPerson.xml", "//ctxO:OrganisationalPerson") },
-        { SharedConstants.Name.NonXMLFull, ("NonXMLFull.xml", "//nonXML") },
+        { SharedConstants.Name.NonXML, ("NonXMLFull.xml", "//nonXML") },
     };
 }

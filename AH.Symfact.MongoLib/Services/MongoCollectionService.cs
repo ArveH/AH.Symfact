@@ -20,7 +20,7 @@ public class MongoCollectionService : IMongoCollectionService
         _logger.Information("Deleting collection '{CollectionName}'...",
             collectionName);
         var database = _connectionFactory.GetDatabase();
-        await database.DropCollectionAsync(SharedConstants.Name.Contract, ct);
+        await database.DropCollectionAsync(collectionName, ct);
         _logger.Information("Collection '{CollectionName}' deleted",
             collectionName);
     }

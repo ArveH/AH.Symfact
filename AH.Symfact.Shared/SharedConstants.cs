@@ -13,6 +13,6 @@ public static class SharedConstants
         public const string Contract = "Contract";
         public const string OrganisationalPerson = "OrganisationalPerson";
         public const string Party = "Party";
-        public const string NonXMLFull = "NonXMLFull";
+        public const string NonXML = "NonXML";
     }
 }

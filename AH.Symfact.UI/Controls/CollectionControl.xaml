@@ -20,7 +20,7 @@
                      Width="200"
                      Minimum="0"
                      Maximum="100"
-                     Value="{x:Bind ViewModel.ProgressDone, Mode=OneWay}"/>
+                     Value="{x:Bind ViewModel.ProgressDone, Mode=TwoWay}"/>
         <TextBlock Margin="0 0 10 0" 
                    VerticalAlignment="Center"
                    Text="{x:Bind ViewModel.Count, Mode=OneWay}"/>
