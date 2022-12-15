@@ -17,4 +17,8 @@
     <ProjectReference Include="..\AH.Symfact.Shared\AH.Symfact.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>

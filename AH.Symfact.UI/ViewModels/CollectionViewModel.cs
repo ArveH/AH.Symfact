@@ -32,7 +32,7 @@ public partial class CollectionViewModel: ObservableRecipient
     private bool _isIdle = true;
 
     [ObservableProperty] 
-    private string _textIndexFields = "$**";
+    private string _textIndexFields = "{\"$**\": \"text\"}";
 
     public DispatcherQueue? DispatcherQueue { get; set; }
     public string CollectionName { get; }
@@ -96,11 +96,12 @@ public partial class CollectionViewModel: ObservableRecipient
                     IsCreateIndexActive = true;
                     IsIdle = false;
                 });
+                await _collectionService.DropTextIndexAsync(CollectionName);
                 await _collectionService.CreateTextIndexAsync(CollectionName, TextIndexFields);
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Recreated text index on collection '{CollectionName}' for fields {Fields} failed",
+                _logger.Error(ex, "Recreating text index on collection '{CollectionName}' for fields {Fields} failed",
                     CollectionName, TextIndexFields);
             }
             finally

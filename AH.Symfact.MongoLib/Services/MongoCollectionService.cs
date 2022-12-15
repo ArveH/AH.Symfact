@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using AH.Symfact.MongoLib.Extensions;
 
 namespace AH.Symfact.MongoLib.Services;
 
@@ -27,19 +27,38 @@ public class MongoCollectionService : IMongoCollectionService
             collectionName);
     }
 
-    public async Task CreateTextIndexAsync(
-        string collectionName,
-        string fields)
+    public async Task DropTextIndexAsync(string collectionName)
     {
-        _logger.Information("Creating text index for fields {Fields} on collection '{CollectionName}'...",
-            fields, collectionName);
+        _logger.Information("Dropping text index on collection '{CollectionName}'...",
+            collectionName);
         var database = _connectionFactory.GetDatabase();
         var collection = database.GetCollection<BsonDocument>(collectionName);
+        var cursor = await collection.Indexes.ListAsync();
+        var indexes = await cursor.ToListAsync();
+        var indexName = indexes
+            .Where(i => i.Find("key._fts")?.AsString == "text")
+            .Select(i => i["name"].AsString)
+            .FirstOrDefault();
+        if (indexName == null) return;
+
+        await collection.Indexes.DropOneAsync(indexName);
+        _logger.Information("Text index dropped on collection '{CollectionName}'",
+            collectionName);
+    }
+
+    public async Task CreateTextIndexAsync(
+        string collectionName,
+        string fieldsStr)
+    {
+        _logger.Information("Creating text index for fields {Fields} on collection '{CollectionName}'...",
+            fieldsStr, collectionName);
+        var database = _connectionFactory.GetDatabase();
+        var collection = database.GetCollection<BsonDocument>(collectionName);
+        var keys = new IndexKeysDefinitionBuilder<BsonDocument>().Combine(fieldsStr);
         var name = await collection.Indexes.CreateOneAsync(
-            new CreateIndexModel<BsonDocument>(
-                Builders<BsonDocument>.IndexKeys.Text("$**")));
-        _logger.Information("Created text index on collection '{CollectionName}' for fields {Fields}",
-            collectionName, fields);
+            new CreateIndexModel<BsonDocument>(keys));
+        _logger.Information("Created text index '{IndexName}' on collection '{CollectionName}' for fields {Fields}",
+            name, collectionName, fieldsStr);
     }
 
     public async Task<int> InsertAsync(

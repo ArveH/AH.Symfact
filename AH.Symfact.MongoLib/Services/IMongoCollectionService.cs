@@ -12,5 +12,6 @@ public interface IMongoCollectionService
         string collectionName,
         CancellationToken ct);
 
-    Task CreateTextIndexAsync(string collectionName, string fields);
+    Task CreateTextIndexAsync(string collectionName, string fieldsStr);
+    Task DropTextIndexAsync(string collectionName);
 }

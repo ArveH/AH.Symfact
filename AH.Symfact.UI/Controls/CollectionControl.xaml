@@ -35,7 +35,7 @@
                      IsEnabled="{x:Bind ViewModel.IsIdle, Mode=OneWay}"
                      VerticalAlignment="Center"
                      HorizontalAlignment="Stretch"
-                     Text="{x:Bind ViewModel.TextIndexFields, Mode=OneWay}"/>
+                     Text="{x:Bind ViewModel.TextIndexFields, Mode=TwoWay}"/>
             <ProgressRing IsActive="{x:Bind ViewModel.IsCreateIndexActive, Mode=OneWay}"
                           VerticalAlignment="Center"
                           Maximum="100"/>
