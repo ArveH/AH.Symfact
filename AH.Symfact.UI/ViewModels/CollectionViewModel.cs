@@ -1,6 +1,4 @@
-﻿using Microsoft.SqlServer.Management.Smo;
-
-namespace AH.Symfact.UI.ViewModels;
+﻿namespace AH.Symfact.UI.ViewModels;
 
 public partial class CollectionViewModel: ObservableRecipient
 {
@@ -24,29 +22,42 @@ public partial class CollectionViewModel: ObservableRecipient
 
     [ObservableProperty] 
     private int _count;
-    
+
+    [ObservableProperty] 
+    private bool _isCreateIndexActive;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(RecreateCollectionCommand))]
+    [NotifyCanExecuteChangedFor(nameof(RecreateTextIndexCommand))]
+    private bool _isIdle = true;
+
+    [ObservableProperty] 
+    private string _textIndexFields = "$**";
+
     public DispatcherQueue? DispatcherQueue { get; set; }
     public string CollectionName { get; }
-    public string ButtonName => "(Re)Create " + CollectionName;
 
     [ObservableProperty] 
     private int _progressDone;
 
-    [RelayCommand]
+    private bool CanCommandsExecute() => IsIdle;
+
+    [RelayCommand(CanExecute = nameof(CanCommandsExecute))]
     public async Task RecreateCollectionAsync()
     {
-        if (!MongoConstants.DataInfo.TryGetValue(CollectionName, 
-                out (string filePath, string elementPath, string nsToRemove) pos))
-        {
-            _logger.Error("Can't get DataInfo for Collection '{CollectionName}'", 
-                CollectionName);
-            return;
-        }
-
         await Task.Run(async () =>
         {
             try
             {
+                DispatcherQueue?.TryEnqueue(() => { IsIdle = false; });
+                if (!MongoConstants.DataInfo.TryGetValue(CollectionName,
+                        out (string filePath, string elementPath, string nsToRemove) pos))
+                {
+                    _logger.Error("Can't get DataInfo for Collection '{CollectionName}'",
+                        CollectionName);
+                    return;
+                }
+
                 await _collectionService.DeleteCollectionAsync(CollectionName, _cts.Token);
                 var nodes = _fileReader.ReadFromFile(
                     pos.filePath, pos.elementPath);
@@ -56,21 +67,49 @@ public partial class CollectionViewModel: ObservableRecipient
                     Count = nodes.Count;
                 });
                 await _collectionService.InsertAsync(
-                    CollectionName, 
+                    CollectionName,
                     pos.nsToRemove,
                     nodes,
-                    c =>
-                    {
-                        DispatcherQueue?.TryEnqueue(() =>
-                        {
-                            ProgressDone = c * 100 / nodes.Count;
-                        });
-                    },
+                    c => { DispatcherQueue?.TryEnqueue(() => { ProgressDone = c * 100 / nodes.Count; }); },
                     _cts.Token);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, $"(Re)Create '{CollectionName}' failed");
+            }
+            finally
+            {
+                DispatcherQueue?.TryEnqueue(() => { IsIdle = true; });
+            }
+        });
+    }
+
+    [RelayCommand(CanExecute = nameof(CanCommandsExecute))]
+    public async Task RecreateTextIndexAsync()
+    {
+        await Task.Run(async () =>
+        {
+            try
+            {
+                DispatcherQueue?.TryEnqueue(() =>
+                {
+                    IsCreateIndexActive = true;
+                    IsIdle = false;
+                });
+                await _collectionService.CreateTextIndexAsync(CollectionName, TextIndexFields);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Recreated text index on collection '{CollectionName}' for fields {Fields} failed",
+                    CollectionName, TextIndexFields);
+            }
+            finally
+            {
+                DispatcherQueue?.TryEnqueue(() =>
+                {
+                    IsCreateIndexActive = false;
+                    IsIdle = true;
+                });
             }
         });
     }

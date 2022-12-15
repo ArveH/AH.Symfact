@@ -10,19 +10,35 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel Margin="0 0 0 0" Orientation="Horizontal">
-        <Button Margin="0 0 10 0" 
-                VerticalAlignment="Center"
-                Content="{x:Bind ViewModel.ButtonName, Mode=OneWay}" Command="{x:Bind ViewModel.RecreateCollectionCommand, Mode=OneWay}"/>
-        <ProgressBar Margin="0 0 10 0" 
+    <StackPanel Orientation="Vertical">
+        <TextBlock Text="{x:Bind ViewModel.CollectionName}"
+                   Margin="10 5 0 0"
+                   FontSize="18"/>
+        <StackPanel Margin="10 0 0 0" Orientation="Horizontal">
+            <Button Margin="0 0 10 0" 
+                    VerticalAlignment="Center"
+                    Content="(Re)Create collection" Command="{x:Bind ViewModel.RecreateCollectionCommand, Mode=OneWay}"/>
+            <ProgressBar Margin="0 0 10 0" 
+                         VerticalAlignment="Center"
+                         Width="200"
+                         Minimum="0"
+                         Maximum="100"
+                         Value="{x:Bind ViewModel.ProgressDone, Mode=TwoWay}"/>
+            <TextBlock VerticalAlignment="Center"
+                       Text="{x:Bind ViewModel.Count, Mode=OneWay}"/>
+        </StackPanel>
+        <StackPanel Margin="10 5 0 10" Orientation="Horizontal">
+            <Button Margin="0 0 10 0" 
+                    VerticalAlignment="Center"
+                    Content="(Re)Create text index" Command="{x:Bind ViewModel.RecreateTextIndexCommand, Mode=OneWay}"/>
+            <TextBox Margin="0 0 10 0" 
+                     IsEnabled="{x:Bind ViewModel.IsIdle, Mode=OneWay}"
                      VerticalAlignment="Center"
-                     Height="50"
-                     Width="200"
-                     Minimum="0"
-                     Maximum="100"
-                     Value="{x:Bind ViewModel.ProgressDone, Mode=TwoWay}"/>
-        <TextBlock Margin="0 0 10 0" 
-                   VerticalAlignment="Center"
-                   Text="{x:Bind ViewModel.Count, Mode=OneWay}"/>
+                     HorizontalAlignment="Stretch"
+                     Text="{x:Bind ViewModel.TextIndexFields, Mode=OneWay}"/>
+            <ProgressRing IsActive="{x:Bind ViewModel.IsCreateIndexActive, Mode=OneWay}"
+                          VerticalAlignment="Center"
+                          Maximum="100"/>
+        </StackPanel>
     </StackPanel>
 </UserControl>

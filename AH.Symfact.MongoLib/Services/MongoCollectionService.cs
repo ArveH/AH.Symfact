@@ -1,4 +1,6 @@
-﻿namespace AH.Symfact.MongoLib.Services;
+﻿using System.Collections;
+
+namespace AH.Symfact.MongoLib.Services;
 
 public class MongoCollectionService : IMongoCollectionService
 {
@@ -23,6 +25,21 @@ public class MongoCollectionService : IMongoCollectionService
         await database.DropCollectionAsync(collectionName, ct);
         _logger.Information("Collection '{CollectionName}' deleted",
             collectionName);
+    }
+
+    public async Task CreateTextIndexAsync(
+        string collectionName,
+        string fields)
+    {
+        _logger.Information("Creating text index for fields {Fields} on collection '{CollectionName}'...",
+            fields, collectionName);
+        var database = _connectionFactory.GetDatabase();
+        var collection = database.GetCollection<BsonDocument>(collectionName);
+        var name = await collection.Indexes.CreateOneAsync(
+            new CreateIndexModel<BsonDocument>(
+                Builders<BsonDocument>.IndexKeys.Text("$**")));
+        _logger.Information("Created text index on collection '{CollectionName}' for fields {Fields}",
+            collectionName, fields);
     }
 
     public async Task<int> InsertAsync(
