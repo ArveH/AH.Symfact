@@ -28,7 +28,7 @@ public sealed partial class CollectionsControl
                 logger)));
         CollectionStack.Children.Add(new CollectionControl(
             new CollectionViewModel(
-                SharedConstants.Name.OrganisationalPerson, 
+                SharedConstants.Name.User, 
                 collectionService!, 
                 fileReader!, 
                 logger)));

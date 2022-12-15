@@ -10,10 +10,19 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel x:Name="CollectionStack" Orientation="Vertical">
-        <TextBlock Text="MongoDb Collections"
+    <StackPanel Orientation="Vertical"
+                Margin="0 10 10 10"
+                HorizontalAlignment="Stretch"
+                BorderBrush="Gray"
+                BorderThickness="1">
+        <TextBlock Text="Create Collections"
                    Padding="15 20 10 10"
                    FontWeight="bold"
                    FontSize="20"/>
+        <StackPanel x:Name="CollectionStack" 
+                    Margin="10 10 10 10"
+                    BorderBrush="Gray"
+                    BorderThickness="1">
+        </StackPanel>
     </StackPanel>
 </UserControl>
