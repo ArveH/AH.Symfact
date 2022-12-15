@@ -27,6 +27,7 @@ public class MongoCollectionService : IMongoCollectionService
 
     public async Task<int> InsertAsync(
         string collectionName,
+        string nsToRemove,
         XmlNodeList nodes,
         Action<int> progress,
         CancellationToken ct)
@@ -50,6 +51,10 @@ public class MongoCollectionService : IMongoCollectionService
                 }
                 var json = JsonConvert.SerializeXmlNode(party, new Newtonsoft.Json.Formatting(), true)
                     .Replace("@ID", "_id");
+                if (!string.IsNullOrWhiteSpace(nsToRemove))
+                {
+                    json = json.Replace(nsToRemove, string.Empty);
+                }
                 var bDoc = BsonDocument.Parse(json);
                 await collection.InsertOneAsync(bDoc, null, ct);
                 counter++;

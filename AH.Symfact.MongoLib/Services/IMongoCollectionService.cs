@@ -2,8 +2,8 @@
 
 public interface IMongoCollectionService
 {
-    Task<int> InsertAsync(
-        string collectionName,
+    Task<int> InsertAsync(string collectionName,
+        string nsToRemove,
         XmlNodeList nodes,
         Action<int> progress,
         CancellationToken ct);

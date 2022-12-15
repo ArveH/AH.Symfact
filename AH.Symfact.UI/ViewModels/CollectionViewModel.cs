@@ -36,7 +36,7 @@ public partial class CollectionViewModel: ObservableRecipient
     public async Task RecreateCollectionAsync()
     {
         if (!MongoConstants.DataInfo.TryGetValue(CollectionName, 
-                out (string filePath, string elementPath) pos))
+                out (string filePath, string elementPath, string nsToRemove) pos))
         {
             _logger.Error("Can't get DataInfo for Collection '{CollectionName}'", 
                 CollectionName);
@@ -56,7 +56,8 @@ public partial class CollectionViewModel: ObservableRecipient
                     Count = nodes.Count;
                 });
                 await _collectionService.InsertAsync(
-                    CollectionName,
+                    CollectionName, 
+                    pos.nsToRemove,
                     nodes,
                     c =>
                     {
