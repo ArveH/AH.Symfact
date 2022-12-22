@@ -14,4 +14,10 @@ public interface IMongoCollectionService
 
     Task CreateTextIndexAsync(string collectionName, string fieldsStr);
     Task DropTextIndexAsync(string collectionName);
+
+    int BulkInsert(
+        string collectionName,
+        string nsToRemove,
+        XmlNodeList nodes,
+        CancellationToken ct);
 }

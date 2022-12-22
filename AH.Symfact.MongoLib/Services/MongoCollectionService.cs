@@ -1,4 +1,6 @@
-﻿using AH.Symfact.MongoLib.Extensions;
+﻿using System.Diagnostics;
+using System.Text;
+using AH.Symfact.MongoLib.Extensions;
 
 namespace AH.Symfact.MongoLib.Services;
 
@@ -76,6 +78,8 @@ public class MongoCollectionService : IMongoCollectionService
         {
             var database = _connectionFactory.GetDatabase();
             var collection = database.GetCollection<BsonDocument>(collectionName);
+            var sw = new Stopwatch();
+            sw.Start();
 
             foreach (XmlNode party in nodes)
             {
@@ -94,11 +98,13 @@ public class MongoCollectionService : IMongoCollectionService
                 var bDoc = BsonDocument.Parse(json);
                 await collection.InsertOneAsync(bDoc, null, ct);
                 counter++;
+                //if (counter % 100 == 0) {await Task.Delay(1000, ct);}
                 progress(counter);
             }
 
-            _logger.Information("Inserted {Count} documents into '{CollectionName}'",
-                nodesCount, collectionName);
+            sw.Stop();
+            _logger.Information("Inserted {Count} documents into '{CollectionName}' in {Ms}ms",
+                nodesCount, collectionName, sw.ElapsedMilliseconds);
             return counter;
         }
         catch (Exception)
@@ -108,4 +114,57 @@ public class MongoCollectionService : IMongoCollectionService
             throw;
         }
     }
+
+    public int BulkInsert(
+        string collectionName,
+        string nsToRemove,
+        XmlNodeList nodes,
+        CancellationToken ct)
+    {
+        var nodesCount = nodes.Count;
+        _logger.Information("Starting to bulk insert {Count} documents into '{CollectionName}'...",
+            nodesCount, collectionName);
+        var counter = 0;
+        try
+        {
+            var database = _connectionFactory.GetDatabase();
+            var collection = database.GetCollection<BsonDocument>(collectionName);
+            var sw = new Stopwatch();
+            sw.Start();
+
+            var docs = new List<WriteModel<BsonDocument>>(nodes.Count);
+            foreach (XmlNode party in nodes)
+            {
+                if (ct.IsCancellationRequested)
+                {
+                    _logger.Warning("Bulk inserting documents into '{CollectionName}' was cancelled",
+                        collectionName);
+                    return counter;
+                }
+                var json = JsonConvert.SerializeXmlNode(party, new Newtonsoft.Json.Formatting(), true)
+                    .Replace("@ID", "_id");
+                if (!string.IsNullOrWhiteSpace(nsToRemove))
+                {
+                    json = json.Replace(nsToRemove, string.Empty);
+                }
+                var bDoc = BsonDocument.Parse(json);
+                docs.Add(new InsertOneModel<BsonDocument>(bDoc));
+                counter++;
+            }
+
+            collection.BulkWrite(docs, new BulkWriteOptions {IsOrdered = false}, ct);
+
+            sw.Stop();
+            _logger.Information("Bulk inserted {Count} documents into '{CollectionName}' in {Ms}ms",
+                nodesCount, collectionName, sw.ElapsedMilliseconds);
+            return counter;
+        }
+        catch (Exception)
+        {
+            _logger.Error("Bulk inserting documents into '{CollectionName}' failed after {Count} inserts",
+                collectionName, counter);
+            throw;
+        }
+    }
+
 }

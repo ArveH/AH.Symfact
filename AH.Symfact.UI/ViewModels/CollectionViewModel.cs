@@ -66,11 +66,16 @@ public partial class CollectionViewModel: ObservableRecipient
                     ProgressDone = 0;
                     Count = nodes.Count;
                 });
-                await _collectionService.InsertAsync(
+                //await _collectionService.InsertAsync(
+                //    CollectionName,
+                //    pos.nsToRemove,
+                //    nodes,
+                //    c => { DispatcherQueue?.TryEnqueue(() => { ProgressDone = c * 100 / nodes.Count; }); },
+                //    _cts.Token);
+                _collectionService.BulkInsert(
                     CollectionName,
                     pos.nsToRemove,
                     nodes,
-                    c => { DispatcherQueue?.TryEnqueue(() => { ProgressDone = c * 100 / nodes.Count; }); },
                     _cts.Token);
             }
             catch (Exception ex)
